@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<robot name="cfr" xmlns:xacro="http://ros.org/wiki/xacro">
+
+    <!-- Define robot constants -->
+    <xacro:property name="base_width" value="0.31"/>
+    <xacro:property name="base_length" value="0.42"/>
+    <xacro:property name="base_height" value="0.18"/>
+
+    <xacro:macro name="cfr" params="prefix">
+
+        <!-- Robot Footprint -->
+        <link name="base_footprint">
+            <!-- <visual>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <box size="0.001 0.001 0.001" />
+                </geometry>
+            </visual> -->
+        </link>
+
+        <!-- Robot Base -->
+        <link name="base_link">
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                  <box size="${base_length} ${base_width} ${base_height}"/>
+                </geometry>
+            </collision>
+
+            <!-- <visual>
+                <geometry>
+                    <box size="${base_length} ${base_width} ${base_height}"/>
+                </geometry>
+                <material name="Cyan">
+                    <color rgba="0 1.0 1.0 1.0"/>
+                </material>
+            </visual> -->
+
+            <inertial>
+                <origin xyz="0 0 1" rpy="0 0 0"/>
+                <mass value="1"/>
+                <inertia
+                ixx="1.0" ixy="0.0" ixz="0.0"
+                iyy="1.0" iyz="0.0"
+                izz="1.0"/>
+            </inertial>
+        </link>
+
+        <joint name="base_joint" type="fixed">
+            <parent link="base_footprint"/>
+            <child link="base_link"/>
+            <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+        </joint>
+
+        <link name="cfr_link">
+            <collision>
+                <origin rpy="0 0 0" xyz="0 0 0"/>
+                <geometry>
+                    <mesh filename="file://$(find cfr_description)/meshes/CFR_blender.dae"/>
+                </geometry>
+            </collision>
+
+            <visual>
+                <origin rpy="0 0 0" xyz="0 0 0"/>
+                <geometry>
+                    <mesh filename="file://$(find cfr_description)/meshes/CFR_blender.dae"/>
+                </geometry>
+            </visual>
+
+            <inertial>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <mass value="10"/>
+                <inertia
+                ixx="10.0" ixy="0.0" ixz="0.0"
+                iyy="10.0" iyz="0.0"
+                izz="10.0"/>
+            </inertial>
+        </link>
+
+        <joint name="cfr_joint" type="fixed">
+            <parent link="base_footprint"/>
+            <child link="cfr_link"/>
+            <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+        </joint>
+
+        <gazebo>
+            <plugin name="object_controller" filename="libgazebo_ros_planar_move.so">
+            <commandTopic>cmd_vel</commandTopic>
+            <odometryTopic>odom</odometryTopic>
+            <odometryFrame>odom</odometryFrame>
+            <odometryRate>20.0</odometryRate>
+            <robotBaseFrame>base_link</robotBaseFrame>
+            </plugin>
+        </gazebo>
+
+    
+    </xacro:macro>
+
+</robot>

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="$(arg name)">
+  <!-- robot name parameter -->
+  <xacro:arg name="name" default="" />
+
+  <xacro:arg name="prefix" default="" />
+  <xacro:arg name="gazebo_controllers" default="$(find cfr_control)/config/control.yaml" />
+
+  <xacro:include filename="$(find cfr_description)/urdf/cfr_description.urdf.xacro" />
+  <xacro:include filename="$(find cfr_description)/urdf/blades.urdf.xacro" />
+
+  <!-- Load cfr description -->
+  <xacro:cfr prefix="$(arg prefix)" />
+  <xacro:blades prefix="$(arg prefix)" />
+
+  <xacro:if value="$(arg is_sim)">
+    <gazebo>
+      <plugin name="$(arg prefix)gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+        <parameters>$(arg gazebo_controllers)</parameters>
+      </plugin>
+    </gazebo>
+  </xacro:if>
+
+</robot>

@@ -17,20 +17,20 @@ if [ $? != 0 ]; then
     tmux send-keys -t $session:$window 'cd ~/cfr_ws; ros2 launch cfr_gazebo gazebo.launch.py' C-m
 
     tmux split-window -v
-    tmux send-keys -t $session:$window 'sleep 2 ; ros2 launch teleop_twist_joy teleop-launch.py joy_config:=f710' C-m 
+    tmux send-keys -t $session:$window 'sleep 2; ros2 launch teleop_twist_joy teleop-launch.py joy_config:=f710' C-m 
     tmux select-layout tiled
 
     tmux split-window -h
-    tmux send-keys -t $session:$window ''
+    tmux send-keys -t $session:$window 'sleep 3; ros2 launch cfr_blades_control start.launch.py' C-m
     tmux select-layout tiled
 
-    # tmux split-window -h
-    # tmux send-keys -t $session:$window 'sleep 5 ; ' 
-    # tmux select-layout tiled
+    tmux split-window -h
+    tmux send-keys -t $session:$window 'sleep 4; ros2 launch path_tracer start.launch.py' C-m
+    tmux select-layout tiled
 
-    # tmux split-window -h
-    # tmux send-keys -t $session:$window 'sleep 6 ; ' 
-    # tmux select-layout tiled
+    tmux split-window -h
+    tmux send-keys -t $session:$window '' 
+    tmux select-layout tiled
 
 fi
 

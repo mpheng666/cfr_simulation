@@ -2,6 +2,8 @@
 #include <functional>
 #include <memory>
 #include <string>
+#include <algorithm>
+#include <iomanip>
 
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/float64_multi_array.hpp"
@@ -37,7 +39,7 @@ class CFRBladesControl : public rclcpp::Node
 
     void joy_callback(const sensor_msgs::msg::Joy::SharedPtr msg)
     {
-        if(msg->buttons.at(enable_button_))  blades_speed_ = msg->axes.at(3) * max_speed_; 
+        if(msg->buttons.at(enable_button_))  blades_speed_ = std::clamp(msg->axes.at(speed_axis_) * max_speed_, 0.0, max_speed_); 
     }
 
     void load_params()
@@ -55,9 +57,9 @@ class CFRBladesControl : public rclcpp::Node
     rclcpp::TimerBase::SharedPtr timer_;
     const int N_BLADES = 2;
     double max_speed_ = 200.0 / 60.0;
-    double blades_speed_ = 0.0;
-    int enable_button_ = 5;
-    int speed_axis_ = 3;
+    double blades_speed_;
+    int enable_button_;
+    int speed_axis_;
 };
 
 int main(int argc, char * argv[])

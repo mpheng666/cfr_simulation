@@ -19,9 +19,12 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(nav_msgs REQUIRED)
+find_package(visualization_msgs REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_ros REQUIRED)
 
-add_executable(path_tracer_node src/path_tracer_node.cpp)
-ament_target_dependencies(path_tracer_node rclcpp nav_msgs)
+add_executable(path_tracer_node src/path_tracer_node.cpp src/path_tracer.cpp)
+ament_target_dependencies(path_tracer_node rclcpp nav_msgs visualization_msgs tf2_ros tf2)
 # rosidl_target_interfaces(path_tracer_node ${PROJECT_NAME} "rosidl_typesupport_cpp")
 
 install(TARGETS

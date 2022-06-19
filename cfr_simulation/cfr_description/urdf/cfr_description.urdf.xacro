@@ -84,7 +84,7 @@
                 <odometryRate>20.0</odometryRate>
                 <publish_odom>true</publish_odom>
                 <publish_odom_tf>true</publish_odom_tf>
-                <robotBaseFrame>cfr_link</robotBaseFrame>
+                <robotBaseFrame>base_footprint</robotBaseFrame>
             </plugin>
         </gazebo>
     

@@ -16,6 +16,7 @@ Panels:
         - /Marker1
         - /Polygon1/Topic1
         - /Polygon2/Topic1
+        - /MarkerArray2
       Splitter Ratio: 0.5
     Tree Height: 804
   - Class: rviz_common/Selection
@@ -78,15 +79,16 @@ Visualization Manager:
         odom:
           base_footprint:
             base_link:
-              front_blade:
-                {}
-              rear_blade:
-                {}
+              {}
             cfr_link:
+              {}
+            front_blade:
+              {}
+            rear_blade:
               {}
       Update Interval: 1
       Value: true
-    - Alpha: 0.5
+    - Alpha: 1
       Class: rviz_default_plugins/RobotModel
       Collision Enabled: false
       Description File: ""
@@ -401,10 +403,34 @@ Visualization Manager:
         Reliability Policy: Reliable
         Value: /cfr_path
       Value: true
+    - Class: rviz_default_plugins/Marker
+      Enabled: true
+      Name: Marker
+      Namespaces:
+        {}
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /path_marker
+      Value: true
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Name: MarkerArray
+      Namespaces:
+        path: true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /path_marker
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: base_link
+    Fixed Frame: base_footprint
     Frame Rate: 30
   Name: root
   Tools:
@@ -444,25 +470,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 14.635457992553711
+      Distance: 6.203745365142822
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 1.6978254318237305
-        Y: 1.1659133434295654
-        Z: -1.00612211227417
+        X: -0.2704358696937561
+        Y: -0.4059795141220093
+        Z: -0.4540923833847046
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.9947967529296875
+      Pitch: 0.8997969031333923
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 0.9953970909118652
+      Yaw: 5.46856689453125
     Saved: ~
 Window Geometry:
   Displays:

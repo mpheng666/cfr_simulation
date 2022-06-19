@@ -28,7 +28,7 @@ def load_yaml(file_path):
         return None
 
 def generate_launch_description():
-    blades_config_file = get_package_file('cfr_blades_control', 'config/f710.yaml')
+    blades_config_file = get_package_file('cfr_blades_control', 'config/spmr1010.yaml')
     blades_config = load_yaml(blades_config_file)
 
     return launch.LaunchDescription([

@@ -39,17 +39,19 @@ class CFRBladesControl : public rclcpp::Node
 
     void joy_callback(const sensor_msgs::msg::Joy::SharedPtr msg)
     {
-        if(msg->buttons.at(enable_button_))  blades_speed_ = std::clamp(msg->axes.at(speed_axis_) * max_speed_, 0.0, max_speed_); 
+        if(msg->buttons.at(enable_button_) || !require_enable_button_)  blades_speed_ = std::clamp(msg->axes.at(speed_axis_) * -max_speed_, 0.0, -max_speed_); 
     }
 
     void load_params()
     {
         max_speed_ = this->declare_parameter("max_speed", 120.0) / 60.0;
         RCLCPP_INFO(this->get_logger(),"CFR blades running at maximum speed %f rpm", max_speed_ * 60.0);
-        enable_button_ = this->declare_parameter("enable_button", 5);
+        enable_button_ = this->declare_parameter("enable_button", 0);
         RCLCPP_INFO(this->get_logger(),"Enable blades button %i ", enable_button_);
         speed_axis_ = this->declare_parameter("speed_axis", 3);
         RCLCPP_INFO(this->get_logger(),"Blades speed axis %i ", speed_axis_);
+        require_enable_button_ = this->declare_parameter("require_enable_button", false);
+        RCLCPP_INFO(this->get_logger(),"Require enable button is set to %d" , require_enable_button_);
     }
 
     rclcpp::Subscription<sensor_msgs::msg::Joy>::SharedPtr joy_subscription_;
@@ -60,6 +62,7 @@ class CFRBladesControl : public rclcpp::Node
     double blades_speed_;
     int enable_button_;
     int speed_axis_;
+    bool require_enable_button_;
 };
 
 int main(int argc, char * argv[])

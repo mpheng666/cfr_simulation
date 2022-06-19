@@ -87,8 +87,8 @@ void PathTracer::constructMarker(visualization_msgs::msg::Marker& marker)
     marker.pose.orientation.w = 1.0;
     marker.id = id_counter_;
     marker.type = visualization_msgs::msg::Marker::CUBE;
-    marker.scale.x = 1.6;
-    marker.scale.y = 0.8;
+    marker.scale.x = 0.8;
+    marker.scale.y = 1.6;
     marker.scale.z = 0.01;
     marker.color.g = 1.0f;
     marker.color.b = 0.0f;

@@ -41,7 +41,7 @@ class PathTracer : public rclcpp::Node
     int32_t id_counter_ {0};
     std::shared_ptr<tf2_ros::TransformListener> tf_listener_{nullptr};
     std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
-    std::string target_frame_ {"base_footprint"};
+    std::string target_frame_ {"base_link"};
     std::string source_frame_ {"odom"};
 
 };

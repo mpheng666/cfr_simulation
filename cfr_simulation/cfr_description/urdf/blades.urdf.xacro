@@ -31,24 +31,16 @@
           </visual>
         </link>
       
-        <!-- <gazebo reference="${prefix}_blade">
-            <mu1 value="1.0"/>
-            <mu2 value="0.5"/>
-            <kp value="100.0" />
-            <kd value="1.0" />
-            <fdir1 value="1 0 0"/>
-        </gazebo> -->
-      
         <joint name="${prefix}front_blade_joint" type="continuous">
             <origin xyz="0.46 0 0" rpy="0 0 0" />
-            <parent link="base_footprint"/>
+            <parent link="base_link"/>
             <child link="${prefix}front_blade"/>
             <axis xyz="0 0 1" rpy="0 0 0" />
         </joint>
 
         <joint name="${prefix}rear_blade_joint" type="continuous">
             <origin xyz="-0.46 0 0" rpy="0 0 0" />
-            <parent link="base_footprint"/>
+            <parent link="base_link"/>
             <child link="${prefix}rear_blade"/>
             <axis xyz="0 0 1" rpy="0 0 0" />
         </joint>

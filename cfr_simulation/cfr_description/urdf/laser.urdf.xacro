@@ -24,8 +24,8 @@
       </collision> -->
     </link>
 
-    <!-- <gazebo reference="${link}">
-      <sensor name="${link}" type="ray">
+    <gazebo reference="${link}">
+      <sensor name="${link}" type="gpu_ray">
         <always_on>true</always_on>
         <visualize>true</visualize>
         <update_rate>5</update_rate>
@@ -57,7 +57,7 @@
           <frame_name>${link}</frame_name>
         </plugin>
       </sensor>
-  </gazebo> -->
+  </gazebo>
 
   </xacro:macro>
 </robot>

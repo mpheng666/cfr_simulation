@@ -1,12 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-	<!-- lidar approximate physical properties -->
-  <!-- <xacro:property name="laser_x" value="0.08" />
-  <xacro:property name="laser_y" value="0.08" />
-  <xacro:property name="laser_z" value="0.12" />
-  <xacro:property name="laser_mass" value="0.5" /> -->
-
 	<!-- sick tim571 -->
   <xacro:macro name="laser" params="link">
     <link name="${link}">
@@ -25,10 +19,10 @@
     </link>
 
     <gazebo reference="${link}">
-      <sensor name="${link}" type="gpu_ray">
+      <sensor name="${link}" type="ray">
         <always_on>true</always_on>
         <visualize>true</visualize>
-        <update_rate>5</update_rate>
+        <update_rate>15</update_rate>
         <ray>
           <scan>
             <horizontal>

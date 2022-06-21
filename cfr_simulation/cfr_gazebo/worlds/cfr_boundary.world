@@ -468,16 +468,6 @@
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
-      <model name='cfr'>
-        <pose>2.1e-05 -0 0.09 0 -0 1e-06</pose>
-        <scale>1 1 1</scale>
-        <link name='base_footprint'>
-          <pose>2.1e-05 -0 0.09 0 -0 1e-06</pose>
-          <velocity>1e-06 6e-06 0.000131 -6.3e-05 -0 -4e-06</velocity>
-          <acceleration>0.000976 0.254692 0.339717 -1.40912 0.000173 -0.001177</acceleration>
-          <wrench>0.01074 2.80162 3.73689 0 -0 0</wrench>
-        </link>
-      </model>
       <model name='ground_plane'>
         <pose>0 0 0 0 -0 0</pose>
         <scale>1 1 1</scale>

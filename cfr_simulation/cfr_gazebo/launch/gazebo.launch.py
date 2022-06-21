@@ -81,6 +81,7 @@ def generate_launch_description():
              '-s', 'libgazebo_ros_init.so',
              '-s', 'libgazebo_ros_factory.so',
              cfr_world_path],
+            #  prefix=['xterm -e gdb -ex run --args'],
         output='screen',
     )
 
@@ -108,12 +109,6 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(PathJoinSubstitution(
         [FindPackageShare("cfr_control"), 'launch', 'control.launch.py'])))
 
-    # Launch cfr_control/teleop_base.launch.py which is various ways to tele-op
-    # the robot but does not include the joystick. Also, has a twist mux.
-    launch_cfr_teleop_base = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(PathJoinSubstitution(
-        [FindPackageShare("cfr_control"), 'launch', 'teleop_base.launch.py'])))
-
     ld = LaunchDescription(ARGUMENTS)
     ld.add_action(node_robot_state_publisher)
     ld.add_action(spawn_joint_state_broadcaster)
@@ -122,6 +117,5 @@ def generate_launch_description():
     ld.add_action(gzclient)
     ld.add_action(spawn_robot)
     # ld.add_action(launch_cfr_control)
-    # ld.add_action(launch_cfr_teleop_base)
 
     return ld

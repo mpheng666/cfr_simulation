@@ -11,5 +11,5 @@ controller_manager:
 forward_velocity_controller:
   ros__parameters:
     joints:
-      - front_blade_joint
-      - rear_blade_joint
+      - right_blade_joint
+      - left_blade_joint

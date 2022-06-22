@@ -39,7 +39,7 @@ class CFRBladesControl : public rclcpp::Node
 
     void joy_callback(const sensor_msgs::msg::Joy::SharedPtr msg)
     {
-        if(msg->buttons.at(enable_button_) || !require_enable_button_)  blades_speed_ = std::clamp(msg->axes.at(speed_axis_) * -max_speed_, 0.0, -max_speed_); 
+        if(msg->buttons.at(enable_button_) || !require_enable_button_)  blades_speed_ = std::clamp(msg->axes.at(speed_axis_) * max_speed_, 0.0, max_speed_); 
     }
 
     void load_params()

@@ -496,7 +496,7 @@
       <camera name='user_camera'>
         <pose>11.2096 -5.58863 16.244 0 1.02764 2.72819</pose>
         <view_controller>ortho</view_controller>
-        <projection_type>orthographic</projection_type>
+        <projection_type>perspective</projection_type>
       </camera>
     </gui>
     <model name='Construction Cone'>

@@ -14,8 +14,6 @@ using std::placeholders::_1;
 
 namespace cfr_actuation_ns
 {
-    using Floats = std_msgs::msg::Float64MultiArray; 
-    using Joy = sensor_msgs::msg::Joy;
 
     struct MotorActuation
     {
@@ -55,13 +53,13 @@ namespace cfr_actuation_ns
 
             MotorActuation motor_actuation_;
 
-            rclcpp::Publisher<Floats>::SharedPtr axes_pub_;
-            rclcpp::Subscription<Joy>::SharedPtr joy_sub_;
+            rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr actuation_pub_;
+            rclcpp::Subscription<sensor_msgs::msg::Joy>::SharedPtr joy_sub_;
             rclcpp::TimerBase::SharedPtr timer_;
 
             void loadParams();
             void timerCb();
-            void joyCb(const Joy::SharedPtr msg);
+            void joyCb(const sensor_msgs::msg::Joy::SharedPtr msg);
             void joyToMotorActuation(const double joy_left_x, const double joy_left_y, const double joy_right_x, const double joy_right_y);
     };
 

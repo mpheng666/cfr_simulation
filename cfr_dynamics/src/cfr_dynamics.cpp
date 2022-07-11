@@ -1,11 +1,11 @@
 #include "cfr_dynamics/cfr_dynamics.hpp"
-
 namespace cfr_dynamics_ns
 {
     CfrDynamics::CfrDynamics():
     Node("cfr_dynamics"),
     accel_pub_(this->create_publisher<geometry_msgs::msg::Accel>("cfr_acceleration", 10)),
     actuation_sub_(this->create_subscription<std_msgs::msg::Float64MultiArray>("cfr_actuation", 10, std::bind(&CfrDynamics::actuationCb, this, _1))),
+    cmd_vel_sub_(this->create_subscription<geometry_msgs::msg::Twist>("cfr/cmd_vel", 10, std::bind(&CfrDynamics::cmdVelCb, this, _1))),
     timer_(this->create_wall_timer(100ms, std::bind(&CfrDynamics::timerCb, this)))
     {
         this->loadParams();
@@ -30,12 +30,17 @@ namespace cfr_dynamics_ns
         model_inputs_.LXMotordeg = msg->data.at(0);
         model_inputs_.RXMotordeg = msg->data.at(1);
         model_inputs_.RYMotordeg = msg->data.at(2);
-        model_inputs_.NetTorque = msg->data.at(3);
-        model_inputs_.vx = msg->data.at(0);
-        model_inputs_.vy = msg->data.at(0);
-        model_inputs_.theta_dot = msg->data.at(0);
+        // model_inputs_.NetTorque = msg->data.at(3);
+        model_inputs_.NetTorque = 22.0;
         this->computeEffectiveContactRadius();
         this->computeDynamics();
+    }
+
+    void CfrDynamics::cmdVelCb(const geometry_msgs::msg::Twist::SharedPtr msg)
+    {
+        model_inputs_.vx = msg->linear.x;
+        model_inputs_.vy = msg->linear.y;
+        model_inputs_.theta_dot = msg->angular.z;
     }
 
     void CfrDynamics::loadParams()
@@ -75,6 +80,7 @@ namespace cfr_dynamics_ns
             else
                 effective_c_r_.effective_rad_RY = -(effective_c_r_.k_right_y * abs(model_inputs_.RYMotordeg) + effective_c_r_.b_right_y);
         }
+        effective_c_r_.print();
     }
 
     void CfrDynamics::computeDynamics()
@@ -144,6 +150,7 @@ namespace cfr_dynamics_ns
 
         dynamics_gen_.theta_acc = dynamics_gen_.theta_acc_left + dynamics_gen_.theta_acc_right  - (environment_params_.mu_4 * model_inputs_.theta_dot)/cfr_model_.I;
 
+        // dynamics_gen_.print();
         // (theta_acc_left, theta_acc_right, (environment_params_.mu_4 * theta_dot)/I]
     } 
 

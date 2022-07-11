@@ -8,6 +8,7 @@
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/float64_multi_array.hpp"
 #include "geometry_msgs/msg/accel.hpp"
+#include "geometry_msgs/msg/twist.hpp"
 
 using namespace std::chrono_literals;
 using std::placeholders::_1;
@@ -80,6 +81,19 @@ namespace cfr_dynamics_ns
         double k_right_y {0.0};
         double b_right_y {0.0};
         double effective_rad_RY {0.0};
+
+        void print()
+        {
+            printf("k_left_x: %lf \n", k_left_x);
+            printf("b_left_x: %lf \n", b_left_x);
+            printf("effective_rad_LX: %lf \n", effective_rad_LX);
+            printf("k_right_x: %lf \n", k_right_x);
+            printf("b_right_x: %lf \n", b_right_x);
+            printf("effective_rad_RX: %lf \n", effective_rad_RX);
+            printf("k_right_y: %lf \n", k_right_y);
+            printf("b_right_y: %lf \n", b_right_y);
+            printf("effective_rad_RY: %lf \n", effective_rad_RY);
+        };
     };
 
     struct DynamicsGenerated
@@ -102,6 +116,28 @@ namespace cfr_dynamics_ns
         double theta_acc_left {0.0};
         double theta_acc_right {0.0};
         double theta_acc {0.0};
+
+        void print()
+        {
+            printf("Fy_l_rotor: %lf \n", Fy_l_rotor);
+            printf("Fy_r_rotor: %lf \n", Fy_r_rotor);
+            printf("Fy_rotor: %lf \n", Fy_rotor);
+            printf("F_friction: %lf \n", F_friction);
+            printf("F_drag_y: %lf \n", F_drag_y);
+            printf("Fy: %lf \n", Fy);
+            printf("y_acc: %lf \n", y_acc);
+            printf("Fx_r_rotor: %lf \n", Fx_r_rotor);
+            printf("F_drag_x: %lf \n", F_drag_x);
+            printf("Fx: %lf \n", Fx);
+            printf("x_acc: %lf \n", x_acc);
+            printf("L_lever: %lf \n", L_lever);
+            printf("R_lever: %lf \n", R_lever);
+            printf("rot_torque_left: %lf \n", rot_torque_left);
+            printf("rot_torque_right: %lf \n", rot_torque_right);
+            printf("theta_acc_left: %lf \n", theta_acc_left);
+            printf("theta_acc_right: %lf \n", theta_acc_right);
+            printf("theta_acc: %lf \n", theta_acc);
+        };
     };
 
     class CfrDynamics : public rclcpp::Node
@@ -120,11 +156,13 @@ namespace cfr_dynamics_ns
 
             rclcpp::Publisher<geometry_msgs::msg::Accel>::SharedPtr accel_pub_;
             rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr actuation_sub_;
+            rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_sub_;
             rclcpp::TimerBase::SharedPtr timer_;
 
             void loadParams();
             void timerCb();
             void actuationCb(const std_msgs::msg::Float64MultiArray::SharedPtr msg);
+            void cmdVelCb(const geometry_msgs::msg::Twist::SharedPtr msg);
             void computeEffectiveContactRadius();
             void computeDynamics();            
     };

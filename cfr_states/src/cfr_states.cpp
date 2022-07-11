@@ -50,6 +50,10 @@ namespace cfr_states_ns
         kinematics_states_.velocity_linear_y_prev + kinematics_states_.acc_linear_y_curr * delta_t; 
         kinematics_states_.velocity_angular_z_curr = 
         kinematics_states_.velocity_angular_z_prev + kinematics_states_.acc_angular_z_curr * delta_t; 
+
+        RCLCPP_INFO(this->get_logger(), "Currnet vel linear x: %lf", kinematics_states_.velocity_linear_x_curr);
+        RCLCPP_INFO(this->get_logger(), "Currnet vel linear y: %lf", kinematics_states_.velocity_linear_x_curr);
+        RCLCPP_INFO(this->get_logger(), "Currnet vel angular z: %lf", kinematics_states_.velocity_angular_z_curr);
         
         kinematics_states_.velocity_linear_x_prev = kinematics_states_.velocity_linear_x_curr;
         kinematics_states_.velocity_linear_y_prev = kinematics_states_.velocity_linear_y_curr;

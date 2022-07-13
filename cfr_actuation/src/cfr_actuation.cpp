@@ -6,7 +6,7 @@ namespace cfr_actuation_ns
     Node("cfr_actuation"),
     actuation_pub_(this->create_publisher<std_msgs::msg::Float64MultiArray>("cfr_actuation", 10)),
     joy_sub_(this->create_subscription<sensor_msgs::msg::Joy>("joy", 10, std::bind(&CfrActuation::joyCb, this, _1))),
-    timer_(this->create_wall_timer(100ms, std::bind(&CfrActuation::timerCb, this)))
+    timer_(this->create_wall_timer(10ms, std::bind(&CfrActuation::timerCb, this)))
     {
         this->loadParams();
     }

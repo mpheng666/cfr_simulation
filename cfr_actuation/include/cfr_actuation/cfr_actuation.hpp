@@ -27,10 +27,10 @@ namespace cfr_actuation_ns
 
         void print()
         {
-            printf("LXMotordeg_FB: %f \n", left_x_motor_deg_fb);
-            printf("RXMotordeg_FB: %f \n", right_x_motor_deg_fb);
-            printf("LXMotordeg_ROT: %f \n", left_x_motor_deg_rot);
-            printf("RXMotordeg_ROT: %f \n", right_x_motor_deg_rot);
+            // printf("LXMotordeg_FB: %f \n", left_x_motor_deg_fb);
+            // printf("RXMotordeg_FB: %f \n", right_x_motor_deg_fb);
+            // printf("LXMotordeg_ROT: %f \n", left_x_motor_deg_rot);
+            // printf("RXMotordeg_ROT: %f \n", right_x_motor_deg_rot);
             printf("LXMotordeg: %f \n", left_x_motor_deg);
             printf("RXMotordeg: %f \n", right_x_motor_deg);
             printf("RYMotordeg: %f \n", right_y_motor_deg);

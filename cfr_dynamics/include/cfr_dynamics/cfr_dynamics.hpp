@@ -68,6 +68,13 @@ namespace cfr_dynamics_ns
         double vx {0.0};
         double vy {0.0};
         double theta_dot {0.0};
+
+        void print()
+        {
+            printf("LXMotordeg: %lf \n", LXMotordeg);
+            printf("RXMotordeg: %lf \n", RXMotordeg);
+            printf("RYMotordeg: %lf \n", RYMotordeg);    
+        }
     };
 
     struct BladesEffectiveContactRadius
@@ -84,14 +91,14 @@ namespace cfr_dynamics_ns
 
         void print()
         {
-            printf("k_left_x: %lf \n", k_left_x);
-            printf("b_left_x: %lf \n", b_left_x);
-            printf("effective_rad_LX: %lf \n", effective_rad_LX);
-            printf("k_right_x: %lf \n", k_right_x);
-            printf("b_right_x: %lf \n", b_right_x);
-            printf("effective_rad_RX: %lf \n", effective_rad_RX);
-            printf("k_right_y: %lf \n", k_right_y);
-            printf("b_right_y: %lf \n", b_right_y);
+            // printf("k_left_x: %lf \n", k_left_x);
+            // printf("b_left_x: %lf \n", b_left_x);
+            // printf("effective_rad_LX: %lf \n", effective_rad_LX);
+            // printf("k_right_x: %lf \n", k_right_x);
+            // printf("b_right_x: %lf \n", b_right_x);
+            // printf("effective_rad_RX: %lf \n", effective_rad_RX);
+            // printf("k_right_y: %lf \n", k_right_y);
+            // printf("b_right_y: %lf \n", b_right_y);
             printf("effective_rad_RY: %lf \n", effective_rad_RY);
         };
     };
@@ -119,24 +126,24 @@ namespace cfr_dynamics_ns
 
         void print()
         {
-            printf("Fy_l_rotor: %lf \n", Fy_l_rotor);
-            printf("Fy_r_rotor: %lf \n", Fy_r_rotor);
-            printf("Fy_rotor: %lf \n", Fy_rotor);
-            printf("F_friction: %lf \n", F_friction);
-            printf("F_drag_y: %lf \n", F_drag_y);
-            printf("Fy: %lf \n", Fy);
-            printf("y_acc: %lf \n", y_acc);
-            printf("Fx_r_rotor: %lf \n", Fx_r_rotor);
-            printf("F_drag_x: %lf \n", F_drag_x);
-            printf("Fx: %lf \n", Fx);
-            printf("x_acc: %lf \n", x_acc);
-            printf("L_lever: %lf \n", L_lever);
-            printf("R_lever: %lf \n", R_lever);
-            printf("rot_torque_left: %lf \n", rot_torque_left);
-            printf("rot_torque_right: %lf \n", rot_torque_right);
+            // printf("Fy_l_rotor: %lf \n", Fy_l_rotor);
+            // printf("Fy_r_rotor: %lf \n", Fy_r_rotor);
+            // printf("Fy_rotor: %lf \n", Fy_rotor);
+            // printf("F_friction: %lf \n", F_friction);
+            // printf("F_drag_y: %lf \n", F_drag_y);
+            // printf("Fy: %lf \n", Fy);
+            // printf("y_acc: %lf \n", y_acc);
+            // printf("Fx_r_rotor: %lf \n", Fx_r_rotor);
+            // printf("F_drag_x: %lf \n", F_drag_x);
+            // printf("Fx: %lf \n", Fx);
+            // printf("x_acc: %lf \n", x_acc);
+            // printf("L_lever: %lf \n", L_lever);
+            // printf("R_lever: %lf \n", R_lever);
+            // printf("rot_torque_left: %lf \n", rot_torque_left);
+            // printf("rot_torque_right: %lf \n", rot_torque_right);
             printf("theta_acc_left: %lf \n", theta_acc_left);
             printf("theta_acc_right: %lf \n", theta_acc_right);
-            printf("theta_acc: %lf \n", theta_acc);
+            // printf("theta_acc: %lf \n", theta_acc);
         };
     };
 

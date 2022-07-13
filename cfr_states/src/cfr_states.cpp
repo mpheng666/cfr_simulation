@@ -23,6 +23,7 @@ namespace cfr_states_ns
 
     void CfrStates::timerCb()
     {
+        // printf("debug");
         auto cmd_vel_msg = geometry_msgs::msg::Twist();
         cmd_vel_msg.linear.x = kinematics_states_.velocity_linear_x_curr;
         cmd_vel_msg.linear.y = kinematics_states_.velocity_linear_y_curr;

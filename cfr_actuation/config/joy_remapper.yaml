@@ -1,0 +1,9 @@
+joy_left_x_axis: 3
+joy_left_y_axis: 1
+joy_right_x_axis: 2
+joy_right_y_axis: 0
+
+joy_left_x_magnitude: 1.0
+joy_left_y_magnitude: 1.0
+joy_right_x_magnitude: -1.0
+joy_right_y_magnitude: -1.0

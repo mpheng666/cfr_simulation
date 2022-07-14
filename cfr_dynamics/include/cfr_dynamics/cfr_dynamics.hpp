@@ -9,6 +9,7 @@
 #include "std_msgs/msg/float64_multi_array.hpp"
 #include "geometry_msgs/msg/accel.hpp"
 #include "geometry_msgs/msg/twist.hpp"
+#include "nav_msgs/msg/odometry.hpp"
 
 using namespace std::chrono_literals;
 using std::placeholders::_1;
@@ -164,12 +165,14 @@ namespace cfr_dynamics_ns
             rclcpp::Publisher<geometry_msgs::msg::Accel>::SharedPtr accel_pub_;
             rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr actuation_sub_;
             rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_sub_;
+            rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_sub_;
             rclcpp::TimerBase::SharedPtr timer_;
 
             void loadParams();
             void timerCb();
             void actuationCb(const std_msgs::msg::Float64MultiArray::SharedPtr msg);
             void cmdVelCb(const geometry_msgs::msg::Twist::SharedPtr msg);
+            void odomCb(const nav_msgs::msg::Odometry::SharedPtr msg);
             void computeEffectiveContactRadius();
             void computeDynamics();            
     };

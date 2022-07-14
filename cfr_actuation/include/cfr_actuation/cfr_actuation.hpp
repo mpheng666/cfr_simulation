@@ -14,6 +14,18 @@ using std::placeholders::_1;
 
 namespace cfr_actuation_ns
 {
+    struct JoyRemapper
+    {
+        int joy_left_x_axis {0};
+        int joy_left_y_axis {1};
+        int joy_right_x_axis {2};
+        int joy_right_y_axis {3};
+        double joy_left_x_magnitude {1.0};
+        double joy_left_y_magnitude {1.0};
+        double joy_right_x_magnitude {1.0};
+        double joy_right_y_magnitude {1.0};
+    };
+
     struct MotorDegLimit
     {
         double LXmin {-16.5};
@@ -59,6 +71,7 @@ namespace cfr_actuation_ns
             ~CfrActuation();
 
         private:
+            JoyRemapper joy_remapper_;
             MotorDegLimit motor_deg_limit_;
             JoyLimit joy_limit_;
             MotorActuation motor_actuation_;

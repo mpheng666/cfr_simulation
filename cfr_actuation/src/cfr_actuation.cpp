@@ -28,10 +28,10 @@ namespace cfr_actuation_ns
 
     void CfrActuation::joyCb(const sensor_msgs::msg::Joy::SharedPtr msg)
     {
-        double JoystickLeftX = msg->axes.at(0);
-        double JoystickLeftY = msg->axes.at(1); 
-        double JoystickRightX = msg->axes.at(2);
-        double JoystickRightY = msg->axes.at(3);
+        double JoystickLeftX = joy_remapper_.joy_left_x_magnitude * msg->axes.at(joy_remapper_.joy_left_x_axis);
+        double JoystickLeftY = joy_remapper_.joy_left_y_magnitude * msg->axes.at(joy_remapper_.joy_left_y_axis); 
+        double JoystickRightX = joy_remapper_.joy_right_x_magnitude * msg->axes.at(joy_remapper_.joy_right_x_axis);
+        double JoystickRightY = joy_remapper_.joy_right_y_magnitude * msg->axes.at(joy_remapper_.joy_right_y_axis);
         // RCLCPP_INFO(this->get_logger(), "JoystickLeftX: %f", JoystickLeftX);
         // RCLCPP_INFO(this->get_logger(), "JoystickLeftY: %f", JoystickLeftY);
         // RCLCPP_INFO(this->get_logger(), "JoystickRightX: %f", JoystickRightX);
@@ -48,9 +48,19 @@ namespace cfr_actuation_ns
         motor_deg_limit_.RXmax = this->declare_parameter("RXmax", 16.5);
         motor_deg_limit_.RYmin = this->declare_parameter("RYmin", -12.5);
         motor_deg_limit_.RYmax = this->declare_parameter("RYmax", 12.5);
+
+        joy_remapper_.joy_left_x_axis = this->declare_parameter("joy_left_x_axis", 0);
+        joy_remapper_.joy_left_y_axis = this->declare_parameter("joy_left_y_axis", 1);
+        joy_remapper_.joy_right_x_axis = this->declare_parameter("joy_right_x_axis", 2);
+        joy_remapper_.joy_right_y_axis = this->declare_parameter("joy_right_y_axis", 3);
+
+        joy_remapper_.joy_left_x_magnitude = this->declare_parameter("joy_left_x_magnitude", 1.0);
+        joy_remapper_.joy_left_y_magnitude = this->declare_parameter("joy_left_y_magnitude", 1.0);
+        joy_remapper_.joy_right_x_magnitude = this->declare_parameter("joy_right_x_magnitude", 1.0);
+        joy_remapper_.joy_right_y_magnitude = this->declare_parameter("joy_right_y_magnitude", 1.0);
     }
 
-    void CfrActuation::joyToMotorActuation(const double JoystickLeftX, const double JoystickLeftY, const double JoystickRightX, const double JoystickRightY)
+    void CfrActuation::joyToMotorActuation(const double JoystickLeftX, [[maybe_unused]] const double JoystickLeftY, const double JoystickRightX, const double JoystickRightY)
     {
         motor_actuation_.LXMotordeg_FB = motor_deg_limit_.LXmin*(1-(JoystickRightY-joy_limit_.joymin)/(joy_limit_.joymax-joy_limit_.joymin)) + motor_deg_limit_.LXmax*(JoystickRightY-joy_limit_.joymin)/(joy_limit_.joymax-joy_limit_.joymin); 
         motor_actuation_.RXMotordeg_FB = -(motor_deg_limit_.RXmin*(1-(JoystickRightY-joy_limit_.joymin)/(joy_limit_.joymax-joy_limit_.joymin)) + motor_deg_limit_.RXmax*(JoystickRightY-joy_limit_.joymin)/(joy_limit_.joymax-joy_limit_.joymin));
@@ -61,7 +71,9 @@ namespace cfr_actuation_ns
         motor_actuation_.LXMotordeg = motor_actuation_.LXMotordeg_FB + motor_actuation_.LXMotordeg_ROT;
         motor_actuation_.RXMotordeg = motor_actuation_.RXMotordeg_FB + motor_actuation_.RXMotordeg_ROT;
 
-        motor_actuation_.RYMotordeg = motor_deg_limit_.RYmin*(1-(JoystickLeftX-joy_limit_.joymin)/(joy_limit_.joymax-joy_limit_.joymin)) + motor_deg_limit_.RYmax*(JoystickLeftX-joy_limit_.joymin)/(joy_limit_.joymax-joy_limit_.joymin); 
+        motor_actuation_.RYMotordeg = motor_deg_limit_.RYmin*(1-(JoystickLeftX-joy_limit_.joymin)/(joy_limit_.joymax-joy_limit_.joymin)) + motor_deg_limit_.RYmax*(JoystickLeftX-joy_limit_.joymin)/(joy_limit_.joymax-joy_limit_.joymin);
+
+        // [[maybe_unused]] double dummy = JoystickLeftY;
 
         motor_actuation_.print();
     }

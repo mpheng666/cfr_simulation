@@ -28,11 +28,17 @@ def load_yaml(file_path):
         return None
 
 def generate_launch_description():
+    motor_limits_config_file = get_package_file('cfr_actuation', 'config/motor_limits.yaml')
+    motor_limits_config = load_yaml(motor_limits_config_file)
+    joy_config_file = get_package_file('cfr_actuation', 'config/joy_remapper.yaml')
+    joy_config = load_yaml(joy_config_file)
+
     return launch.LaunchDescription([
         launch_ros.actions.Node(
             name='cfr_actuation_node',
             package='cfr_actuation',
             executable='cfr_actuation_node',
             output='screen',
+            parameters= [joy_config, motor_limits_config]
         )
     ])

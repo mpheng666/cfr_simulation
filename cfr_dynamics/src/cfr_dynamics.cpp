@@ -6,6 +6,7 @@ namespace cfr_dynamics_ns
     accel_pub_(this->create_publisher<geometry_msgs::msg::Accel>("cfr_acceleration", 10)),
     actuation_sub_(this->create_subscription<std_msgs::msg::Float64MultiArray>("cfr_actuation", 10, std::bind(&CfrDynamics::actuationCb, this, _1))),
     cmd_vel_sub_(this->create_subscription<geometry_msgs::msg::Twist>("cfr/cmd_vel", 10, std::bind(&CfrDynamics::cmdVelCb, this, _1))),
+    odom_sub_(this->create_subscription<nav_msgs::msg::Odometry>("odom", 10, std::bind(&CfrDynamics::odomCb, this, _1))),
     timer_(this->create_wall_timer(10ms, std::bind(&CfrDynamics::timerCb, this)))
     {
         this->loadParams();
@@ -39,9 +40,16 @@ namespace cfr_dynamics_ns
 
     void CfrDynamics::cmdVelCb(const geometry_msgs::msg::Twist::SharedPtr msg)
     {
-        model_inputs_.vx = msg->linear.x;
-        model_inputs_.vy = msg->linear.y;
-        model_inputs_.theta_dot = msg->angular.z;
+        // model_inputs_.vx = msg->linear.x;
+        // model_inputs_.vy = msg->linear.y;
+        // model_inputs_.theta_dot = msg->angular.z;
+    }
+
+    void CfrDynamics::odomCb(const nav_msgs::msg::Odometry::SharedPtr msg)
+    {
+        model_inputs_.vx = msg->twist.twist.linear.x;
+        model_inputs_.vy = msg->twist.twist.linear.y;
+        model_inputs_.theta_dot = msg->twist.twist.angular.z;
     }
 
     void CfrDynamics::loadParams()

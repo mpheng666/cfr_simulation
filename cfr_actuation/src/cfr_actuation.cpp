@@ -20,45 +20,48 @@ namespace cfr_actuation_ns
     {
         auto actuation_msg = std_msgs::msg::Float64MultiArray();
         actuation_msg.data.resize(3);
-        actuation_msg.data.at(0) = motor_actuation_.left_x_motor_deg;
-        actuation_msg.data.at(1) = motor_actuation_.right_x_motor_deg;
-        actuation_msg.data.at(2) = motor_actuation_.right_y_motor_deg;
+        actuation_msg.data.at(0) = motor_actuation_.LXMotordeg;
+        actuation_msg.data.at(1) = motor_actuation_.RXMotordeg;
+        actuation_msg.data.at(2) = motor_actuation_.RYMotordeg;
         actuation_pub_->publish(actuation_msg);
     }
 
     void CfrActuation::joyCb(const sensor_msgs::msg::Joy::SharedPtr msg)
     {
-        double joy_left_x = msg->axes.at(0);
-        double joy_left_y = msg->axes.at(1); 
-        double joy_right_x = msg->axes.at(2);
-        double joy_right_y = msg->axes.at(3);
-        // RCLCPP_INFO(this->get_logger(), "joy_left_x: %f", joy_left_x);
-        // RCLCPP_INFO(this->get_logger(), "joy_left_y: %f", joy_left_y);
-        // RCLCPP_INFO(this->get_logger(), "joy_right_x: %f", joy_right_x);
-        // RCLCPP_INFO(this->get_logger(), "joy_right_y: %f", joy_right_y);
+        double JoystickLeftX = msg->axes.at(0);
+        double JoystickLeftY = msg->axes.at(1); 
+        double JoystickRightX = msg->axes.at(2);
+        double JoystickRightY = msg->axes.at(3);
+        // RCLCPP_INFO(this->get_logger(), "JoystickLeftX: %f", JoystickLeftX);
+        // RCLCPP_INFO(this->get_logger(), "JoystickLeftY: %f", JoystickLeftY);
+        // RCLCPP_INFO(this->get_logger(), "JoystickRightX: %f", JoystickRightX);
+        // RCLCPP_INFO(this->get_logger(), "JoystickRightY: %f", JoystickRightY);
 
-        this->joyToMotorActuation(joy_left_x, joy_left_y, joy_right_x, joy_right_y);
+        this->joyToMotorActuation(JoystickLeftX, JoystickLeftY, JoystickRightX, JoystickRightY);
     }
 
     void CfrActuation::loadParams()
     {
-        left_x_min_ = this->declare_parameter("left_x_min", -1.0);
-        left_x_max_ = this->declare_parameter("left_x_max", 1.0);
-        right_x_min_ = this->declare_parameter("right_x_min", -1.0);
-        right_x_max_ = this->declare_parameter("right_x_max", 1.0);
-        right_y_min_ = this->declare_parameter("right_y_min", -1.0);
-        right_y_max_ = this->declare_parameter("right_y_max", 1.0);
+        motor_deg_limit_.LXmin = this->declare_parameter("LXmin", -16.5);
+        motor_deg_limit_.LXmax = this->declare_parameter("LXmax", 16.5);
+        motor_deg_limit_.RXmin = this->declare_parameter("RXmin", -16.5);
+        motor_deg_limit_.RXmax = this->declare_parameter("RXmax", 16.5);
+        motor_deg_limit_.RYmin = this->declare_parameter("RYmin", -12.5);
+        motor_deg_limit_.RYmax = this->declare_parameter("RYmax", 12.5);
     }
 
-    void CfrActuation::joyToMotorActuation(const double joy_left_x, const double joy_left_y, const double joy_right_x, const double joy_right_y)
+    void CfrActuation::joyToMotorActuation(const double JoystickLeftX, const double JoystickLeftY, const double JoystickRightX, const double JoystickRightY)
     {
-        motor_actuation_.left_x_motor_deg_fb =  left_x_min_*joy_right_y + left_x_max_*joy_right_y;
-        motor_actuation_.right_x_motor_deg_fb = right_x_min_*joy_right_y + right_x_max_*joy_right_y;
-        motor_actuation_.left_x_motor_deg_rot = -left_x_min_*joy_right_x + left_x_max_*joy_right_x;
-        motor_actuation_.right_x_motor_deg_rot = -right_x_min_*joy_right_x + right_x_max_*joy_right_x;
-        motor_actuation_.left_x_motor_deg = motor_actuation_.left_x_motor_deg_fb + motor_actuation_.left_x_motor_deg_rot;
-        motor_actuation_.right_x_motor_deg = motor_actuation_.right_x_motor_deg_fb + motor_actuation_.right_x_motor_deg_rot;
-        motor_actuation_.right_y_motor_deg = right_y_min_*joy_left_x + right_y_max_*joy_left_x;
+        motor_actuation_.LXMotordeg_FB = motor_deg_limit_.LXmin*(1-(JoystickRightY-joy_limit_.joymin)/(joy_limit_.joymax-joy_limit_.joymin)) + motor_deg_limit_.LXmax*(JoystickRightY-joy_limit_.joymin)/(joy_limit_.joymax-joy_limit_.joymin); 
+        motor_actuation_.RXMotordeg_FB = -(motor_deg_limit_.RXmin*(1-(JoystickRightY-joy_limit_.joymin)/(joy_limit_.joymax-joy_limit_.joymin)) + motor_deg_limit_.RXmax*(JoystickRightY-joy_limit_.joymin)/(joy_limit_.joymax-joy_limit_.joymin));
+
+        motor_actuation_.LXMotordeg_ROT = -(motor_deg_limit_.LXmin*(1-(JoystickRightX-joy_limit_.joymin)/(joy_limit_.joymax-joy_limit_.joymin)) + motor_deg_limit_.LXmax*(JoystickRightX-joy_limit_.joymin)/(joy_limit_.joymax-joy_limit_.joymin)); 
+        motor_actuation_.RXMotordeg_ROT = -(motor_deg_limit_.RXmin*(1-(JoystickRightX-joy_limit_.joymin)/(joy_limit_.joymax-joy_limit_.joymin)) + motor_deg_limit_.RXmax*(JoystickRightX-joy_limit_.joymin)/(joy_limit_.joymax-joy_limit_.joymin));
+
+        motor_actuation_.LXMotordeg = motor_actuation_.LXMotordeg_FB + motor_actuation_.LXMotordeg_ROT;
+        motor_actuation_.RXMotordeg = motor_actuation_.RXMotordeg_FB + motor_actuation_.RXMotordeg_ROT;
+
+        motor_actuation_.RYMotordeg = motor_deg_limit_.RYmin*(1-(JoystickLeftX-joy_limit_.joymin)/(joy_limit_.joymax-joy_limit_.joymin)) + motor_deg_limit_.RYmax*(JoystickLeftX-joy_limit_.joymin)/(joy_limit_.joymax-joy_limit_.joymin); 
 
         motor_actuation_.print();
     }

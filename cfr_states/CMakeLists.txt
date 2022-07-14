@@ -60,7 +60,7 @@ install(TARGETS ${executable_name}
   RUNTIME DESTINATION lib/${PROJECT_NAME}
 )
 
-install(DIRECTORY include config launch
+install(DIRECTORY include launch
   DESTINATION share/${PROJECT_NAME}
 )
 

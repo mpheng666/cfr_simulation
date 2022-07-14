@@ -14,26 +14,41 @@ using std::placeholders::_1;
 
 namespace cfr_actuation_ns
 {
+    struct MotorDegLimit
+    {
+        double LXmin {-16.5};
+        double LXmax {16.5};
+        double RXmin {-16.5};
+        double RXmax {16.5};
+        double RYmin {-12.5};
+        double RYmax {16.5};
+    };
+
+    struct JoyLimit
+    {
+        double joymin {-0.66};
+        double joymax {0.66};
+    };
 
     struct MotorActuation
     {
-        double left_x_motor_deg_fb;
-        double right_x_motor_deg_fb;
-        double left_x_motor_deg_rot;
-        double right_x_motor_deg_rot;
-        double left_x_motor_deg;
-        double right_x_motor_deg;
-        double right_y_motor_deg;
+        double LXMotordeg_FB {0.0};
+        double RXMotordeg_FB {0.0};
+        double LXMotordeg_ROT {0.0};
+        double RXMotordeg_ROT {0.0};
+        double LXMotordeg {0.0};
+        double RXMotordeg {0.0};
+        double RYMotordeg {0.0};
 
         void print()
         {
-            // printf("LXMotordeg_FB: %f \n", left_x_motor_deg_fb);
-            // printf("RXMotordeg_FB: %f \n", right_x_motor_deg_fb);
-            // printf("LXMotordeg_ROT: %f \n", left_x_motor_deg_rot);
-            // printf("RXMotordeg_ROT: %f \n", right_x_motor_deg_rot);
-            printf("LXMotordeg: %f \n", left_x_motor_deg);
-            printf("RXMotordeg: %f \n", right_x_motor_deg);
-            printf("RYMotordeg: %f \n", right_y_motor_deg);
+            printf("LXMotordeg_FB: %f \n", LXMotordeg_FB);
+            printf("RXMotordeg_FB: %f \n", RXMotordeg_FB);
+            printf("LXMotordeg_ROT: %f \n", LXMotordeg_ROT);
+            printf("RXMotordeg_ROT: %f \n", RXMotordeg_ROT);
+            printf("LXMotordeg: %f \n", LXMotordeg);
+            printf("RXMotordeg: %f \n", RXMotordeg);
+            printf("RYMotordeg: %f \n", RYMotordeg);
         };
     };
 
@@ -44,13 +59,8 @@ namespace cfr_actuation_ns
             ~CfrActuation();
 
         private:
-            double left_x_min_;
-            double left_x_max_;
-            double right_x_min_;
-            double right_x_max_;
-            double right_y_min_;
-            double right_y_max_;
-
+            MotorDegLimit motor_deg_limit_;
+            JoyLimit joy_limit_;
             MotorActuation motor_actuation_;
 
             rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr actuation_pub_;
@@ -60,9 +70,9 @@ namespace cfr_actuation_ns
             void loadParams();
             void timerCb();
             void joyCb(const sensor_msgs::msg::Joy::SharedPtr msg);
-            void joyToMotorActuation(const double joy_left_x, const double joy_left_y, const double joy_right_x, const double joy_right_y);
+            void joyToMotorActuation(const double JoystickLeftX, const double JoystickLeftY, const double JoystickRightX, const double JoystickRightY);
     };
 
-}; // cfr_actuation_ns
+} // cfr_actuation_ns
 
 #endif

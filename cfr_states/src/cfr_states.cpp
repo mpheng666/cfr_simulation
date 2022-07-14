@@ -4,7 +4,7 @@ namespace cfr_states_ns
 {
     CfrStates::CfrStates():
     Node("cfr_states"),
-    cmd_vel_pub_(this->create_publisher<geometry_msgs::msg::Twist>("cfr/cmd_vel", 10)),
+    cmd_vel_pub_(this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10)),
     acc_sub_(this->create_subscription<geometry_msgs::msg::Accel>("cfr_acceleration", 10, std::bind(&CfrStates::accelCb, this, _1))),
     timer_(this->create_wall_timer(100ms, std::bind(&CfrStates::timerCb, this)))
     {
@@ -53,7 +53,7 @@ namespace cfr_states_ns
         kinematics_states_.velocity_angular_z_prev + kinematics_states_.acc_angular_z_curr * delta_t; 
 
         RCLCPP_INFO(this->get_logger(), "Currnet vel linear x: %lf", kinematics_states_.velocity_linear_x_curr);
-        RCLCPP_INFO(this->get_logger(), "Currnet vel linear y: %lf", kinematics_states_.velocity_linear_x_curr);
+        RCLCPP_INFO(this->get_logger(), "Currnet vel linear y: %lf", kinematics_states_.velocity_linear_y_curr);
         RCLCPP_INFO(this->get_logger(), "Currnet vel angular z: %lf", kinematics_states_.velocity_angular_z_curr);
         
         kinematics_states_.velocity_linear_x_prev = kinematics_states_.velocity_linear_x_curr;

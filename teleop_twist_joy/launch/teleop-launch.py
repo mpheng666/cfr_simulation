@@ -30,6 +30,6 @@ def generate_launch_description():
         launch_ros.actions.Node(
             package='teleop_twist_joy', executable='teleop_node',
             name='teleop_twist_joy_node', parameters=[config_filepath],
-            remappings={('/cmd_vel', launch.substitutions.LaunchConfiguration('joy_vel'))},
+            remappings=[('/cmd_vel', 'joy_vel')],
             ),
     ])

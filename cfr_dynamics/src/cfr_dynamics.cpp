@@ -38,7 +38,7 @@ namespace cfr_dynamics_ns
         this->computeDynamics();
     }
 
-    void CfrDynamics::cmdVelCb(const geometry_msgs::msg::Twist::SharedPtr msg)
+    void CfrDynamics::cmdVelCb([[maybe_unused]] const geometry_msgs::msg::Twist::SharedPtr msg)
     {
         // model_inputs_.vx = msg->linear.x;
         // model_inputs_.vy = msg->linear.y;

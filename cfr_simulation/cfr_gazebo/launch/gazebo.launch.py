@@ -16,7 +16,7 @@ ARGUMENTS = [
 def generate_launch_description():
 
     cfr_world_path = PathJoinSubstitution(
-                    [FindPackageShare("cfr_gazebo"), "worlds", "cfr_boundary_large.world"]
+                    [FindPackageShare("cfr_gazebo"), "worlds", "cfr_boundary_3030.world"]
     )
     # Launch args
     world_path = LaunchConfiguration('world_path')

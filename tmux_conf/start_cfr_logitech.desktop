@@ -1,0 +1,13 @@
+[Desktop Entry]
+Name=Cfr Simulation Logitech
+Exec=/home/mpheng/cfr_ws/src/tmux_conf/start_cfr_logitech.bash
+Icon=/home/mpheng/cfr_ws/src/tmux_conf/icons/robot.png
+Terminal=false
+Type=Application
+StartupNotify=true
+
+Actions=Quit;
+
+[Desktop Action Quit]
+Name=Quit
+Exec=tmux kill-ser

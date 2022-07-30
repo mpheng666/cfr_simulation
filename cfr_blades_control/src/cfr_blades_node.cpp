@@ -7,6 +7,7 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/float64_multi_array.hpp"
+#include "std_msgs/msg/bool.hpp"
 #include "sensor_msgs/msg/joy.hpp"
 
 using namespace std::chrono_literals;
@@ -21,7 +22,8 @@ class CFRBladesControl : public rclcpp::Node
         this->load_params();
         joy_subscription_ = this->create_subscription<sensor_msgs::msg::Joy>(
         "joy", 10, std::bind(&CFRBladesControl::joy_callback, this, _1));
-        blades_publisher_ = this->create_publisher<std_msgs::msg::Float64MultiArray>("/forward_velocity_controller/commands", 10);
+        blades_publisher_ = this->create_publisher<std_msgs::msg::Float64MultiArray>("forward_velocity_controller/commands", 10);
+        start_publisher_ = this->create_publisher<std_msgs::msg::Bool>("allow_move", 10);
         timer_ = this->create_wall_timer(
         200ms, std::bind(&CFRBladesControl::timer_callback, this));
     }
@@ -34,6 +36,18 @@ class CFRBladesControl : public rclcpp::Node
         control_msg.data.front() = blades_speed_;
         control_msg.data.back() = -blades_speed_;
         // RCLCPP_INFO(this->get_logger(), "Blades speed: %f", control_msg.data.front() * 60.0);
+        if(abs(blades_speed_) > 0.0)
+        {  
+          auto msg = std_msgs::msg::Bool();
+          msg.data = true;
+          start_publisher_->publish(msg);
+        }
+        else
+        {
+          auto msg = std_msgs::msg::Bool();
+          msg.data = false;
+          start_publisher_->publish(msg);
+        }
         blades_publisher_->publish(control_msg);
     }
 

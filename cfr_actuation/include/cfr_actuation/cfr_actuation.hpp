@@ -7,6 +7,7 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/float64_multi_array.hpp"
+#include "std_msgs/msg/bool.hpp"
 #include "sensor_msgs/msg/joy.hpp"
 
 using namespace std::chrono_literals;
@@ -78,11 +79,15 @@ namespace cfr_actuation_ns
 
             rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr actuation_pub_;
             rclcpp::Subscription<sensor_msgs::msg::Joy>::SharedPtr joy_sub_;
+            rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr allow_move_sub_;
             rclcpp::TimerBase::SharedPtr timer_;
+
+            bool allow_move_ {false};
 
             void loadParams();
             void timerCb();
             void joyCb(const sensor_msgs::msg::Joy::SharedPtr msg);
+            void allowMoveCb(const std_msgs::msg::Bool::SharedPtr msg);
             void joyToMotorActuation(const double JoystickLeftX, const double JoystickLeftY, const double JoystickRightX, const double JoystickRightY);
     };
 

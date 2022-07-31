@@ -7,7 +7,8 @@ namespace cfr_actuation_ns
     actuation_pub_(this->create_publisher<std_msgs::msg::Float64MultiArray>("cfr_actuation", 10)),
     joy_sub_(this->create_subscription<sensor_msgs::msg::Joy>("joy", 10, std::bind(&CfrActuation::joyCb, this, _1))),
     allow_move_sub_(this->create_subscription<std_msgs::msg::Bool>("allow_move", 10, std::bind(&CfrActuation::allowMoveCb, this, _1))),
-    timer_(this->create_wall_timer(10ms, std::bind(&CfrActuation::timerCb, this)))
+    timer_(this->create_wall_timer(10ms, std::bind(&CfrActuation::timerCb, this))),
+    reset_timer_(this->create_wall_timer(2s, std::bind(&CfrActuation::resetTimerCb, this)))
     {
         this->loadParams();
     }
@@ -27,28 +28,43 @@ namespace cfr_actuation_ns
         actuation_pub_->publish(actuation_msg);
     }
 
+    void CfrActuation::resetTimerCb()
+    {
+        reset_flag_ = false;
+    }
+
     void CfrActuation::allowMoveCb(const std_msgs::msg::Bool::SharedPtr msg)
     {
-        this->allow_move_ = msd.data;
+        this->allow_move_ = msg->data;
     }
 
     void CfrActuation::joyCb(const sensor_msgs::msg::Joy::SharedPtr msg)
     {
-        double JoystickLeftX = joy_remapper_.joy_left_x_magnitude * msg->axes.at(joy_remapper_.joy_left_x_axis);
-        double JoystickLeftY = joy_remapper_.joy_left_y_magnitude * msg->axes.at(joy_remapper_.joy_left_y_axis); 
-        double JoystickRightX = joy_remapper_.joy_right_x_magnitude * msg->axes.at(joy_remapper_.joy_right_x_axis);
-        double JoystickRightY = joy_remapper_.joy_right_y_magnitude * msg->axes.at(joy_remapper_.joy_right_y_axis);
-        // RCLCPP_INFO(this->get_logger(), "JoystickLeftX: %f", JoystickLeftX);
-        // RCLCPP_INFO(this->get_logger(), "JoystickLeftY: %f", JoystickLeftY);
-        // RCLCPP_INFO(this->get_logger(), "JoystickRightX: %f", JoystickRightX);
-        // RCLCPP_INFO(this->get_logger(), "JoystickRightY: %f", JoystickRightY);
         if(this->allow_move_)
         {
+            double JoystickLeftX = joy_remapper_.joy_left_x_magnitude * msg->axes.at(joy_remapper_.joy_left_x_axis);
+            double JoystickLeftY = joy_remapper_.joy_left_y_magnitude * msg->axes.at(joy_remapper_.joy_left_y_axis); 
+            double JoystickRightX = joy_remapper_.joy_right_x_magnitude * msg->axes.at(joy_remapper_.joy_right_x_axis);
+            double JoystickRightY = joy_remapper_.joy_right_y_magnitude * msg->axes.at(joy_remapper_.joy_right_y_axis);
+            // RCLCPP_INFO(this->get_logger(), "JoystickLeftX: %f", JoystickLeftX);
+            // RCLCPP_INFO(this->get_logger(), "JoystickLeftY: %f", JoystickLeftY);
+            // RCLCPP_INFO(this->get_logger(), "JoystickRightX: %f", JoystickRightX);
+            // RCLCPP_INFO(this->get_logger(), "JoystickRightY: %f", JoystickRightY);
             this->joyToMotorActuation(JoystickLeftX, JoystickLeftY, JoystickRightX, JoystickRightY);
+        }
+        else if(reset_flag_ == false 
+        && (msg->axes.at(joy_remapper_.joy_left_x_axis) > 0.0 
+        || msg->axes.at(joy_remapper_.joy_left_y_axis) > 0.0 
+        || msg->axes.at(joy_remapper_.joy_right_x_axis) > 0.0 
+        || msg->axes.at(joy_remapper_.joy_right_y_axis) > 0.0))
+        {
+            system("notify-send -u low 'CFR SIMULATION' 'Please run the blades before moving!'");
+            RCLCPP_INFO(this->get_logger(), "DO SOMETHING");
+            reset_flag_ = true;
         }
         else
         {
-            system("notify-send -u low -t 1 'CFR SIMULATION' 'Please start the engine before moving!'");
+            // RCLCPP_INFO(this->get_logger(), "DO NOTHING");
         }
     }
 
@@ -87,7 +103,7 @@ namespace cfr_actuation_ns
 
         // [[maybe_unused]] double dummy = JoystickLeftY;
 
-        motor_actuation_.print();
+        // motor_actuation_.print();
     }
 
 } // cfr_actuation_ns

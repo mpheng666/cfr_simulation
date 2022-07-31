@@ -53,7 +53,21 @@ class CFRBladesControl : public rclcpp::Node
 
     void joy_callback(const sensor_msgs::msg::Joy::SharedPtr msg)
     {
-        if(msg->buttons.at(enable_button_) || !require_enable_button_)  blades_speed_ = std::clamp(msg->axes.at(speed_axis_) * max_speed_, 0.0, max_speed_); 
+        if(this->is_start_)
+        {
+          if(msg->buttons.at(enable_button_) || !require_enable_button_)  blades_speed_ = std::clamp(msg->axes.at(speed_axis_) * max_speed_, 0.0, max_speed_); 
+        }
+        else 
+        {
+          if(msg->buttons.at(start_button_) > 0)
+          {
+            this->is_start_ = true;
+          }
+          if(msg->axes.at(speed_axis_) > 0.0)
+          {
+            system("notify-send -u low 'CFR SIMULATION' 'Please start the engine!'");
+          }
+        }
     }
 
     void load_params()
@@ -62,6 +76,8 @@ class CFRBladesControl : public rclcpp::Node
         RCLCPP_INFO(this->get_logger(),"CFR blades running at maximum speed %f rpm", max_speed_ * 60.0);
         enable_button_ = this->declare_parameter("enable_button", 0);
         RCLCPP_INFO(this->get_logger(),"Enable blades button %i ", enable_button_);
+        start_button_ = this->declare_parameter("start_button", 0);
+        RCLCPP_INFO(this->get_logger(),"Start button %i ", start_button_);
         speed_axis_ = this->declare_parameter("speed_axis", 3);
         RCLCPP_INFO(this->get_logger(),"Blades speed axis %i ", speed_axis_);
         require_enable_button_ = this->declare_parameter("require_enable_button", false);
@@ -70,6 +86,7 @@ class CFRBladesControl : public rclcpp::Node
 
     rclcpp::Subscription<sensor_msgs::msg::Joy>::SharedPtr joy_subscription_;
     rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr blades_publisher_;
+    rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr start_publisher_;
     rclcpp::TimerBase::SharedPtr timer_;
     const int N_BLADES = 2;
     double max_speed_ = 200.0 / 60.0;
@@ -77,6 +94,8 @@ class CFRBladesControl : public rclcpp::Node
     int enable_button_;
     int speed_axis_;
     bool require_enable_button_;
+    int start_button_;
+    bool is_start_ {false};
 };
 
 int main(int argc, char * argv[])

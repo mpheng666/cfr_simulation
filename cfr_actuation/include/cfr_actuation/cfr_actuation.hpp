@@ -81,11 +81,14 @@ namespace cfr_actuation_ns
             rclcpp::Subscription<sensor_msgs::msg::Joy>::SharedPtr joy_sub_;
             rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr allow_move_sub_;
             rclcpp::TimerBase::SharedPtr timer_;
+            rclcpp::TimerBase::SharedPtr reset_timer_;
 
             bool allow_move_ {false};
+            bool reset_flag_ {false};
 
             void loadParams();
             void timerCb();
+            void resetTimerCb();
             void joyCb(const sensor_msgs::msg::Joy::SharedPtr msg);
             void allowMoveCb(const std_msgs::msg::Bool::SharedPtr msg);
             void joyToMotorActuation(const double JoystickLeftX, const double JoystickLeftY, const double JoystickRightX, const double JoystickRightY);

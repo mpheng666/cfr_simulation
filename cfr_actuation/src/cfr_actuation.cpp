@@ -35,12 +35,12 @@ namespace cfr_actuation_ns
 
     void CfrActuation::allowMoveCb(const std_msgs::msg::Bool::SharedPtr msg)
     {
-        this->allow_move_ = msg->data;
+        allow_move_ = msg->data;
     }
 
     void CfrActuation::joyCb(const sensor_msgs::msg::Joy::SharedPtr msg)
     {
-        if(this->allow_move_)
+        if(allow_move_)
         {
             double JoystickLeftX = joy_remapper_.joy_left_x_magnitude * msg->axes.at(joy_remapper_.joy_left_x_axis);
             double JoystickLeftY = joy_remapper_.joy_left_y_magnitude * msg->axes.at(joy_remapper_.joy_left_y_axis); 
@@ -54,17 +54,16 @@ namespace cfr_actuation_ns
         }
         else if(reset_flag_ == false 
         && (msg->axes.at(joy_remapper_.joy_left_x_axis) > 0.0 
-        || msg->axes.at(joy_remapper_.joy_left_y_axis) > 0.0 
         || msg->axes.at(joy_remapper_.joy_right_x_axis) > 0.0 
         || msg->axes.at(joy_remapper_.joy_right_y_axis) > 0.0))
         {
-            system("notify-send -u low 'CFR SIMULATION' 'Please run the blades before moving!'");
-            RCLCPP_INFO(this->get_logger(), "DO SOMETHING");
+            system("notify-send -u low --hint int:transient:1 'CFR SIMULATION' 'Please run the blades before moving!'");
             reset_flag_ = true;
+            this->joyToMotorActuation(0.0, 0.0, 0.0, 0.0);
         }
         else
         {
-            // RCLCPP_INFO(this->get_logger(), "DO NOTHING");
+            this->joyToMotorActuation(0.0, 0.0, 0.0, 0.0);
         }
     }
 

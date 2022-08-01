@@ -36,7 +36,7 @@ class CFRBladesControl : public rclcpp::Node
         control_msg.data.front() = blades_speed_;
         control_msg.data.back() = -blades_speed_;
         // RCLCPP_INFO(this->get_logger(), "Blades speed: %f", control_msg.data.front() * 60.0);
-        if(abs(blades_speed_) > 0.0)
+        if(abs(blades_speed_) > 0.1)
         {  
           auto msg = std_msgs::msg::Bool();
           msg.data = true;
@@ -53,19 +53,26 @@ class CFRBladesControl : public rclcpp::Node
 
     void joy_callback(const sensor_msgs::msg::Joy::SharedPtr msg)
     {
-        if(this->is_start_)
+        auto temp = (msg->axes.at(speed_axis_) - joy_offset_);
+        RCLCPP_INFO(this->get_logger(), "temp %f", temp);
+        if(is_start_)
         {
-          if(msg->buttons.at(enable_button_) || !require_enable_button_)  blades_speed_ = std::clamp(msg->axes.at(speed_axis_) * max_speed_, 0.0, max_speed_); 
+          if(msg->buttons.at(enable_button_) || !require_enable_button_)  
+          {
+            // blades_speed_ = std::clamp(msg->axes.at(speed_axis_) * max_speed_, 0.0, max_speed_); 
+            blades_speed_ = (msg->axes.at(speed_axis_) - joy_offset_) * max_speed_; 
+          }
         }
         else 
         {
           if(msg->buttons.at(start_button_) > 0)
           {
-            this->is_start_ = true;
+            is_start_ = true;
           }
-          if(msg->axes.at(speed_axis_) > 0.0)
+
+          if(abs(msg->axes.at(speed_axis_) - joy_offset_) > joy_deadzone_)
           {
-            system("notify-send -u low 'CFR SIMULATION' 'Please start the engine!'");
+            system("notify-send -u low --hint int:transient:1 'CFR SIMULATION' 'Please start the engine!'");
           }
         }
     }
@@ -82,6 +89,8 @@ class CFRBladesControl : public rclcpp::Node
         RCLCPP_INFO(this->get_logger(),"Blades speed axis %i ", speed_axis_);
         require_enable_button_ = this->declare_parameter("require_enable_button", false);
         RCLCPP_INFO(this->get_logger(),"Require enable button is set to %d" , require_enable_button_);
+        joy_offset_ = this->declare_parameter("joy_offset", 0.0);
+        RCLCPP_INFO(this->get_logger(),"Joy offset is set to %f" , joy_offset_);
     }
 
     rclcpp::Subscription<sensor_msgs::msg::Joy>::SharedPtr joy_subscription_;
@@ -96,6 +105,8 @@ class CFRBladesControl : public rclcpp::Node
     bool require_enable_button_;
     int start_button_;
     bool is_start_ {false};
+    double joy_offset_ {0.0};
+    double joy_deadzone_ {0.15};
 };
 
 int main(int argc, char * argv[])

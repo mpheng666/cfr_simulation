@@ -1,5 +1,6 @@
-max_speed: 200.0
+max_speed: -150.0
 enable_button : 0
 speed_axis: 1
-enable_button: 0
+require_enable_button: false
 start_button: 0
+joy_offset: 0.6

@@ -1,9 +1,11 @@
 #include <chrono>
 #include <functional>
+#include <locale>
 #include <memory>
 #include <string>
 #include <algorithm>
 #include <iomanip>
+#include <type_traits>
 
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/float64_multi_array.hpp"
@@ -63,6 +65,7 @@ class CFRBladesControl : public rclcpp::Node
             blades_speed_ = (msg->axes.at(speed_axis_) - joy_offset_) * max_speed_; 
           }
         }
+        
         else 
         {
           if(msg->buttons.at(start_button_) > 0)

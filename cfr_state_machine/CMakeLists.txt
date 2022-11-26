@@ -1,8 +1,45 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.5)
+project(cfr_state_machine)
 
-project(cfr_fsm)
+# Default to C99
+if(NOT CMAKE_C_STANDARD)
+  set(CMAKE_C_STANDARD 99)
+endif()
+
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 20)
+endif()
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 set(THREADS_PREFER_PTHREAD_FLAG ON)
-find_package(Threads REQUIRED)
 
-add_executable(cfr_fsm main.cpp src/cfr_fsm.cpp)
-target_link_libraries(cfr_fsm PRIVATE Threads::Threads)
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(Threads REQUIRED)
+find_package(Boost REQUIRED)
+
+include_directories( include ${Boost_INCLUDE_DIRS} )
+
+add_executable(cfr_sm_node src/cfr_fsm_node.cpp)
+target_include_directories(cfr_sm_node PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+
+ament_target_dependencies(cfr_sm_node rclcpp std_msgs)
+
+
+install(TARGETS cfr_sm_node
+  DESTINATION lib/${PROJECT_NAME})
+
+if(BUILD_TESTING)
+  find_package(ament_lint_auto REQUIRED)
+  ament_lint_auto_find_test_dependencies()
+endif()
+
+ament_package()

@@ -33,15 +33,10 @@ namespace cfr_sm {
     struct StateStop;
     struct StateError;
     struct StateManual;
-    
 
-    struct sm_CFR : sc::state_machine<sm_CFR, StateIdle>, public rclcpp::Node {
+    struct sm_CFR : sc::state_machine<sm_CFR, StateIdle> {
     public:
-        sm_CFR()
-            : Node("cfr_sm_node")
-        {
-            std::cout << "Initiated State Machine: CFR \n";
-        }
+        sm_CFR() { std::cout << "Initiated State Machine: CFR \n"; }
     };
 
     struct StateIdle : sc::simple_state<StateIdle, sm_CFR> {
@@ -83,13 +78,10 @@ namespace cfr_sm {
         typedef sc::transition<EventReset, StateIdle> reactions;
     };
 
-    // struct StateManual : sc::simple_state<StateManual, sm_CFR> {
-    // public:
-    //     StateManual() { std::cout << "State: StateManual \n"; }
-    //     typedef mpl::list<sc::transition<event_MoveToSecondState, secondState>,
-    //                       sc::transition<event_MoveToThirdState, thirdState>>
-    //     reactions;
-    // };
+    struct StateManual : sc::simple_state<StateManual, sm_CFR> {
+    public:
+        StateManual() { std::cout << "State: StateManual \n"; }
+    };
 
 } // namespace cfr_sm
 

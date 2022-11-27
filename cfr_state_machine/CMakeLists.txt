@@ -15,24 +15,29 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
 find_package(Threads REQUIRED)
 find_package(Boost REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
+find_package(cfr_state_machine REQUIRED)
+
+rosidl_generate_interfaces(${PROJECT_NAME}
+  "srv/Start.srv"
+ )
 
 include_directories( include ${Boost_INCLUDE_DIRS} )
 
-add_executable(cfr_sm_node src/cfr_fsm_node.cpp)
+add_executable(cfr_sm_node src/cfr_sm_node.cpp src/cfr_sm_server.cpp)
 target_include_directories(cfr_sm_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-ament_target_dependencies(cfr_sm_node rclcpp std_msgs)
-
+ament_target_dependencies(cfr_sm_node rclcpp std_msgs cfr_state_machine std_srvs)
 
 install(TARGETS cfr_sm_node
   DESTINATION lib/${PROJECT_NAME})

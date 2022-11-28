@@ -6,6 +6,7 @@
 using boost::asio::ip::tcp;
 
 enum { max_length = 1024 };
+bool running = true;
 
 int main(int argc, char* argv[])
 {
@@ -21,18 +22,24 @@ int main(int argc, char* argv[])
         tcp::resolver resolver(io_context);
         boost::asio::connect(s, resolver.resolve(argv[1], argv[2]));
 
-        std::cout << "Enter message: ";
-        char request[max_length];
-        std::cin.getline(request, max_length);
-        size_t request_length = std::strlen(request);
-        boost::asio::write(s, boost::asio::buffer(request, request_length));
+        while (running) {
+            std::cout << "External Device: ";
+            char request[max_length];
+            std::cin.getline(request, max_length);
+            if(request[0] == 'q')
+            {
+                running = false;
+            }
+            size_t request_length = std::strlen(request);
+            boost::asio::write(s, boost::asio::buffer(request, request_length));
 
-        char reply[max_length];
-        size_t reply_length =
-        boost::asio::read(s, boost::asio::buffer(reply, request_length));
-        std::cout << "Reply is: ";
-        std::cout.write(reply, reply_length);
-        std::cout << "\n";
+            char reply[max_length];
+            size_t reply_length =
+            boost::asio::read(s, boost::asio::buffer(reply, request_length));
+            std::cout << "CFR: ";
+            std::cout.write(reply, reply_length);
+            std::cout << "\n";
+        }
     }
     catch (std::exception& e) {
         std::cerr << "Exception: " << e.what() << "\n";

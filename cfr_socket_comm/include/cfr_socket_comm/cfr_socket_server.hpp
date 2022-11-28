@@ -14,19 +14,24 @@ namespace cfr_socket_comm {
     public:
         SocketSession(tcp::socket socket)
             : socket_(std::move(socket))
+            , data_(MAX_DATA_LEN_)
         {
         }
 
-        void start() { doRead(); }
-
-    private:
         void doRead()
         {
             auto self(shared_from_this());
             socket_.async_read_some(
-            boost::asio::buffer(data_, max_length),
+            boost::asio::buffer(data_, MAX_DATA_LEN_),
             [this, self](boost::system::error_code ec, std::size_t length) {
                 if (!ec) {
+                    if (length) {
+                        std::cout << "len: " << length << "\n";
+                        for (const auto& d : data_) {
+                            std::cout << d;
+                        }
+                        std::cout << "\n";
+                    }
                     doWrite(length);
                 }
             });
@@ -35,6 +40,7 @@ namespace cfr_socket_comm {
         void doWrite(std::size_t length)
         {
             auto self(shared_from_this());
+
             boost::asio::async_write(
             socket_, boost::asio::buffer(data_, length),
             [this, self](boost::system::error_code ec, std::size_t /*length*/) {
@@ -44,9 +50,10 @@ namespace cfr_socket_comm {
             });
         }
 
+    private:
         tcp::socket socket_;
-        enum { max_length = 1024 };
-        char data_[max_length];
+        static constexpr size_t MAX_DATA_LEN_{1024};
+        std::vector<char> data_;
     };
 
     class CFRSocketServer {
@@ -58,7 +65,7 @@ namespace cfr_socket_comm {
         uint32_t port_{};
         tcp::acceptor acceptor_;
 
-        void setupCFRServiceClient(int argc, char** argv);
+        void callCFRServiceClient(int argc, char** argv, const std::string& service_name);
         void doAccept();
     };
 } // namespace cfr_socket_comm

@@ -13,7 +13,7 @@ namespace cfr_socket_comm {
         RCLCPP_INFO_STREAM(rclcpp::get_logger("CFR_TCP_socket"),
                            "Started CFR TCP local host server at port " << port_);
 
-        setupCFRServiceClient(argc, argv);
+        callCFRServiceClient(argc, argv, "init_service");
 
         try {
             doAccept();
@@ -23,11 +23,12 @@ namespace cfr_socket_comm {
         }
     }
 
-    void CFRSocketServer::setupCFRServiceClient(int argc, char** argv)
+    void CFRSocketServer::callCFRServiceClient(int argc, char** argv, const std::string& service_name)
     {
         rclcpp::init(argc, argv);
         auto client_node = rclcpp::Node::make_shared("CFR_sm_service_client");
-        auto client = client_node->create_client<std_srvs::srv::Trigger>("cfr_sm_node/init_service");
+        auto client =
+        client_node->create_client<std_srvs::srv::Trigger>("cfr_sm_node/" + service_name);
 
         while (!client->wait_for_service(std::chrono::seconds(1))) {
             if (!rclcpp::ok()) {
@@ -54,7 +55,7 @@ namespace cfr_socket_comm {
     {
         acceptor_.async_accept([&](boost::system::error_code ec, tcp::socket socket) {
             if (!ec) {
-                std::make_shared<SocketSession>(std::move(socket))->start();
+                std::make_shared<SocketSession>(std::move(socket))->doRead();
             }
             doAccept();
         });

@@ -1,8 +1,7 @@
 #ifndef CFR_SOCKET_SERVER_HPP_
 #define CFR_SOCKET_SERVER_HPP_
 
-#include "rclcpp/rclcpp.hpp"
-#include "std_srvs/srv/trigger.hpp"
+#include "../lib/cfr_sm_client.hpp"
 #include <boost/asio.hpp>
 
 #include <chrono>
@@ -26,13 +25,15 @@ namespace cfr_socket_comm {
             [this, self](boost::system::error_code ec, std::size_t length) {
                 if (!ec) {
                     if (length) {
-                        std::cout << "len: " << length << "\n";
                         for (const auto& d : data_) {
                             std::cout << d;
                         }
                         std::cout << "\n";
                     }
-                    doWrite(length);
+                    // data_.clear();
+                    // doRead();
+
+                    // doWrite(length);
                 }
             });
         }
@@ -65,7 +66,7 @@ namespace cfr_socket_comm {
         uint32_t port_{};
         tcp::acceptor acceptor_;
 
-        void callCFRServiceClient(int argc, char** argv, const std::string& service_name);
+        // void callCFRServiceClient(int argc, char** argv, const std::string& service_name);
         void doAccept();
     };
 } // namespace cfr_socket_comm

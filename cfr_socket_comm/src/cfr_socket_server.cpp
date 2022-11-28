@@ -13,7 +13,6 @@ namespace cfr_socket_comm {
         RCLCPP_INFO_STREAM(rclcpp::get_logger("CFR_TCP_socket"),
                            "Started CFR TCP local host server at port " << port_);
 
-        callCFRServiceClient(argc, argv, "init_service");
 
         try {
             doAccept();
@@ -23,39 +22,20 @@ namespace cfr_socket_comm {
         }
     }
 
-    void CFRSocketServer::callCFRServiceClient(int argc, char** argv, const std::string& service_name)
-    {
-        rclcpp::init(argc, argv);
-        auto client_node = rclcpp::Node::make_shared("CFR_sm_service_client");
-        auto client =
-        client_node->create_client<std_srvs::srv::Trigger>("cfr_sm_node/" + service_name);
-
-        while (!client->wait_for_service(std::chrono::seconds(1))) {
-            if (!rclcpp::ok()) {
-                RCLCPP_ERROR(client_node->get_logger(),
-                             "client interrupted while waiting for service to appear.");
-                return;
-            }
-            RCLCPP_INFO(client_node->get_logger(), "waiting for service to appear...");
-        }
-
-        auto request = std::make_shared<std_srvs::srv::Trigger::Request>();
-        auto result_future = client->async_send_request(request);
-        if (rclcpp::spin_until_future_complete(client_node, result_future) !=
-            rclcpp::FutureReturnCode::SUCCESS) {
-            RCLCPP_ERROR(client_node->get_logger(), "service call failed :(");
-            return ;
-        }
-
-        auto result = result_future.get();
-        rclcpp::shutdown();
-    }
+    // void CFRSocketServer::callCFRServiceClient()
+    // {
+    //     rclcpp::init(argc, argv);
+    //     cfr_sm_client::CFRSMClient client("cfr_sm_client");
+    //     client.callCFRService();
+    //     rclcpp::shutdown();
+    // }
 
     void CFRSocketServer::doAccept()
     {
         acceptor_.async_accept([&](boost::system::error_code ec, tcp::socket socket) {
             if (!ec) {
                 std::make_shared<SocketSession>(std::move(socket))->doRead();
+                // callCFRServiceClient(argc, argv, "init_service");
             }
             doAccept();
         });

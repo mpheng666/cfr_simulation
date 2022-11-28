@@ -3,32 +3,60 @@
 namespace cfr_socket_comm {
     CFRSocketServer::CFRSocketServer(boost::asio::io_context& io_context,
                                      const uint32_t port)
-        : 
-        // Node("cfr_scoket_node")
-         port_(port)
+        : port_(port)
         , acceptor_(io_context, tcp::endpoint(tcp::v4(), port_))
     {
     }
 
-    void CFRSocketServer::start()
+    void CFRSocketServer::start(int argc, char** argv)
     {
-        std::cout << "start \n";
-        // RCLCPP_INFO(this->get_logger(), "Started server!");
+        RCLCPP_INFO_STREAM(rclcpp::get_logger("CFR_TCP_socket"),
+                           "Started CFR TCP local host server at port " << port_);
+
+        setupCFRServiceClient(argc, argv);
+
         try {
-            do_accept();
+            doAccept();
         }
         catch (const std::exception& e) {
             std::cerr << e.what() << '\n';
         }
     }
 
-    void CFRSocketServer::do_accept()
+    void CFRSocketServer::setupCFRServiceClient(int argc, char** argv)
+    {
+        rclcpp::init(argc, argv);
+        auto client_node = rclcpp::Node::make_shared("CFR_sm_service_client");
+        auto client = client_node->create_client<std_srvs::srv::Trigger>("cfr_sm_node/init_service");
+
+        while (!client->wait_for_service(std::chrono::seconds(1))) {
+            if (!rclcpp::ok()) {
+                RCLCPP_ERROR(client_node->get_logger(),
+                             "client interrupted while waiting for service to appear.");
+                return;
+            }
+            RCLCPP_INFO(client_node->get_logger(), "waiting for service to appear...");
+        }
+
+        auto request = std::make_shared<std_srvs::srv::Trigger::Request>();
+        auto result_future = client->async_send_request(request);
+        if (rclcpp::spin_until_future_complete(client_node, result_future) !=
+            rclcpp::FutureReturnCode::SUCCESS) {
+            RCLCPP_ERROR(client_node->get_logger(), "service call failed :(");
+            return ;
+        }
+
+        auto result = result_future.get();
+        rclcpp::shutdown();
+    }
+
+    void CFRSocketServer::doAccept()
     {
         acceptor_.async_accept([&](boost::system::error_code ec, tcp::socket socket) {
             if (!ec) {
-                std::make_shared<session>(std::move(socket))->start();
+                std::make_shared<SocketSession>(std::move(socket))->start();
             }
-            do_accept();
+            doAccept();
         });
     }
 } // namespace cfr_socket_comm

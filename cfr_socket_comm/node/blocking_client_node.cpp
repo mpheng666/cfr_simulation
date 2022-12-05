@@ -24,31 +24,21 @@ int main(int argc, char* argv[])
 
         while (running) {
             std::cout << "External Device: ";
-            // char request[max_length];
-            std::string request{};
-            std::getline(std::cin, request);
-            // std::cin.getline(request);
-            if(request[0] == 'q')
-            {
+            char request[max_length];
+            std::cin.getline(request, max_length);
+            if (request[0] == 'q') {
                 running = false;
             }
-            // size_t request_length = std::strlen(request);
-            boost::asio::write(s, boost::asio::buffer(request));
-            // boost::asio::write(s, boost::asio::buffer(request, request_length));
+            size_t request_length = std::strlen(request);
+            boost::asio::write(s, boost::asio::buffer(request, request_length));
 
             boost::system::error_code error;
             boost::asio::streambuf buffer;
-            boost::asio::read_until(s, buffer, '\n', error);
-            std::istream str(&buffer);
-            std::string reply{};
-            std::getline(str, reply);
-            // char reply[max_length];
-            // size_t reply_length =
-            // boost::asio::read(s, boost::asio::buffer(reply, request_length));
+            char reply[max_length];
+            size_t reply_length =
+            boost::asio::read(s, boost::asio::buffer(reply, request_length));
             std::cout << "CFR: ";
-            // std::cout << reply_length << " ";
             std::cout << reply;
-            // std::cout.write(reply, reply_length);
             std::cout << "\n";
         }
     }

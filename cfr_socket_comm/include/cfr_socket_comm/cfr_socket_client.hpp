@@ -8,18 +8,18 @@ using boost::asio::ip::tcp;
 
 namespace cfr_socket_comm {
     class CFRSocketClient {
-        public:
-            CFRSocketClient(boost::asio::io_context& io_context,
-                            const tcp::resolver::results_type& endpoints);
+    public:
+        CFRSocketClient(const std::string& host, const std::string& service);
+        void start();
 
-            void write();
-            void close();
+    private:
+        boost::asio::io_context io_context_;
+        tcp::socket socket_{io_context_};
+        static constexpr int MAX_BUFFER_SIZE_{1024};
+        std::string host_{"localhost"};
+        std::string port_{"10000"};
 
-        private:
-            boost::asio::io_context& io_context_;
-            tcp::socket socket_;
-
-            void doConnect(const tcp::resolver::results_type& endpoints);
+        void runClient();
     };
 } // namespace cfr_socket_comm
 

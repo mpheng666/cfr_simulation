@@ -25,7 +25,7 @@ find_package(Boost REQUIRED)
 
 include_directories( include ${Boost_INCLUDE_DIRS} )
 
-add_executable(cfr_socket_server_node src/cfr_socket_comm_node.cpp src/cfr_socket_server.cpp)
+add_executable(cfr_socket_server_node node/cfr_socket_server_node.cpp src/cfr_socket_server.cpp)
 target_include_directories(cfr_socket_server_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
@@ -36,7 +36,7 @@ ament_target_dependencies(
   std_srvs
 )
 
-add_executable(cfr_socket_client_node src/blocking_tcp_client.cpp)
+add_executable(cfr_socket_client_node node/cfr_socket_client_node.cpp src/cfr_socket_client.cpp)
 target_include_directories(cfr_socket_client_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)

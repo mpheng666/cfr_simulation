@@ -8,36 +8,35 @@ namespace cfr_socket_comm {
     {
     }
 
-    void CFRSocketServer::start(int argc, char** argv)
+    void CFRSocketServer::start()
     {
-        RCLCPP_INFO_STREAM(rclcpp::get_logger("CFR_TCP_socket"),
-                           "Started CFR TCP local host server at port " << port_);
-
-
-        try {
-            doAccept();
-        }
-        catch (const std::exception& e) {
-            std::cerr << e.what() << '\n';
+        for (;;) {
+            std::thread(&CFRSocketServer::runSession, this, acceptor_.accept()).detach();
         }
     }
 
-    // void CFRSocketServer::callCFRServiceClient()
-    // {
-    //     rclcpp::init(argc, argv);
-    //     cfr_sm_client::CFRSMClient client("cfr_sm_client");
-    //     client.callCFRService();
-    //     rclcpp::shutdown();
-    // }
-
-    void CFRSocketServer::doAccept()
+    void CFRSocketServer::runSession(tcp::socket sock)
     {
-        acceptor_.async_accept([&](boost::system::error_code ec, tcp::socket socket) {
-            if (!ec) {
-                std::make_shared<SocketSession>(std::move(socket))->doRead();
-                // callCFRServiceClient(argc, argv, "init_service");
+        try {
+            for (;;) {
+                char data[MAX_BUFFER_SIZE_];
+
+                boost::system::error_code error;
+                size_t length = sock.read_some(boost::asio::buffer(data), error);
+                if (error == boost::asio::error::eof)
+                    break;
+                else if (error)
+                    throw boost::system::system_error(error);
+                if (length) {
+                    std::string data_str(data, length);
+                    std::cout << data_str << "\n";
+                }
+
+                boost::asio::write(sock, boost::asio::buffer(data, length));
             }
-            doAccept();
-        });
+        }
+        catch (std::exception& e) {
+            std::cerr << "Exception in thread: " << e.what() << "\n";
+        }
     }
 } // namespace cfr_socket_comm

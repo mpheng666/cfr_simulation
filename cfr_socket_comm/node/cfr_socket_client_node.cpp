@@ -8,8 +8,8 @@ int main(int argc, char* argv[])
             return 1;
         }
 
-        cfr_socket_comm::CFRSocketClient client(argv[1], argv[2]);
-        client.start();
+        cfr_socket_comm::CFRSocketClient client;
+        client.start(argv[1], argv[2]);
     }
     catch (std::exception& e) {
         std::cerr << "Exception: " << e.what() << "\n";

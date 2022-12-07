@@ -20,7 +20,7 @@ namespace cfr_socket_comm {
         try {
             for (;;) {
                 char data[MAX_BUFFER_SIZE_];
-
+            
                 boost::system::error_code error;
                 size_t length = sock.read_some(boost::asio::buffer(data), error);
                 if (error == boost::asio::error::eof)
@@ -29,10 +29,14 @@ namespace cfr_socket_comm {
                     throw boost::system::system_error(error);
                 if (length) {
                     std::string data_str(data, length);
-                    std::cout << data_str << "\n";
+                    std::cout << "CFR read: " << data_str << "\n";
                 }
+                char respond_data[3];
+                respond_data[0] = 'O';
+                respond_data[1] = 'K';
+                respond_data[2] = '\n';
 
-                boost::asio::write(sock, boost::asio::buffer(data, length));
+                boost::asio::write(sock, boost::asio::buffer(respond_data, 3));
             }
         }
         catch (std::exception& e) {

@@ -2,12 +2,17 @@
 
 int main(int argc, char** argv)
 {
-    boost::asio::io_context io_context;
-
-    cfr_socket_comm::CFRSocketServer cfr_socket_server(io_context, 10000);
-
-    cfr_socket_server.start();
-    io_context.run();
+    static constexpr int DEFAULT_PORT {10000};
+    cfr_socket_comm::CFRSocketServer cfr_socket_server;
+    if (argc > 1) {
+        cfr_socket_server.listen(std::atoi(argv[0]));
+        std::cout << "Running localhost server, listening to port " << std::atoi(argv[0]) << "\n";
+    }
+    else {
+        cfr_socket_server.listen(DEFAULT_PORT);
+        std::cout << "Running localhost server, listening to default port " << DEFAULT_PORT << "\n";
+    }
+    cfr_socket_server.run();
 
     return 0;
 }

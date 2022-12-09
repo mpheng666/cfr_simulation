@@ -17,7 +17,7 @@ if [ $? != 0 ]; then
     tmux send-keys -t $session:$window 'cd ~/cfr_ws; ros2 launch cfr_gazebo gazebo.launch.py' C-m
 
     tmux split-window -v
-    tmux send-keys -t $session:$window 'sleep 2; ros2 launch teleop_twist_joy teleop-launch.py joy_config:=spmr1010' C-m 
+    tmux send-keys -t $session:$window 'sleep 2; ros2 launch cfr_telejoy_config teleop-launch.py joy_config:=spmr1010' C-m 
     tmux select-layout tiled
 
     tmux split-window -h
@@ -29,10 +29,6 @@ if [ $? != 0 ]; then
     tmux select-layout tiled
 
     tmux split-window -h
-    tmux send-keys -t $session:$window 'sleep 3; ros2 launch joy_publisher start.launch.py' C-m
-    tmux select-layout tiled
-
-    tmux split-window -h
     tmux send-keys -t $session:$window 'sleep 3; ros2 launch cfr_actuation start.launch.py' C-m
     tmux select-layout tiled
 
@@ -41,7 +37,7 @@ if [ $? != 0 ]; then
     tmux select-layout tiled
 
     tmux split-window -h
-    tmux send-keys -t $session:$window 'sleep 3; ros2 launch cfr_states start.launch.py' C-m
+    tmux send-keys -t $session:$window 'sleep 3; ros2 launch cfr_kinematics_states start.launch.py' C-m
     tmux select-layout tiled
 fi
 

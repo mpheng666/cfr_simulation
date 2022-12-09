@@ -2,7 +2,6 @@
 #define CFR_SM_SERVER_HPP_
 
 #include "cfr_state_machine/cfr_state_machine.hpp"
-#include "cfr_state_machine/srv/start.hpp"
 #include "std_srvs/srv/trigger.hpp"
 #include <memory>
 

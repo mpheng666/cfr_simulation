@@ -23,12 +23,6 @@ find_package(std_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
 find_package(Threads REQUIRED)
 find_package(Boost REQUIRED)
-find_package(rosidl_default_generators REQUIRED)
-find_package(cfr_state_machine REQUIRED)
-
-rosidl_generate_interfaces(${PROJECT_NAME}
-  "srv/Start.srv"
- )
 
 include_directories( include ${Boost_INCLUDE_DIRS} )
 
@@ -37,7 +31,7 @@ add_executable(cfr_sm_node src/cfr_sm_node.cpp src/cfr_sm_server.cpp)
 target_include_directories(cfr_sm_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-ament_target_dependencies(cfr_sm_node rclcpp std_msgs cfr_state_machine std_srvs)
+ament_target_dependencies(cfr_sm_node rclcpp std_msgs std_srvs)
 
 install(TARGETS cfr_sm_node
   DESTINATION lib/${PROJECT_NAME})

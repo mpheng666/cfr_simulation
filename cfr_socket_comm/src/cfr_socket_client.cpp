@@ -39,8 +39,9 @@ namespace cfr_socket_comm {
         char request_data[MAX_BUFFER_SIZE_];
         std::cin.getline(request_data, MAX_BUFFER_SIZE_);
         const size_t request_size = std::strlen(request_data);
+        request_data[request_size] = '\n';
         try {
-            boost::asio::write(socket_, boost::asio::buffer(request_data, request_size));
+            boost::asio::write(socket_, boost::asio::buffer(request_data, request_size+1));
         }
         catch (const std::exception& e) {
             std::cerr << e.what() << '\n';

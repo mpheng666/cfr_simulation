@@ -40,6 +40,8 @@ namespace cfr_socket_comm {
 
         void startAccept();
         void handleAccept(con_handle_t con_handle, boost::system::error_code const& err);
+        void doAsynWrite(con_handle_t con_handle,
+                         const std::shared_ptr<std::string> buff);
         void handleWrite(con_handle_t con_handle,
                          std::shared_ptr<std::string> msg_buffer,
                          boost::system::error_code const& err);

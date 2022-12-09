@@ -33,37 +33,41 @@ namespace cfr_socket_comm {
                                        boost::system::error_code const& err)
     {
         if (!err) {
-            std::cout << "Connection from: "
-                      << con_handle->socket.remote_endpoint().address().to_string() << "\n";
-            std::cout << "Sending message\n";
-            auto buff = std::make_shared<std::string>("Hello World!\r\n\r\n");
-            auto handler = boost::bind(&CFRSocketServer::handleWrite, this, con_handle,
-                                       buff, boost::asio::placeholders::error);
-            boost::asio::async_write(con_handle->socket, boost::asio::buffer(*buff),
-                                     handler);
+            std::string con_notif =
+            "Connection from: " +
+            con_handle->socket.remote_endpoint().address().to_string() + "\n";
+            std::cout << con_notif;
             doAsynRead(con_handle);
         }
         else {
-            std::cerr << "We had an error: " << err.message() << std::endl;
+            std::cerr << "Accept error: " << err.message() << "\n";
             connections_.erase(con_handle);
         }
         startAccept();
     }
 
+    void CFRSocketServer::doAsynWrite(con_handle_t con_handle,
+                                      const std::shared_ptr<std::string> buff)
+    {
+        auto handler = boost::bind(&CFRSocketServer::handleWrite, this, con_handle, buff,
+                                   boost::asio::placeholders::error);
+        boost::asio::async_write(con_handle->socket, boost::asio::buffer(*buff), handler);
+    }
+
     void CFRSocketServer::handleWrite(con_handle_t con_handle,
-                                      std::shared_ptr<std::string> msg_buffer,
+                                      [[maybe_unused]]std::shared_ptr<std::string> msg_buffer,
                                       boost::system::error_code const& err)
     {
-        if (!err) {
-            std::cout << "Finished sending message\n";
+        if (err) {
+            std::cerr << "Write error: " << err.message() << std::endl;
+            connections_.erase(con_handle);
+        }
+        else {
             if (con_handle->socket.is_open()) {
                 // Write completed successfully and connection is open
             }
         }
-        else {
-            std::cerr << "We had an error: " << err.message() << std::endl;
-            connections_.erase(con_handle);
-        }
+        doAsynRead(con_handle);
     }
 
     void CFRSocketServer::doAsynRead(con_handle_t con_handle)
@@ -79,22 +83,20 @@ namespace cfr_socket_comm {
                                      boost::system::error_code const& err,
                                      size_t bytes_transfered)
     {
+        if (err) {
+            std::cerr << "Read error: " << err.message() << std::endl;
+            connections_.erase(con_handle);
+        }
+
         if (bytes_transfered > 0) {
             std::istream is(&con_handle->read_buffer);
             std::string line;
             std::getline(is, line);
             std::cout << "Message Received: " << line << std::endl;
-        }
-
-        if (!err) {
-            doAsynRead(con_handle);
-        }
-        else {
-            std::cerr << "We had an error: " << err.message() << std::endl;
-            connections_.erase(con_handle);
+            auto respond_msg = std::make_shared<std::string>(line + " OK\n");
+            doAsynWrite(con_handle, respond_msg);
         }
     }
-
 
     void CFRSocketServer::runSession(tcp::socket sock)
     {

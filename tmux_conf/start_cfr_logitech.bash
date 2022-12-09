@@ -29,10 +29,6 @@ if [ $? != 0 ]; then
     tmux select-layout tiled
 
     tmux split-window -h
-    tmux send-keys -t $session:$window 'sleep 3; ros2 launch joy_publisher start.launch.py' C-m
-    tmux select-layout tiled
-
-    tmux split-window -h
     tmux send-keys -t $session:$window 'sleep 3; ros2 launch cfr_actuation start.launch.py' C-m
     tmux select-layout tiled
 

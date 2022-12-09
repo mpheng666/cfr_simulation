@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>cfr_states</name>
+  <name>cfr_kinematics_states</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
-  <maintainer email="richard@todo.todo">richard</maintainer>
-  <license>TODO: License declaration</license>
+  <description>This package updates the kinematics states of CFR</description>
+  <maintainer email="mpheng96@gmail.com">mpheng</maintainer>
+  <license>MIT</license>
 
   <depend>rclcpp</depend>
   <depend>std_msgs</depend>

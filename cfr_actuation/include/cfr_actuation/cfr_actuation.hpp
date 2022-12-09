@@ -69,7 +69,6 @@ namespace cfr_actuation_ns
     {
         public:
             CfrActuation();
-            ~CfrActuation();
 
         private:
             JoyRemapper joy_remapper_;

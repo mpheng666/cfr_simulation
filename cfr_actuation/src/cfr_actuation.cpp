@@ -13,11 +13,6 @@ namespace cfr_actuation_ns
         this->loadParams();
     }
 
-    CfrActuation::~CfrActuation()
-    {
-        
-    }
-
     void CfrActuation::timerCb()
     {
         auto actuation_msg = std_msgs::msg::Float64MultiArray();

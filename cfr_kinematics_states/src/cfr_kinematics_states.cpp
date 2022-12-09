@@ -1,27 +1,21 @@
-#include "cfr_states/cfr_states.hpp"
+#include "cfr_kinematics_states/cfr_kinematics_states.hpp"
 
-namespace cfr_states_ns
-{
-    CfrStates::CfrStates():
+namespace cfr_kinemtics_states_ns {
+    CfrKinematicsStates::CfrKinematicsStates():
     Node("cfr_states"),
     cmd_vel_pub_(this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10)),
-    acc_sub_(this->create_subscription<geometry_msgs::msg::Accel>("cfr_acceleration", 10, std::bind(&CfrStates::accelCb, this, _1))),
-    timer_(this->create_wall_timer(100ms, std::bind(&CfrStates::timerCb, this)))
+    acc_sub_(this->create_subscription<geometry_msgs::msg::Accel>("cfr_acceleration", 10, std::bind(&CfrKinematicsStates::accelCb, this, _1))),
+    timer_(this->create_wall_timer(100ms, std::bind(&CfrKinematicsStates::timerCb, this)))
     {
         this->loadParams();
     }
 
-    CfrStates::~CfrStates()
+    void CfrKinematicsStates::loadParams()
     {
 
     }
 
-    void CfrStates::loadParams()
-    {
-
-    }
-
-    void CfrStates::timerCb()
+    void CfrKinematicsStates::timerCb()
     {
         auto cmd_vel_msg = geometry_msgs::msg::Twist();
         cmd_vel_msg.linear.x = kinematics_states_.velocity_linear_x_curr;
@@ -30,7 +24,7 @@ namespace cfr_states_ns
         cmd_vel_pub_->publish(cmd_vel_msg);
     }
 
-    void CfrStates::accelCb(const geometry_msgs::msg::Accel::SharedPtr msg)
+    void CfrKinematicsStates::accelCb(const geometry_msgs::msg::Accel::SharedPtr msg)
     {
         kinematics_states_.acc_linear_x_curr = msg->linear.x;
         kinematics_states_.acc_linear_y_curr = msg->linear.y;
@@ -38,7 +32,7 @@ namespace cfr_states_ns
         this->updateStates();
     }
 
-    void CfrStates::updateStates()
+    void CfrKinematicsStates::updateStates()
     {
         auto t_ros = rclcpp::Clock();
         t_ = t_ros.now().seconds();

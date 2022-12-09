@@ -3,9 +3,9 @@
 <package format="3">
   <name>cfr_dynamics</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
-  <maintainer email="richard@todo.todo">richard</maintainer>
-  <license>TODO: License declaration</license>
+  <description>This package handles CFR dynamics model</description>
+  <maintainer email="mpheng96@gmail.com">mpheng</maintainer>
+  <license>MIT</license>
 
   <depend>rclcpp</depend>
   <depend>std_msgs</depend>

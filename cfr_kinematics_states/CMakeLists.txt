@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(cfr_states)
+project(cfr_kinematics_states)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -25,7 +25,7 @@ include_directories(
   include
 )
 
-set(executable_name cfr_states_node)
+set(executable_name cfr_kinematics_states_node)
 set(library_name ${executable_name}_lib)
 set(dependencies 
   ament_cmake
@@ -35,14 +35,14 @@ set(dependencies
 )
 
 add_library(${library_name} SHARED
-  src/cfr_states.cpp
+  src/cfr_kinematics_states.cpp
 )
 
 ament_target_dependencies(${library_name}
   ${dependencies}
 )
 
-add_executable(${executable_name} src/cfr_states_node.cpp)
+add_executable(${executable_name} src/cfr_kinematics_states_node.cpp)
 
 target_link_libraries(${executable_name} ${library_name})
 

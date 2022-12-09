@@ -11,7 +11,7 @@ namespace cfr_sm {
         cfr_sm_.initiate();
 
         init_service_ = this->create_service<std_srvs::srv::Trigger>(
-        "~/init_service", [this](const std::shared_ptr<std_srvs::srv::Trigger::Request> req,
+        "~/init_service", [this]([[maybe_unused]]const std::shared_ptr<std_srvs::srv::Trigger::Request> req,
                                std::shared_ptr<std_srvs::srv::Trigger::Response> res) {
             cfr_sm_.process_event(cfr_sm::EventInit());
             res->success = true;
@@ -20,7 +20,7 @@ namespace cfr_sm {
 
         start_service_ = this->create_service<std_srvs::srv::Trigger>(
         "~/start_service",
-        [this](const std::shared_ptr<std_srvs::srv::Trigger::Request> req,
+        [this]([[maybe_unused]]const std::shared_ptr<std_srvs::srv::Trigger::Request> req,
                std::shared_ptr<std_srvs::srv::Trigger::Response> res) {
             cfr_sm_.process_event(cfr_sm::EventStart());
             res->success = true;
@@ -28,7 +28,7 @@ namespace cfr_sm {
         });
 
         stop_service_ = this->create_service<std_srvs::srv::Trigger>(
-        "~/stop_service", [this](const std::shared_ptr<std_srvs::srv::Trigger::Request> req,
+        "~/stop_service", [this]([[maybe_unused]]const std::shared_ptr<std_srvs::srv::Trigger::Request> req,
                                std::shared_ptr<std_srvs::srv::Trigger::Response> res) {
             cfr_sm_.process_event(cfr_sm::EventStop());
             res->success = true;
@@ -37,7 +37,7 @@ namespace cfr_sm {
 
         reset_service_ = this->create_service<std_srvs::srv::Trigger>(
         "~/reset_service",
-        [this](const std::shared_ptr<std_srvs::srv::Trigger::Request> req,
+        [this]([[maybe_unused]]const std::shared_ptr<std_srvs::srv::Trigger::Request> req,
                std::shared_ptr<std_srvs::srv::Trigger::Response> res) {
             cfr_sm_.process_event(cfr_sm::EventReset());
             res->success = true;

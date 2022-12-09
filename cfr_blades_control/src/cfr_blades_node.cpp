@@ -75,7 +75,7 @@ class CFRBladesControl : public rclcpp::Node
 
           if(abs(msg->axes.at(speed_axis_) - joy_offset_) > joy_deadzone_)
           {
-            system("notify-send -u low --hint int:transient:1 'CFR SIMULATION' 'Please start the engine!'");
+            // system("notify-send -u low --hint int:transient:1 'CFR SIMULATION' 'Please start the engine!'");
           }
         }
     }

@@ -2,10 +2,11 @@
 <package format="2">
   <name>teleop_twist_joy</name>
   <version>2.4.3</version>
-  <description>Generic joystick teleop for twist robots.</description>
+  <description>Generic joystick teleop for twist robots with slight modification for CFR</description>
   <maintainer email="clalancette@openrobotics.org">Chris Lalancette</maintainer>
-
   <license>BSD</license>
+  <maintainer email="mpheng96@gmail.com">mpheng</maintainer>
+  <license>MIT</license>
 
   <url type="website">http://wiki.ros.org/teleop_twist_joy</url>
   <author email="mpurvis@clearpathrobotics.com">Mike Purvis</author>

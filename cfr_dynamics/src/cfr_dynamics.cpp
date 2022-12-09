@@ -12,11 +12,6 @@ namespace cfr_dynamics_ns
         this->loadParams();
     }
 
-    CfrDynamics::~CfrDynamics()
-    {
-        
-    }
-
     void CfrDynamics::timerCb()
     {
         auto accel_msg = geometry_msgs::msg::Accel();
@@ -89,7 +84,7 @@ namespace cfr_dynamics_ns
             else
                 effective_c_r_.effective_rad_RY = -(effective_c_r_.k_right_y * abs(model_inputs_.RYMotordeg) + effective_c_r_.b_right_y);
         }
-        effective_c_r_.print();
+        // effective_c_r_.print();
     }
 
     void CfrDynamics::computeDynamics()

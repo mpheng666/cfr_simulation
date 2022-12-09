@@ -49,22 +49,9 @@ void PathTracer::timerCallback()
     }
 
     trace_marker_.id = id_counter_++;
-    // RCLCPP_INFO(this->get_logger(), "id %i", id_counter_);
 
     trace_marker_.pose = odom_.pose.pose;
     trace_marker_.pose.position.z = -0.02;
-
-    // RCLCPP_INFO(this->get_logger(), "odom x: %f", odom_.pose.pose.position.x);
-    // RCLCPP_INFO(this->get_logger(), "tf x: %f", transformStamped.transform.translation.x);
-
-    // trace_marker_.pose.position.x = transformStamped.transform.translation.x;
-    // trace_marker_.pose.position.y = transformStamped.transform.translation.y;
-    // trace_marker_.pose.position.z = transformStamped.transform.translation.z;
-
-    // trace_marker_.pose.orientation.x = transformStamped.transform.rotation.x;
-    // trace_marker_.pose.orientation.y = transformStamped.transform.rotation.y;
-    // trace_marker_.pose.orientation.z = transformStamped.transform.rotation.z;
-    // trace_marker_.pose.orientation.w = transformStamped.transform.rotation.w;
 
     trace_markers_.markers.push_back(trace_marker_);
     markers_publisher_->publish(trace_markers_);

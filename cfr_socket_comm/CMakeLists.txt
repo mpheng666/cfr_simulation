@@ -22,6 +22,7 @@ find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
 find_package(Boost REQUIRED)
+find_package(cfr_state_machine)
 
 include_directories( include ${Boost_INCLUDE_DIRS} )
 
@@ -34,6 +35,7 @@ ament_target_dependencies(
   rclcpp
   std_msgs
   std_srvs
+  cfr_state_machine
 )
 
 add_executable(cfr_socket_client_node node/cfr_socket_client_node.cpp src/cfr_socket_client.cpp)

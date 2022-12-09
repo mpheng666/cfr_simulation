@@ -1,9 +1,11 @@
 #ifndef CFR_SOCKET_SERVER_HPP_
 #define CFR_SOCKET_SERVER_HPP_
 
-#include "../lib/cfr_sm_client.hpp"
+#include "cfr_state_machine/cfr_sm_client.hpp"
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
+#include <list>
+#include <iostream>
 
 using boost::asio::ip::tcp;
 

@@ -35,7 +35,7 @@ namespace cfr_socket_comm {
         if (!err) {
             std::string con_notif =
             "Connection from: " +
-            con_handle->socket.remote_endpoint().address().to_string() + "\n";
+            con_handle->socket.remote_endpoint().address().to_string() + "\n\n";
             std::cout << con_notif;
             doAsynRead(con_handle);
         }
@@ -59,8 +59,6 @@ namespace cfr_socket_comm {
                                  [[maybe_unused]] std::shared_ptr<std::string> msg_buffer,
                                  boost::system::error_code const& err)
     {
-        std::cout << "Entering handle write \n";
-
         if (err) {
             std::cerr << "Write error: " << err.message() << std::endl;
             connections_.erase(con_handle);
@@ -86,7 +84,6 @@ namespace cfr_socket_comm {
                                      boost::system::error_code const& err,
                                      size_t bytes_transfered)
     {
-        std::cout << "Entering handle read \n";
         if (err) {
             std::cerr << "Read error: " << err.message() << std::endl;
             connections_.erase(con_handle);
@@ -96,8 +93,10 @@ namespace cfr_socket_comm {
             std::istream is(&con_handle->read_buffer);
             std::string line;
             std::getline(is, line);
-            std::cout << "Message Received: " << line << std::endl;
+            // std::cout << "Message Received: " << line << "\n";
             auto respond_msg = std::make_shared<std::string>(line + " OK\n");
+            cfr_sm_client::CFRSMClient cfr_state_machine_client_("cfr_sm_client_node");
+            cfr_state_machine_client_.callCFRService(line);
             doAsynWrite(con_handle, respond_msg);
         }
     }

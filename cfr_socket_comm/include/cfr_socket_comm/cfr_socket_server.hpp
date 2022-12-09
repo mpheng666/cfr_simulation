@@ -49,8 +49,6 @@ namespace cfr_socket_comm {
         void handleRead(con_handle_t con_handle,
                         boost::system::error_code const& err,
                         size_t bytes_transfered);
-
-        void runSession(tcp::socket sock);
     };
 
 } // namespace cfr_socket_comm

@@ -54,10 +54,13 @@ namespace cfr_socket_comm {
         boost::asio::async_write(con_handle->socket, boost::asio::buffer(*buff), handler);
     }
 
-    void CFRSocketServer::handleWrite(con_handle_t con_handle,
-                                      [[maybe_unused]]std::shared_ptr<std::string> msg_buffer,
-                                      boost::system::error_code const& err)
+    void
+    CFRSocketServer::handleWrite(con_handle_t con_handle,
+                                 [[maybe_unused]] std::shared_ptr<std::string> msg_buffer,
+                                 boost::system::error_code const& err)
     {
+        std::cout << "Entering handle write \n";
+
         if (err) {
             std::cerr << "Write error: " << err.message() << std::endl;
             connections_.erase(con_handle);
@@ -83,6 +86,7 @@ namespace cfr_socket_comm {
                                      boost::system::error_code const& err,
                                      size_t bytes_transfered)
     {
+        std::cout << "Entering handle read \n";
         if (err) {
             std::cerr << "Read error: " << err.message() << std::endl;
             connections_.erase(con_handle);
@@ -98,32 +102,4 @@ namespace cfr_socket_comm {
         }
     }
 
-    void CFRSocketServer::runSession(tcp::socket sock)
-    {
-        try {
-            for (;;) {
-                char data[MAX_BUFFER_SIZE_];
-
-                boost::system::error_code error;
-                size_t length = sock.read_some(boost::asio::buffer(data), error);
-                if (error == boost::asio::error::eof)
-                    break;
-                else if (error)
-                    throw boost::system::system_error(error);
-                if (length) {
-                    std::string data_str(data, length);
-                    std::cout << "CFR read: " << data_str << "\n";
-                }
-                char respond_data[3];
-                respond_data[0] = 'O';
-                respond_data[1] = 'K';
-                respond_data[2] = '\n';
-
-                boost::asio::write(sock, boost::asio::buffer(respond_data, 3));
-            }
-        }
-        catch (std::exception& e) {
-            std::cerr << "Exception in thread: " << e.what() << "\n";
-        }
-    }
 } // namespace cfr_socket_comm

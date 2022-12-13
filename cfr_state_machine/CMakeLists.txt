@@ -23,8 +23,30 @@ find_package(std_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
 find_package(Threads REQUIRED)
 find_package(Boost REQUIRED)
+find_package(cfr_manager REQUIRED)
 
 include_directories( include ${Boost_INCLUDE_DIRS} )
+
+# Add state machine library
+add_library(cfr_sm_lib src/cfr_state_machine.cpp)
+target_include_directories(cfr_sm_lib PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+ament_target_dependencies(cfr_sm_lib rclcpp std_msgs std_srvs cfr_manager)
+
+ament_export_targets(cfr_sm_lib HAS_LIBRARY_TARGET)
+install(
+  DIRECTORY include/
+  DESTINATION include
+)
+install(
+  TARGETS cfr_sm_lib
+  EXPORT cfr_sm_lib
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION bin
+  INCLUDES DESTINATION include/cfr_state_machine
+)
 
 # Add server node
 add_executable(cfr_sm_node src/cfr_sm_node.cpp src/cfr_sm_server.cpp)
@@ -32,6 +54,7 @@ target_include_directories(cfr_sm_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 ament_target_dependencies(cfr_sm_node rclcpp std_msgs std_srvs)
+target_link_libraries(cfr_sm_node cfr_sm_lib)
 
 install(TARGETS cfr_sm_node
   DESTINATION lib/${PROJECT_NAME})

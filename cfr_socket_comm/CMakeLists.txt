@@ -22,7 +22,8 @@ find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
 find_package(Boost REQUIRED)
-find_package(cfr_state_machine)
+find_package(cfr_manager REQUIRED)
+find_package(cfr_state_machine REQUIRED)
 
 include_directories( include ${Boost_INCLUDE_DIRS} )
 

@@ -20,13 +20,15 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 
-# Add cfr_manager lib
+# ===== cfr_manager =====
 add_library(cfr_manager src/cfr_manager.cpp)
 target_include_directories(cfr_manager PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-# ament_target_dependencies(cfr_manager)
+ament_target_dependencies(cfr_manager rclcpp std_msgs)
+
 ament_export_targets(cfr_manager HAS_LIBRARY_TARGET)
+ament_export_dependencies(rclcpp std_msgs)
 install(
   DIRECTORY include/cfr_manager
   DESTINATION include

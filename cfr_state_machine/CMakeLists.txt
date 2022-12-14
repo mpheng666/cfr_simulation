@@ -27,7 +27,7 @@ find_package(cfr_manager REQUIRED)
 
 include_directories( include ${Boost_INCLUDE_DIRS} )
 
-# Add state machine library
+# ===== cfr_sm_lib =====
 add_library(cfr_sm_lib src/cfr_state_machine.cpp)
 target_include_directories(cfr_sm_lib PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -35,6 +35,7 @@ target_include_directories(cfr_sm_lib PUBLIC
 ament_target_dependencies(cfr_sm_lib rclcpp std_msgs std_srvs cfr_manager)
 
 ament_export_targets(cfr_sm_lib HAS_LIBRARY_TARGET)
+ament_export_dependencies(rclcpp std_msgs std_srvs cfr_manager)
 install(
   DIRECTORY include/
   DESTINATION include
@@ -48,7 +49,7 @@ install(
   INCLUDES DESTINATION include/cfr_state_machine
 )
 
-# Add server node
+# ===== cfr_sm_node =====
 add_executable(cfr_sm_node src/cfr_sm_node.cpp src/cfr_sm_server.cpp)
 target_include_directories(cfr_sm_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -59,16 +60,15 @@ target_link_libraries(cfr_sm_node cfr_sm_lib)
 install(TARGETS cfr_sm_node
   DESTINATION lib/${PROJECT_NAME})
 
-# Add client lib
+# ===== cfr_sm_client =====
 add_library(cfr_sm_client src/cfr_sm_client.cpp)
 target_include_directories(cfr_sm_client PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 ament_target_dependencies(cfr_sm_client rclcpp std_msgs std_srvs)
 
-# # create sm client lib for socket server
 ament_export_targets(cfr_sm_client HAS_LIBRARY_TARGET)
-# ament_export_dependencies(rclcpp std_msgs std_srvs)
+ament_export_dependencies(rclcpp std_msgs std_srvs)
 install(
   DIRECTORY include/
   DESTINATION include
@@ -81,6 +81,7 @@ install(
   RUNTIME DESTINATION bin
   INCLUDES DESTINATION include
 )
+
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

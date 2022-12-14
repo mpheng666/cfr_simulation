@@ -22,11 +22,11 @@ find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
 find_package(Boost REQUIRED)
-find_package(cfr_manager REQUIRED)
 find_package(cfr_state_machine REQUIRED)
 
 include_directories( include ${Boost_INCLUDE_DIRS} )
 
+# ===== cfr_socket_server_node =====
 add_executable(cfr_socket_server_node node/cfr_socket_server_node.cpp src/cfr_socket_server.cpp)
 target_include_directories(cfr_socket_server_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -39,6 +39,7 @@ ament_target_dependencies(
   cfr_state_machine
 )
 
+# ===== cfr_socket_client_node =====
 add_executable(cfr_socket_client_node node/cfr_socket_client_node.cpp src/cfr_socket_client.cpp)
 target_include_directories(cfr_socket_client_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

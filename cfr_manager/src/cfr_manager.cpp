@@ -1,12 +1,27 @@
 #include "cfr_manager/cfr_manager.hpp"
 
 namespace cfr_manager {
-    CFRManager::CFRManager() {}
+    CFRManager::CFRManager()
+        : Node("cfr_manager")
+        , cmd_vel_pub_(
+          this->create_publisher<geometry_msgs::msg::Twist>("cfr_cmd_vel", 20))
+        , blade_speed_pub_(
+          this->create_publisher<std_msgs::msg::Float32>("cfr_blade_speed", 10))
+        , odom_sub_(this->create_subscription<nav_msgs::msg::Odometry>(
+          "odom", 10, std::bind(&CFRManager::odomCallback, this, _1)))
+        , pub_timer_(
+          this->create_wall_timer(10ms, std::bind(&CFRManager::pubTimerCallback, this)))
+    {
+    }
 
     void CFRManager::startBroadcastRobotStatus(const bool command)
     {
         std::cout << "Start channel 10001 to feedback current status \n";
     }
+
+    void CFRManager::pubTimerCallback() {}
+
+    void CFRManager::odomCallback(const nav_msgs::msg::Odometry::SharedPtr msg) {}
 
     void CFRManager::setAllowMoveBlade(const bool command)
     {

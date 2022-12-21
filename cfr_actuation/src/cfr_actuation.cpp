@@ -52,7 +52,7 @@ namespace cfr_actuation_ns
         || msg->axes.at(joy_remapper_.joy_right_x_axis) > 0.0 
         || msg->axes.at(joy_remapper_.joy_right_y_axis) > 0.0))
         {
-            system("notify-send -u low --hint int:transient:1 'CFR SIMULATION' 'Please run the blades before moving!'");
+            // system("notify-send -u low --hint int:transient:1 'CFR SIMULATION' 'Please run the blades before moving!'");
             reset_flag_ = true;
             this->joyToMotorActuation(0.0, 0.0, 0.0, 0.0);
         }

@@ -56,7 +56,7 @@ class CFRBladesControl : public rclcpp::Node
     void joy_callback(const sensor_msgs::msg::Joy::SharedPtr msg)
     {
         auto temp = (msg->axes.at(speed_axis_) - joy_offset_);
-        RCLCPP_INFO(this->get_logger(), "temp %f", temp);
+        // RCLCPP_INFO(this->get_logger(), "temp %f", temp);
         if(is_start_)
         {
           if(msg->buttons.at(enable_button_) || !require_enable_button_)  

@@ -14,7 +14,8 @@ if [ $? != 0 ]; then
     # roscore
     window=0
     tmux rename-window -t $session:$window 'workspace'
-    tmux send-keys -t $session:$window 'cd ~/cfr_ws; ros2 launch cfr_gazebo gazebo.launch.py' C-m
+    # tmux send-keys -t $session:$window 'cd ~/cfr_ws; ros2 launch cfr_gazebo gazebo.launch.py' C-m
+    tmux send-keys -t $session:$window 'ros2 launch cfr_gazebo gazebo.launch.py' C-m
 
     tmux split-window -v
     tmux send-keys -t $session:$window 'sleep 2; ros2 launch cfr_telejoy_config teleop-launch.py joy_config:=f710' C-m 

@@ -5,12 +5,12 @@
 #include <functional>
 #include <memory>
 
+#include "geometry_msgs/msg/twist.hpp"
+#include "nav_msgs/msg/odometry.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/joy.hpp"
 #include "std_msgs/msg/bool.hpp"
 #include "std_msgs/msg/float32.hpp"
-#include "geometry_msgs/msg/twist.hpp"
-#include "nav_msgs/msg/odometry.hpp"
 
 namespace cfr_manager {
     using namespace std::chrono_literals;
@@ -30,6 +30,10 @@ namespace cfr_manager {
         bool allow_move_blade_{false};
         bool allow_cmd_vel_{false};
         float blade_speed_{0.0f};
+
+        bool watch_dog_{true};
+        nav_msgs::msg::Odometry odom_curr_;
+        geometry_msgs::msg::Twist twist_curr_;
 
         rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_pub_;
         rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr blade_speed_pub_;

@@ -10,18 +10,23 @@ namespace cfr_manager {
         , odom_sub_(this->create_subscription<nav_msgs::msg::Odometry>(
           "odom", 10, std::bind(&CFRManager::odomCallback, this, _1)))
         , pub_timer_(
-          this->create_wall_timer(10ms, std::bind(&CFRManager::pubTimerCallback, this)))
+          this->create_wall_timer(50ms, std::bind(&CFRManager::pubTimerCallback, this)))
     {
     }
 
     void CFRManager::startBroadcastRobotStatus(const bool command)
     {
-        std::cout << "Start channel 10001 to feedback current status \n";
+        const std::string command_str = (command) ? "true" : "false";
+        std::cout << "Start channel 10001 to feedback current status" << command_str
+                  << "\n";
     }
 
-    void CFRManager::pubTimerCallback() {}
+    void CFRManager::pubTimerCallback() { cmd_vel_pub_->publish(twist_curr_); }
 
-    void CFRManager::odomCallback(const nav_msgs::msg::Odometry::SharedPtr msg) {}
+    void CFRManager::odomCallback(const nav_msgs::msg::Odometry::SharedPtr msg)
+    {
+        odom_curr_ = *msg;
+    }
 
     void CFRManager::setAllowMoveBlade(const bool command)
     {
@@ -50,12 +55,15 @@ namespace cfr_manager {
     void CFRManager::setCmdvel(const float x, const float y, const float z)
     {
         if (allow_cmd_vel_) {
-
             std::cout << "Command velocity linear x is set at " << x << " \n";
             std::cout << "Command velocity linear y is set at " << y << " \n";
             std::cout << "Command velocity angulat z is set at " << z << " \n";
+            twist_curr_.linear.x = x;
+            twist_curr_.linear.y = y;
+            twist_curr_.angular.z = z;
         }
         else {
+            twist_curr_ = geometry_msgs::msg::Twist();
             std::cout << "Please enable engine for command velocity! \n";
         }
     }

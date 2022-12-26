@@ -14,22 +14,22 @@ if [ $? != 0 ]; then
     # roscore
     window=0
     tmux rename-window -t $session:$window 'workspace'
-    tmux send-keys -t $session:$window '. cfr_project/cfr_ws/install/local_setup.bash; ros2 run cfr_state_machine cfr_sm_node' C-m
+    tmux send-keys -t $session:$window '. ~/workspace/cfr_ws/install/local_setup.bash; ros2 run cfr_state_machine cfr_sm_node' C-m
 
     tmux split-window -v
-    tmux send-keys -t $session:$window '. cfr_project/cfr_ws/install/local_setup.bash; sleep 2; ros2 run cfr_socket_comm cfr_socket_server_node 10000' C-m 
+    tmux send-keys -t $session:$window '. ~/workspace/cfr_ws/install/local_setup.bash; sleep 2; ros2 run cfr_socket_comm cfr_socket_server_node 10000' C-m 
     tmux select-layout tiled
 
     tmux split-window -h
-    tmux send-keys -t $session:$window '. cfr_project/cfr_ws/install/local_setup.bash; sleep 3; ros2 run cfr_socket_comm cfr_socket_client_node localhost 10000' C-m
+    tmux send-keys -t $session:$window '. ~/workspace/cfr_ws/install/local_setup.bash; sleep 3; ros2 run cfr_socket_comm cfr_socket_client_node localhost 10000' C-m
     tmux select-layout tiled
 
     tmux split-window -h
-    tmux send-keys -t $session:$window '. cfr_project/cfr_ws/install/local_setup.bash; sleep 4;' C-m
+    tmux send-keys -t $session:$window '. ~/workspace/cfr_ws/install/local_setup.bash; sleep 4;' C-m
     tmux select-layout tiled
 
     tmux split-window -h
-    tmux send-keys -t $session:$window '. cfr_project/cfr_ws/install/local_setup.bash; sleep 3;' C-m
+    tmux send-keys -t $session:$window '. ~/workspace/cfr_ws/install/local_setup.bash; sleep 3;' C-m
     tmux select-layout tiled
 
 fi

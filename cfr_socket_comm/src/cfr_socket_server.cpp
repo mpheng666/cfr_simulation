@@ -94,9 +94,10 @@ namespace cfr_socket_comm {
             std::string line;
             std::getline(is, line);
             // std::cout << "Message Received: " << line << "\n";
-            auto respond_msg = std::make_shared<std::string>(line + " OK\n");
+            auto respond_msg = std::make_shared<std::string>(HOST_NAME_ + ": " + line + " OK\n");
             cfr_sm_client::CFRSMClient cfr_state_machine_client_("cfr_sm_client_node");
-            cfr_state_machine_client_.callCFRService(line);
+            auto a_service = std::async(&cfr_sm_client::CFRSMClient::callCFRService, &cfr_state_machine_client_, line);
+            // cfr_state_machine_client_.callCFRService(line);
             doAsynWrite(con_handle, respond_msg);
         }
     }

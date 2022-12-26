@@ -39,6 +39,7 @@ namespace cfr_socket_comm {
         tcp::acceptor acceptor_;
         std::list<Connection> connections_;
         static constexpr int MAX_BUFFER_SIZE_{1024};
+        const std::string HOST_NAME_{"CFR"};
 
         void startAccept();
         void handleAccept(con_handle_t con_handle, boost::system::error_code const& err);

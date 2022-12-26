@@ -62,7 +62,7 @@ namespace cfr_socket_comm {
         std::string stream_read_buffer_str(
         (std::istreambuf_iterator<char>(&stream_read_buffer)),
         std::istreambuf_iterator<char>());
-        std::cout << HOST_NAME_ << ": ";
+        // std::cout << HOST_NAME_ << ": ";
         std::cout << stream_read_buffer_str << "\n";
 
         return buffer_size;

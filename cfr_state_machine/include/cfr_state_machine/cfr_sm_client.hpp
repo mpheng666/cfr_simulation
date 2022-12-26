@@ -13,21 +13,19 @@ namespace cfr_sm_client {
         void callCFRService(const std::string& command);
 
     private:
-        CFRSMServiceType strCmdToService(const std::string& command)
+        static constexpr CFRSMServiceType strCmdToService(const std::string& command)
         {
             if (command == "INIT")
                 return CFRSMServiceType::INIT;
-            else if (command == "START")
+            if (command == "START")
                 return CFRSMServiceType::START;
-            else if (command == "STOP")
+            if (command == "STOP")
                 return CFRSMServiceType::STOP;
-            else if (command == "RESET")
+            if (command == "RESET")
                 return CFRSMServiceType::RESET;
-            else
-                return CFRSMServiceType::UNKNOWN;
         }
 
-        constexpr const char* serviceToName(CFRSMServiceType service_type) noexcept
+        static constexpr const char* serviceToName(CFRSMServiceType service_type) noexcept
         {
             switch (service_type) {
                 case CFRSMServiceType::INIT:

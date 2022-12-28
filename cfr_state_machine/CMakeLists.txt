@@ -70,7 +70,7 @@ ament_target_dependencies(cfr_sm_client rclcpp std_msgs std_srvs)
 ament_export_targets(cfr_sm_client HAS_LIBRARY_TARGET)
 ament_export_dependencies(rclcpp std_msgs std_srvs)
 install(
-  DIRECTORY include/
+  DIRECTORY include/cfr_state_machine
   DESTINATION include
 )
 install(

@@ -1,7 +1,7 @@
 #ifndef CFR_SOCKET_SERVER_HPP_
 #define CFR_SOCKET_SERVER_HPP_
 
-#include "cfr_state_machine/cfr_sm_client.hpp"
+#include "cfr_socket_comm/message_handler.hpp"
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include <list>

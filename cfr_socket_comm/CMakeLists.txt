@@ -26,6 +26,28 @@ find_package(cfr_state_machine REQUIRED)
 
 include_directories( include ${Boost_INCLUDE_DIRS} )
 
+# ===== msg_handler_lib =====
+add_library(msg_handler_lib src/message_handler.cpp)
+target_include_directories(msg_handler_lib PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+ament_target_dependencies(msg_handler_lib cfr_state_machine)
+
+ament_export_targets(msg_handler_lib HAS_LIBRARY_TARGET)
+ament_export_dependencies(cfr_state_machine)
+install(
+  DIRECTORY include/
+  DESTINATION include
+)
+install(
+  TARGETS msg_handler_lib
+  EXPORT msg_handler_lib
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION bin
+  INCLUDES DESTINATION include
+)
+
 # ===== cfr_socket_server_node =====
 add_executable(cfr_socket_server_node node/cfr_socket_server_node.cpp src/cfr_socket_server.cpp)
 target_include_directories(cfr_socket_server_node PUBLIC
@@ -36,7 +58,6 @@ ament_target_dependencies(
   rclcpp
   std_msgs
   std_srvs
-  cfr_state_machine
 )
 
 # ===== cfr_socket_client_node =====

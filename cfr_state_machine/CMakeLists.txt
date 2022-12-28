@@ -37,7 +37,7 @@ ament_target_dependencies(cfr_sm_lib rclcpp std_msgs std_srvs cfr_manager)
 ament_export_targets(cfr_sm_lib HAS_LIBRARY_TARGET)
 ament_export_dependencies(rclcpp std_msgs std_srvs cfr_manager)
 install(
-  DIRECTORY include/
+  DIRECTORY include/cfr_state_machine
   DESTINATION include
 )
 install(
@@ -46,7 +46,7 @@ install(
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
   RUNTIME DESTINATION bin
-  INCLUDES DESTINATION include/cfr_state_machine
+  INCLUDES DESTINATION include
 )
 
 # ===== cfr_sm_node =====

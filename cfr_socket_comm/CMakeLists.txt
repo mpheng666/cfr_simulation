@@ -36,7 +36,7 @@ ament_target_dependencies(msg_handler_lib cfr_state_machine)
 ament_export_targets(msg_handler_lib HAS_LIBRARY_TARGET)
 ament_export_dependencies(cfr_state_machine)
 install(
-  DIRECTORY include/
+  DIRECTORY include/cfr_socket_comm
   DESTINATION include
 )
 install(
@@ -59,6 +59,7 @@ ament_target_dependencies(
   std_msgs
   std_srvs
 )
+target_link_libraries(cfr_socket_server_node msg_handler_lib)
 
 # ===== cfr_socket_client_node =====
 add_executable(cfr_socket_client_node node/cfr_socket_client_node.cpp src/cfr_socket_client.cpp)

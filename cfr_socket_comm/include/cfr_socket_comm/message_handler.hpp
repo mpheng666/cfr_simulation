@@ -1,9 +1,9 @@
 #ifndef CFR_SOCKET_COMM_MESSAGE_HANDLER_HPP_
 #define CFR_SOCKET_COMM_MESSAGE_HANDLER_HPP_
 
-#include "cfr_state_machine/cfr_sm_client.hpp"
 #include <string>
 #include <vector>
+#include "cfr_state_machine/cfr_sm_client.hpp"
 
 namespace cfr_socket_comm {
 

@@ -5,7 +5,7 @@
 #include "std_srvs/srv/trigger.hpp"
 
 namespace cfr_sm_client {
-    enum class CFRSMServiceType { INIT, START, STOP, RESET, UNKNOWN };
+    enum class CFRSMServiceType { STATUS, FB, INIT, START, STOP, RESET, CTRL, UNKNOWN };
 
     class CFRSMClient {
     public:
@@ -15,6 +15,10 @@ namespace cfr_sm_client {
     private:
         static CFRSMServiceType strCmdToService(const std::string& command)
         {
+            if (command == "STATUS")
+                return CFRSMServiceType::STATUS;
+            if (command == "FB")
+                return CFRSMServiceType::FB;
             if (command == "INIT")
                 return CFRSMServiceType::INIT;
             if (command == "START")
@@ -23,6 +27,8 @@ namespace cfr_sm_client {
                 return CFRSMServiceType::STOP;
             if (command == "RESET")
                 return CFRSMServiceType::RESET;
+            if (command == "CTRL")
+                return CFRSMServiceType::CTRL;
             return CFRSMServiceType::UNKNOWN;
         }
 

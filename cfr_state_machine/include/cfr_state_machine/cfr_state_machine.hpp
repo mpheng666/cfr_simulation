@@ -7,16 +7,15 @@
 #include <boost/statechart/custom_reaction.hpp>
 #include <boost/statechart/event.hpp>
 #include <boost/statechart/simple_state.hpp>
+#include <boost/statechart/state.hpp>
 #include <boost/statechart/state_machine.hpp>
 #include <boost/statechart/transition.hpp>
-#include <boost/statechart/state.hpp>
 #include <iostream>
 
 namespace sc = boost::statechart;
 namespace mpl = boost::mpl;
 
 namespace cfr_sm {
-    
 
     struct EventInit : sc::event<EventInit> {
     };
@@ -27,6 +26,12 @@ namespace cfr_sm {
     struct EventReset : sc::event<EventReset> {
     };
     struct EventFailed : sc::event<EventFailed> {
+    };
+    struct EventStatus : sc::event<EventStatus> {
+    };
+    struct EventFeedBack : sc::event<EventFeedBack> {
+    };
+    struct EventControl : sc::event<EventControl> {
     };
 
     struct StateIdle;
@@ -55,11 +60,16 @@ namespace cfr_sm {
             // std::cout << "Received EventInit at StateIdle \n";
             return transit<StateReady>();
         }
+
+        void unconsumed_event(const sc::event_base& e){
+            std::cout << "unconsumed event \n";
+        };
     };
 
     struct StateReady : sc::state<StateReady, sm_CFR> {
     public:
-        StateReady(my_context ctx) : my_base(ctx)
+        StateReady(my_context ctx)
+            : my_base(ctx)
         {
             std::cout << "State: StateReady \n";
             context<sm_CFR>().sm_CFR_manager_.startBroadcastRobotStatus(true);
@@ -75,7 +85,6 @@ namespace cfr_sm {
             // std::cout << "Received EventStart at StateReady \n";
             return transit<StateRunning>();
         }
-
     };
 
     struct StateRunning : sc::state<StateRunning, sm_CFR> {

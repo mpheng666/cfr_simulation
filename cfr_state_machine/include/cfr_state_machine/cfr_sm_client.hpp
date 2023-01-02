@@ -35,12 +35,16 @@ namespace cfr_sm_client {
         static constexpr const char* serviceToName(CFRSMServiceType service_type) noexcept
         {
             switch (service_type) {
+                case CFRSMServiceType::STATUS:
+                    return "status_service";
+                case CFRSMServiceType::FB:
+                    return "feedback_service";
                 case CFRSMServiceType::INIT:
                     return "init_service";
-                case CFRSMServiceType::STOP:
-                    return "stop_service";
                 case CFRSMServiceType::START:
                     return "start_service";
+                case CFRSMServiceType::STOP:
+                    return "stop_service";
                 case CFRSMServiceType::RESET:
                     return "reset_service";
                 case CFRSMServiceType::UNKNOWN:

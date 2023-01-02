@@ -2,7 +2,6 @@
 #define CFR_STATE_MACHINE_HPP_
 
 #include "cfr_manager/cfr_manager.hpp"
-#include "rclcpp/rclcpp.hpp"
 
 #include <boost/statechart/custom_reaction.hpp>
 #include <boost/statechart/event.hpp>
@@ -10,7 +9,9 @@
 #include <boost/statechart/state.hpp>
 #include <boost/statechart/state_machine.hpp>
 #include <boost/statechart/transition.hpp>
-#include <iostream>
+
+#include <thread>
+#include <typeinfo>
 
 namespace sc = boost::statechart;
 namespace mpl = boost::mpl;
@@ -43,8 +44,19 @@ namespace cfr_sm {
 
     struct sm_CFR : sc::state_machine<sm_CFR, StateIdle> {
     public:
-        sm_CFR() { std::cout << "Initiated State Machine: CFR \n"; }
-        cfr_manager::CFRManager sm_CFR_manager_;
+        sm_CFR()
+            : sm_CFR_manager_(std::make_shared<cfr_manager::CFRManager>())
+        {
+            std::cout << "Initiated State Machine: CFR \n";
+            std::thread([&]() { rclcpp::spin(sm_CFR_manager_); }).detach();
+        }
+
+        std::shared_ptr<cfr_manager::CFRManager> sm_CFR_manager_;
+
+        void unconsumed_event(const sc::event_base& evt)
+        {
+            std::cout << "Invalid event: " << typeid(evt).name() << "\n";
+        };
     };
 
     struct StateIdle : sc::simple_state<StateIdle, sm_CFR> {
@@ -60,10 +72,6 @@ namespace cfr_sm {
             // std::cout << "Received EventInit at StateIdle \n";
             return transit<StateReady>();
         }
-
-        void unconsumed_event(const sc::event_base& e){
-            std::cout << "unconsumed event \n";
-        };
     };
 
     struct StateReady : sc::state<StateReady, sm_CFR> {
@@ -72,8 +80,8 @@ namespace cfr_sm {
             : my_base(ctx)
         {
             std::cout << "State: StateReady \n";
-            context<sm_CFR>().sm_CFR_manager_.startBroadcastRobotStatus(true);
-            context<sm_CFR>().sm_CFR_manager_.setAllowMoveBlade(true);
+            context<sm_CFR>().sm_CFR_manager_->startBroadcastRobotStatus();
+            context<sm_CFR>().sm_CFR_manager_->setAllowMoveBlade(true);
         }
         ~StateReady() { std::cout << "Leaving StateReady \n"; }
         typedef mpl::list<sc::custom_reaction<EventStart>,
@@ -93,7 +101,7 @@ namespace cfr_sm {
             : my_base(ctx)
         {
             std::cout << "State: StateRunning \n";
-            context<sm_CFR>().sm_CFR_manager_.setAllowCmdvel(true);
+            context<sm_CFR>().sm_CFR_manager_->setAllowCmdvel(true);
         }
         ~StateRunning() { std::cout << "Leaving StateRunning \n"; }
         typedef mpl::list<sc::custom_reaction<EventStop>,
@@ -113,7 +121,7 @@ namespace cfr_sm {
             : my_base(ctx)
         {
             std::cout << "State: StateStop \n";
-            context<sm_CFR>().sm_CFR_manager_.stopAllActions();
+            context<sm_CFR>().sm_CFR_manager_->stopAllActions();
         }
         ~StateStop() { std::cout << "Leaving StateStop \n"; }
         typedef mpl::list<sc::transition<EventInit, StateReady>,
@@ -127,7 +135,7 @@ namespace cfr_sm {
             : my_base(ctx)
         {
             std::cout << "State: StateError \n";
-            context<sm_CFR>().sm_CFR_manager_.killAllActions();
+            context<sm_CFR>().sm_CFR_manager_->killAllActions();
         }
         ~StateError() { std::cout << "Leaving StateError \n"; }
         typedef sc::custom_reaction<EventReset> reactions;

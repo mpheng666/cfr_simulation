@@ -2,7 +2,7 @@
 session="cfr"
 
 tmux has-session -t $session
-if [ $? != 0 ]; then
+# if [ $? != 0 ]; then
     # create new tmux session 
     tmux new-session -d -s $session
 
@@ -11,7 +11,6 @@ if [ $? != 0 ]; then
     tmux set -g status-bg black
     tmux set -g status-fg white
 
-    # roscore
     window=0
     tmux rename-window -t $session:$window 'workspace'
     tmux send-keys -t $session:$window 'cd ~/cfr_ws; ros2 launch cfr_gazebo gazebo.launch.py' C-m
@@ -39,7 +38,7 @@ if [ $? != 0 ]; then
     tmux split-window -h
     tmux send-keys -t $session:$window 'sleep 3; ros2 launch cfr_kinematics_states start.launch.py' C-m
     tmux select-layout tiled
-fi
+# fi
 
 tmux attach-session -t $session
 

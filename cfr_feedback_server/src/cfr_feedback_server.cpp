@@ -37,7 +37,7 @@ namespace cfr_feedback_server {
         if (!error) {
             new_connection->start();
             connections_.push_back(new_connection);
-            std::cout << "Push back new connection! \n";
+            // TODO: Remove the connection if client disconnects
         }
 
         start_accept();

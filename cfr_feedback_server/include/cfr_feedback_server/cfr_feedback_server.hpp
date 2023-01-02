@@ -36,9 +36,10 @@ namespace cfr_feedback_server {
         void write(const std::string& msg)
         {
             const std::string delimiter{"\n"};
+            const std::string host_name{"CFR: "};
 
             boost::asio::async_write(
-            socket_, boost::asio::buffer(msg + delimiter),
+            socket_, boost::asio::buffer(host_name + msg + delimiter),
             boost::bind(&tcp_connection::handle_write, shared_from_this(),
                         boost::asio::placeholders::error,
                         boost::asio::placeholders::bytes_transferred));

@@ -18,6 +18,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 find_package(ament_cmake REQUIRED)
+find_package(Threads REQUIRED)
 find_package(Boost REQUIRED)
 
 include_directories( include ${Boost_INCLUDE_DIRS} )
@@ -43,6 +44,19 @@ install(
   RUNTIME DESTINATION bin
   INCLUDES DESTINATION include
 )
+
+# ===== cfr_feedback_client =====
+add_executable(cfr_feedback_client_node node/cfr_feedback_client_node.cpp)
+target_include_directories(cfr_feedback_client_node PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+ament_target_dependencies(
+  cfr_feedback_client_node
+)
+target_link_libraries(cfr_feedback_client_node ${Boost_LIBRARIES} PRIVATE Threads::Threads)
+
+install(TARGETS cfr_feedback_client_node
+  DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

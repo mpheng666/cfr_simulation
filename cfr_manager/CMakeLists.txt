@@ -22,6 +22,29 @@ find_package(std_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(cfr_feedback_server REQUIRED)
+
+# ===== cfr_feedback_broadcastor =====
+add_library(cfr_feedback_broadcastor src/cfr_feedback_broadcastor.cpp)
+target_include_directories(cfr_feedback_broadcastor PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+ament_target_dependencies(cfr_feedback_broadcastor cfr_feedback_server)
+
+ament_export_targets(cfr_feedback_broadcastor HAS_LIBRARY_TARGET)
+ament_export_dependencies(cfr_feedback_server)
+install(
+  DIRECTORY include/cfr_manager
+  DESTINATION include
+)
+install(
+  TARGETS cfr_feedback_broadcastor
+  EXPORT cfr_feedback_broadcastor
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION bin
+  INCLUDES DESTINATION include
+)
 
 # ===== cfr_manager =====
 add_library(cfr_manager src/cfr_manager.cpp)
@@ -29,6 +52,7 @@ target_include_directories(cfr_manager PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 ament_target_dependencies(cfr_manager rclcpp std_msgs nav_msgs geometry_msgs sensor_msgs)
+target_link_libraries(cfr_manager cfr_feedback_broadcastor)
 
 ament_export_targets(cfr_manager HAS_LIBRARY_TARGET)
 ament_export_dependencies(rclcpp std_msgs nav_msgs geometry_msgs sensor_msgs)

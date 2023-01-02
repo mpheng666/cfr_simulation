@@ -3,6 +3,7 @@
 namespace cfr_manager {
     CFRManager::CFRManager()
         : Node("cfr_manager")
+        , feedback_broadcastor_(server_port_, BROADCAST_FREQUENCY_)
         , cmd_vel_pub_(
           this->create_publisher<geometry_msgs::msg::Twist>("cfr_cmd_vel", 20))
         , blade_speed_pub_(
@@ -11,17 +12,25 @@ namespace cfr_manager {
           "odom", 10, std::bind(&CFRManager::odomCallback, this, _1)))
         , pub_timer_(
           this->create_wall_timer(50ms, std::bind(&CFRManager::pubTimerCallback, this)))
+        , update_timer_(this->create_wall_timer(
+          50ms, std::bind(&CFRManager::updateTimerCallback, this)))
     {
     }
 
-    void CFRManager::startBroadcastRobotStatus(const bool command)
-    {
-        const std::string command_str = (command) ? "true" : "false";
-        std::cout << "Start channel 10001 to feedback current status" << command_str
-                  << "\n";
-    }
+    void CFRManager::startBroadcastRobotStatus() { feedback_broadcastor_.start(); }
 
     void CFRManager::pubTimerCallback() { cmd_vel_pub_->publish(twist_curr_); }
+
+    void CFRManager::updateTimerCallback()
+    {
+        feedback_msg_.now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+        std::chrono::system_clock::now().time_since_epoch());
+        feedback_msg_.position_x = odom_curr_.pose.pose.position.x;
+        feedback_msg_.position_y = odom_curr_.pose.pose.position.y;
+        feedback_msg_.theta = odom_curr_.pose.pose.orientation.z;
+        feedback_msg_.blade_speed = blade_speed_;
+        feedback_broadcastor_.updateMsg(feedback_msg_);
+    }
 
     void CFRManager::odomCallback(const nav_msgs::msg::Odometry::SharedPtr msg)
     {
@@ -46,6 +55,7 @@ namespace cfr_manager {
     {
         if (allow_move_blade_) {
             std::cout << "Blade speed is set at " << command << " \n";
+            blade_speed_ = command;
         }
         else {
             std::cout << "Please enable blade! \n";

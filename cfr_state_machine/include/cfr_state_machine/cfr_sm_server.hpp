@@ -5,6 +5,7 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "std_srvs/srv/trigger.hpp"
+#include "std_msgs/msg/float32_multi_array.hpp"
 
 #include "cfr_state_machine/cfr_state_machine.hpp"
 
@@ -26,6 +27,10 @@ namespace cfr_sm {
         rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr start_service_;
         rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr stop_service_;
         rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr reset_service_;
+
+        rclcpp::Subscription<std_msgs::msg::Float32MultiArray>::SharedPtr control_sub_;
+
+        void controlCallback(/* const */ std_msgs::msg::Float32MultiArray::SharedPtr msg);
     };
 } // namespace cfr_sm
 

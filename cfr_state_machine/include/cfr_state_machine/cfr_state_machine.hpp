@@ -33,6 +33,18 @@ namespace cfr_sm {
     struct EventFeedBack : sc::event<EventFeedBack> {
     };
     struct EventControl : sc::event<EventControl> {
+        EventControl(const float speed, const float x, const float y, const float z)
+            : speed(speed)
+            , x(x)
+            , y(y)
+            , z(z)
+        {
+        }
+
+        float speed{0.0};
+        float x{0.0};
+        float y{0.0};
+        float z{0.0};
     };
 
     struct StateIdle;
@@ -105,13 +117,17 @@ namespace cfr_sm {
         }
         ~StateRunning() { std::cout << "Leaving StateRunning \n"; }
         typedef mpl::list<sc::custom_reaction<EventStop>,
-                          sc::transition<EventFailed, StateError>>
+                          sc::transition<EventFailed, StateError>,
+                          sc::custom_reaction<EventControl>>
         reactions;
 
-        sc::result react(const EventStop& event)
+        sc::result react(const EventStop& event) { return transit<StateStop>(); }
+
+        sc::result react(const EventControl& event)
         {
-            // std::cout << "Received EventStop at StateRunning \n";
-            return transit<StateStop>();
+            context<sm_CFR>().sm_CFR_manager_->setCmdvel(event.x, event.y, event.z);
+            context<sm_CFR>().sm_CFR_manager_->setBladeSpeed(event.speed);
+            return discard_event();
         }
     };
 

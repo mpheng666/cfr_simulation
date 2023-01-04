@@ -11,7 +11,7 @@ namespace cfr_manager {
         , odom_sub_(this->create_subscription<nav_msgs::msg::Odometry>(
           "odom", 10, std::bind(&CFRManager::odomCallback, this, _1)))
         , pub_timer_(
-          this->create_wall_timer(50ms, std::bind(&CFRManager::pubTimerCallback, this)))
+          this->create_wall_timer(100ms, std::bind(&CFRManager::pubTimerCallback, this)))
         , update_timer_(this->create_wall_timer(
           50ms, std::bind(&CFRManager::updateTimerCallback, this)))
     {
@@ -19,7 +19,15 @@ namespace cfr_manager {
 
     void CFRManager::startBroadcastRobotStatus() { feedback_broadcastor_.start(); }
 
-    void CFRManager::pubTimerCallback() { cmd_vel_pub_->publish(twist_curr_); }
+    void CFRManager::pubTimerCallback()
+    {
+        if (allow_move_blade_) {
+            blade_speed_pub_->publish(blade_speed_);
+        }
+        if (allow_cmd_vel_) {
+            cmd_vel_pub_->publish(twist_curr_);
+        }
+    }
 
     void CFRManager::updateTimerCallback()
     {

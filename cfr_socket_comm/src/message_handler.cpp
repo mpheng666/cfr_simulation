@@ -35,6 +35,7 @@ namespace cfr_socket_comm {
                                         &cfr_state_machine_client_, msg);
         }
         if (msg == "CTRL") {
+            
         }
         else {
             std::cout << "Discard invalid message \n";

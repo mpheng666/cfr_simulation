@@ -4,8 +4,8 @@
 namespace cfr_sm {
     CFRControlServer::CFRControlServer()
         : Node("cfr_sm_node")
-        , control_pub_(
-          this->create_subscription<std_msgs::msg::Float32MultiArray>("control_channel", 10. std::bind(&CFRControlServer::controlCallback, this, _1)))
+        , control_pub_(this->create_subscription<std_msgs::msg::Float32MultiArray>(
+          "control_channel", 10. std::bind(&CFRControlServer::controlCallback, this, _1)))
     {
     }
 
@@ -75,10 +75,11 @@ namespace cfr_sm {
         });
     }
 
-    void CFRControlServer::controlCallback(const std_msgs::msg::Float32MultiArray::SharedPtr msg)
+    void CFRControlServer::controlCallback(
+    const std_msgs::msg::Float32MultiArray::SharedPtr msg)
     {
         cfr_sm_.process_event(
-        cfr_sm::EventControl(msg->data[0], msg->data[1], msg->data[2]));
+        cfr_sm::EventControl(msg->data[0], msg->data[1], msg->data[2], msg->data[3]));
     }
 
 } // namespace cfr_sm

@@ -43,4 +43,8 @@ namespace cfr_socket_comm {
         
     }
 
+    std::vector<std::string> MessageHandler::split_string(const char delimiter) {
+        
+    }
+
 } // namespace cfr_socket_comm

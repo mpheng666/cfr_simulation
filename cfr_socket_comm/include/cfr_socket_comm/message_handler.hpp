@@ -14,6 +14,7 @@ namespace cfr_socket_comm {
 
     private:
         const std::string HOST_NAME_{"CFR"};
+        std::vector<std::string> split_string(const char delimiter);
     };
 } // namespace cfr_socket_comm
 

@@ -21,7 +21,7 @@ namespace cfr_kinemtics_states_ns {
         cmd_vel_msg.linear.x = kinematics_states_.velocity_linear_x_curr;
         cmd_vel_msg.linear.y = kinematics_states_.velocity_linear_y_curr;
         cmd_vel_msg.angular.z = kinematics_states_.velocity_angular_z_curr;
-        cmd_vel_pub_->publish(cmd_vel_msg);
+        // cmd_vel_pub_->publish(cmd_vel_msg);
     }
 
     void CfrKinematicsStates::accelCb(const geometry_msgs::msg::Accel::SharedPtr msg)

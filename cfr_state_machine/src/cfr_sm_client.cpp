@@ -41,6 +41,5 @@ namespace cfr_sm_client {
         std_msgs::msg::Float32MultiArray msg;
         msg.data = command;
         control_pub_->publish(msg);
-        std::cout << "do work \n";
     }
 }

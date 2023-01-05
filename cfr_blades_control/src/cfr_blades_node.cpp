@@ -10,8 +10,8 @@
 #include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/joy.hpp"
 #include "std_msgs/msg/bool.hpp"
-#include "std_msgs/msg/float64_multi_array.hpp"
 #include "std_msgs/msg/float32.hpp"
+#include "std_msgs/msg/float64_multi_array.hpp"
 
 using namespace std::chrono_literals;
 using std::placeholders::_1;
@@ -25,7 +25,8 @@ public:
         joy_subscription_ = this->create_subscription<sensor_msgs::msg::Joy>(
         "joy", 10, std::bind(&CFRBladesControl::joy_callback, this, _1));
         blade_speed_subscription_ = this->create_subscription<std_msgs::msg::Float32>(
-        "cfr_blade_speed", 10, std::bind(&CFRBladesControl::blade_speed_callback, this, _1));
+        "cfr_blade_speed", 10,
+        std::bind(&CFRBladesControl::blade_speed_callback, this, _1));
         blades_publisher_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(
         "forward_velocity_controller/commands", 10);
         start_publisher_ = this->create_publisher<std_msgs::msg::Bool>("allow_move", 10);
@@ -62,7 +63,8 @@ private:
         // // RCLCPP_INFO(this->get_logger(), "temp %f", temp);
         // if (is_start_) {
         //     if (msg->buttons.at(enable_button_) || !require_enable_button_) {
-        //         // blades_speed_ = std::clamp(msg->axes.at(speed_axis_) * max_speed_, 0.0,
+        //         // blades_speed_ = std::clamp(msg->axes.at(speed_axis_) * max_speed_,
+        //         0.0,
         //         // max_speed_);
         //         blades_speed_ = (msg->axes.at(speed_axis_) - joy_offset_) * max_speed_;
         //     }
@@ -111,10 +113,10 @@ private:
     rclcpp::TimerBase::SharedPtr timer_;
     const int N_BLADES = 2;
     double max_speed_ = 200.0 / 60.0;
-    double blades_speed_;
+    double blades_speed_{0.0};
     int enable_button_;
     int speed_axis_;
-    bool require_enable_button_;
+    bool require_enable_button_{false};
     int start_button_;
     bool is_start_{false};
     double joy_offset_{0.0};

@@ -34,8 +34,6 @@ namespace cfr_sm_client {
                 return CFRSMServiceType::STOP;
             if (command == "RESET")
                 return CFRSMServiceType::RESET;
-            // if (command == "CTRL")
-            //     return CFRSMServiceType::CTRL;
             return CFRSMServiceType::UNKNOWN;
         }
 

@@ -18,7 +18,7 @@ namespace cfr_dynamics_ns
         accel_msg.linear.x = dynamics_gen_.x_acc;
         accel_msg.linear.y = dynamics_gen_.y_acc;
         accel_msg.angular.z = dynamics_gen_.theta_acc;
-        accel_pub_->publish(accel_msg);
+        // accel_pub_->publish(accel_msg);
     }
 
     void CfrDynamics::actuationCb(const std_msgs::msg::Float64MultiArray::SharedPtr msg)

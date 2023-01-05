@@ -34,11 +34,6 @@ namespace cfr_socket_comm {
         }
 
         res.push_back(s.substr(pos_start));
-        for (const auto& str : res) {
-            std::cout << str << "|";
-        }
-        std::cout << "\n";
-        std::cout << "size: " << res.size() << "\n";
         return res;
     }
 

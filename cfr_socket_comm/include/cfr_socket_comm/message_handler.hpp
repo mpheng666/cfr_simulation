@@ -9,12 +9,20 @@ namespace cfr_socket_comm {
 
     class MessageHandler {
     public:
-        MessageHandler() = default;
-        static std::string handleMessage(const std::string& msg);
+        MessageHandler();
+        ~MessageHandler();
+        void handleMessage(const std::string& msg);
 
     private:
         const std::string HOST_NAME_{"CFR"};
-        std::vector<std::string> split_string(const char delimiter);
+        const std::string DELIMITER_{','};
+        const std::string CLIENT_NODE_NAME_{"cfr_sm_client_node"};
+
+        std::shared_ptr<cfr_sm_client::CFRSMClient> cfr_state_machine_client_;
+
+        std::vector<std::string> split_string(const std::string& s,
+                                              const std::string& delimiter);
+        void takeAction(const std::vector<std::string>& token);
     };
 } // namespace cfr_socket_comm
 

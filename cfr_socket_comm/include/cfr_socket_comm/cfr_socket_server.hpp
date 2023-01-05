@@ -40,6 +40,8 @@ namespace cfr_socket_comm {
         std::list<Connection> connections_;
         static constexpr int MAX_BUFFER_SIZE_{1024};
 
+        MessageHandler msg_handler_;
+
         void startAccept();
         void handleAccept(con_handle_t con_handle, boost::system::error_code const& err);
         void doAsynWrite(con_handle_t con_handle,

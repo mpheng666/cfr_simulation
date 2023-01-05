@@ -1,0 +1,12 @@
+[
+{
+  "directory": "/home/mpheng/cfr_project/cfr_ws/src/build",
+  "command": "/usr/bin/clang++  -DDEFAULT_RMW_IMPLEMENTATION=rmw_fastrtps_cpp -DRCUTILS_ENABLE_FAULT_INJECTION -DSPDLOG_COMPILED_LIB -I/home/mpheng/cfr_project/cfr_ws/src/cfr_actuation/include -isystem /opt/ros/foxy/include  -g   -Wall -Wextra -Wpedantic -std=gnu++2a -o CMakeFiles/cfr_actuation_node.dir/src/cfr_actuation_node.cpp.o -c /home/mpheng/cfr_project/cfr_ws/src/cfr_actuation/src/cfr_actuation_node.cpp",
+  "file": "/home/mpheng/cfr_project/cfr_ws/src/cfr_actuation/src/cfr_actuation_node.cpp"
+},
+{
+  "directory": "/home/mpheng/cfr_project/cfr_ws/src/build",
+  "command": "/usr/bin/clang++  -DDEFAULT_RMW_IMPLEMENTATION=rmw_fastrtps_cpp -DRCUTILS_ENABLE_FAULT_INJECTION -DSPDLOG_COMPILED_LIB -Dcfr_actuation_node_lib_EXPORTS -I/home/mpheng/cfr_project/cfr_ws/src/cfr_actuation/include -isystem /opt/ros/foxy/include  -g -fPIC   -Wall -Wextra -Wpedantic -std=gnu++2a -o CMakeFiles/cfr_actuation_node_lib.dir/src/cfr_actuation.cpp.o -c /home/mpheng/cfr_project/cfr_ws/src/cfr_actuation/src/cfr_actuation.cpp",
+  "file": "/home/mpheng/cfr_project/cfr_ws/src/cfr_actuation/src/cfr_actuation.cpp"
+}
+]

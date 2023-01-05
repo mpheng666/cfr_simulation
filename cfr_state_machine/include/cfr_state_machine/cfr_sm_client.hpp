@@ -2,17 +2,24 @@
 #define CFR_SM_CLIENT_HPP_
 
 #include "rclcpp/rclcpp.hpp"
+#include "std_msgs/msg/float32_multi_array.hpp"
 #include "std_srvs/srv/trigger.hpp"
 
 namespace cfr_sm_client {
-    enum class CFRSMServiceType { STATUS, FB, INIT, START, STOP, RESET, CTRL, UNKNOWN };
+    enum class CFRSMServiceType { STATUS, FB, INIT, START, STOP, RESET, /* CTRL, */ UNKNOWN };
 
-    class CFRSMClient {
+    class CFRSMClient : public rclcpp::Node {
     public:
         CFRSMClient(const std::string& client_name);
         void callCFRService(const std::string& command);
+        void callControl(const std::vector<float>& command);
 
     private:
+        const std::string CLIENT_NS_{"cfr_sm_node/"};
+        std::string client_name_{};
+
+        rclcpp::Publisher<std_msgs::msg::Float32MultiArray>::SharedPtr control_pub_;
+
         static CFRSMServiceType strCmdToService(const std::string& command)
         {
             if (command == "STATUS")
@@ -27,8 +34,8 @@ namespace cfr_sm_client {
                 return CFRSMServiceType::STOP;
             if (command == "RESET")
                 return CFRSMServiceType::RESET;
-            if (command == "CTRL")
-                return CFRSMServiceType::CTRL;
+            // if (command == "CTRL")
+            //     return CFRSMServiceType::CTRL;
             return CFRSMServiceType::UNKNOWN;
         }
 
@@ -53,8 +60,6 @@ namespace cfr_sm_client {
             return "invalid_service";
         }
         
-        const std::string CLIENT_NS_{"cfr_sm_node/"};
-        std::string client_name_{};
     };
 } // namespace cfr_sm_client
 

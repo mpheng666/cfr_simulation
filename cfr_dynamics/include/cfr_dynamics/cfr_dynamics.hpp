@@ -70,7 +70,7 @@ namespace cfr_dynamics_ns
         double vy {0.0};
         double theta_dot {0.0};
 
-        void print()
+        void print() const
         {
             printf("LXMotordeg: %lf \n", LXMotordeg);
             printf("RXMotordeg: %lf \n", RXMotordeg);
@@ -90,7 +90,7 @@ namespace cfr_dynamics_ns
         double b_right_y {0.0};
         double effective_rad_RY {0.0};
 
-        void print()
+        void print() const
         {
             printf("k_left_x: %lf \n", k_left_x);
             printf("b_left_x: %lf \n", b_left_x);
@@ -125,7 +125,7 @@ namespace cfr_dynamics_ns
         double theta_acc_right {0.0};
         double theta_acc {0.0};
 
-        void print()
+        void print() const
         {
             printf("Fy_l_rotor: %lf \n", Fy_l_rotor);
             printf("Fy_r_rotor: %lf \n", Fy_r_rotor);

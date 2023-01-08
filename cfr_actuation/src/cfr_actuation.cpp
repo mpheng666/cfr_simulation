@@ -85,9 +85,11 @@ namespace cfr_actuation_ns
     void CfrActuation::joyToMotorActuation(const double JoystickLeftX, [[maybe_unused]] const double JoystickLeftY, const double JoystickRightX, const double JoystickRightY)
     {
         motor_actuation_.LXMotordeg_FB = motor_deg_limit_.LXmin*(1-(JoystickRightY-joy_limit_.joymin)/(joy_limit_.joymax-joy_limit_.joymin)) + motor_deg_limit_.LXmax*(JoystickRightY-joy_limit_.joymin)/(joy_limit_.joymax-joy_limit_.joymin); 
+
         motor_actuation_.RXMotordeg_FB = -(motor_deg_limit_.RXmin*(1-(JoystickRightY-joy_limit_.joymin)/(joy_limit_.joymax-joy_limit_.joymin)) + motor_deg_limit_.RXmax*(JoystickRightY-joy_limit_.joymin)/(joy_limit_.joymax-joy_limit_.joymin));
 
         motor_actuation_.LXMotordeg_ROT = -(motor_deg_limit_.LXmin*(1-(JoystickRightX-joy_limit_.joymin)/(joy_limit_.joymax-joy_limit_.joymin)) + motor_deg_limit_.LXmax*(JoystickRightX-joy_limit_.joymin)/(joy_limit_.joymax-joy_limit_.joymin)); 
+        
         motor_actuation_.RXMotordeg_ROT = -(motor_deg_limit_.RXmin*(1-(JoystickRightX-joy_limit_.joymin)/(joy_limit_.joymax-joy_limit_.joymin)) + motor_deg_limit_.RXmax*(JoystickRightX-joy_limit_.joymin)/(joy_limit_.joymax-joy_limit_.joymin));
 
         motor_actuation_.LXMotordeg = motor_actuation_.LXMotordeg_FB + motor_actuation_.LXMotordeg_ROT;

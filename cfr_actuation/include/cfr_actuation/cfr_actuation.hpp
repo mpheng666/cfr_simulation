@@ -53,7 +53,7 @@ namespace cfr_actuation_ns
         double RXMotordeg {0.0};
         double RYMotordeg {0.0};
 
-        void print()
+        void print() const
         {
             printf("LXMotordeg_FB: %f \n", LXMotordeg_FB);
             printf("RXMotordeg_FB: %f \n", RXMotordeg_FB);

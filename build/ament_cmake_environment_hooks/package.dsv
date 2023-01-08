@@ -1,4 +1,0 @@
-source;share/cfr_actuation/local_setup.bash
-source;share/cfr_actuation/local_setup.dsv
-source;share/cfr_actuation/local_setup.sh
-source;share/cfr_actuation/local_setup.zsh

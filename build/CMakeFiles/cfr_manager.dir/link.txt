@@ -1,2 +1,0 @@
-/usr/bin/ar qc libcfr_manager.a  CMakeFiles/cfr_manager.dir/src/cfr_manager.cpp.o
-/usr/bin/ranlib libcfr_manager.a

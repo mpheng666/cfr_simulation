@@ -1,2 +1,0 @@
-/usr/bin/ar qc libcfr_feedback_broadcastor.a  CMakeFiles/cfr_feedback_broadcastor.dir/src/cfr_feedback_broadcastor.cpp.o
-/usr/bin/ranlib libcfr_feedback_broadcastor.a

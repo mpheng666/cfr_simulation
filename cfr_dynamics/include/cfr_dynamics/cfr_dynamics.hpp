@@ -163,7 +163,6 @@ namespace cfr_dynamics_ns
 
             rclcpp::Publisher<geometry_msgs::msg::Accel>::SharedPtr accel_pub_;
             rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr actuation_sub_;
-            rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_sub_;
             rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_sub_;
             rclcpp::TimerBase::SharedPtr timer_;
 

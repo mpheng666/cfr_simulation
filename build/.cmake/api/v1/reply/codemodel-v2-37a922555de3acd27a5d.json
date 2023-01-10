@@ -1,0 +1,87 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.5"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "cfr_manager",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "cfr_feedback_broadcastor::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-cfr_feedback_broadcastor-Debug-a13a5c6589075c4e7a9b.json",
+					"name" : "cfr_feedback_broadcastor",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "cfr_manager::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-cfr_manager-Debug-a823c6b5dca4f3601cdd.json",
+					"name" : "cfr_manager",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "cfr_manager_uninstall::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-cfr_manager_uninstall-Debug-3dbd9fe29a91452a269b.json",
+					"name" : "cfr_manager_uninstall",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "uninstall::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-uninstall-Debug-95aaf3a0c5376a5560f0.json",
+					"name" : "uninstall",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/mpheng/workspace/cfr_ws/src/build",
+		"source" : "/home/mpheng/workspace/cfr_ws/src/cfr_manager"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 0
+	}
+}

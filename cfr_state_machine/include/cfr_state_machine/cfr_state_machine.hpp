@@ -18,6 +18,12 @@ namespace mpl = boost::mpl;
 
 namespace cfr_sm {
 
+    struct EventGetState : sc::event<EventGetState> {
+    };
+    struct EventGetMode : sc::event<EventGetMode> {
+    };
+    struct EventSetMode : sc::event<EventSetMode> {
+    };
     struct EventInit : sc::event<EventInit> {
     };
     struct EventStart : sc::event<EventStart> {
@@ -32,6 +38,7 @@ namespace cfr_sm {
     };
     struct EventFeedBack : sc::event<EventFeedBack> {
     };
+
     struct EventControl : sc::event<EventControl> {
         EventControl(const float speed, const float x, const float y, const float z)
             : speed(speed)
@@ -50,6 +57,13 @@ namespace cfr_sm {
     struct StateIdle;
     struct StateReady;
     struct StateRunning;
+
+    struct IStateRunningManual1;
+    struct IStateRunningManual2;
+    struct IStateRunningSemiAuto;
+    struct IStateRunningMPTAuto;
+    struct IStateRunningNYPAuto;
+
     struct StateStop;
     struct StateError;
     struct StateManual;

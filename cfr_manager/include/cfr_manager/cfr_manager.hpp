@@ -23,6 +23,8 @@ namespace cfr_manager {
     public:
         CFRManager();
         void startBroadcastRobotStatus();
+        void startEngine();
+        void initialise();
         void setAllowMoveBlade(/* const */ bool command);
         void setAllowCmdvel(/* const */ bool command);
         void setBladeSpeed(/* const */ float command);

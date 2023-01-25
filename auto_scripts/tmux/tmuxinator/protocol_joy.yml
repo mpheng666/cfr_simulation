@@ -1,0 +1,10 @@
+# ~/.tmuxinator/protocol_joy.yml
+
+name: protocol_joy
+root: ~/
+
+windows:
+  - joy_test:
+      panes:
+        - ros2 launch cfr_telejoy_config start.launch
+        # - ros2 launch cfr_socket_comm client.launch

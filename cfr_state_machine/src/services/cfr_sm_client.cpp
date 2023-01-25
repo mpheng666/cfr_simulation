@@ -1,4 +1,4 @@
-#include "cfr_state_machine/cfr_sm_client.hpp"
+#include "cfr_state_machine/services/cfr_sm_client.hpp"
 
 namespace cfr_sm_client {
     CFRSMClient::CFRSMClient(const std::string& client_name)

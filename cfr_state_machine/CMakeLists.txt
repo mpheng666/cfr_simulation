@@ -50,7 +50,7 @@ install(
 )
 
 # ===== cfr_sm_node =====
-add_executable(cfr_sm_node src/cfr_sm_node.cpp src/cfr_sm_server.cpp)
+add_executable(cfr_sm_node node/cfr_sm_node.cpp src/services/cfr_sm_server.cpp)
 target_include_directories(cfr_sm_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
@@ -61,7 +61,7 @@ install(TARGETS cfr_sm_node
   DESTINATION lib/${PROJECT_NAME})
 
 # ===== cfr_sm_client =====
-add_library(cfr_sm_client src/cfr_sm_client.cpp)
+add_library(cfr_sm_client src/services/cfr_sm_client.cpp)
 target_include_directories(cfr_sm_client PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)

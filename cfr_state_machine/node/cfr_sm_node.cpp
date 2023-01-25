@@ -1,4 +1,4 @@
-#include "cfr_state_machine/cfr_sm_server.hpp"
+#include "cfr_state_machine/services/cfr_sm_server.hpp"
 
 int main(int argc, char* argv[])
 {

@@ -11,6 +11,7 @@
 
 namespace cfr_protocol {
     using std::placeholders::_1;
+    using std::placeholders::_2;
 
     class ProtocolServer : public rclcpp::Node {
     public:

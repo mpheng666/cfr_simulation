@@ -18,7 +18,6 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(rosidl_default_generators REQUIRED)
 find_package(cfr_state_machine REQUIRED)
 find_package(cfr_protocol_interfaces)
 
@@ -35,27 +34,39 @@ target_link_libraries(protocol_server_node)
 install(TARGETS protocol_server_node
   DESTINATION lib/${PROJECT_NAME})
 
-# ===== protocol_client =====
-add_library(protocol_client src/protocol_client.cpp)
-target_include_directories(protocol_client PUBLIC
+# ===== protocol_client_node =====
+add_executable(protocol_client_node node/protocol_client_node.cpp src/protocol_client.cpp)
+target_include_directories(protocol_client_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-ament_target_dependencies(protocol_client rclcpp cfr_protocol_interfaces)
+ament_target_dependencies(protocol_client_node rclcpp cfr_protocol_interfaces)
+target_link_libraries(protocol_client_node)
 
-ament_export_targets(protocol_client HAS_LIBRARY_TARGET)
-ament_export_dependencies(rclcpp std_msgs std_srvs cfr_protocol_interfaces)
-install(
-  DIRECTORY include/cfr_protocol_comm
-  DESTINATION include
-)
-install(
-  TARGETS protocol_client
-  EXPORT protocol_client
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib
-  RUNTIME DESTINATION bin
-  INCLUDES DESTINATION include
-)
+install(TARGETS protocol_client_node
+  DESTINATION lib/${PROJECT_NAME})
+
+
+# ===== protocol_client library =====
+# add_library(protocol_client src/protocol_client.cpp)
+# target_include_directories(protocol_client PUBLIC
+#   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+#   $<INSTALL_INTERFACE:include>)
+# ament_target_dependencies(protocol_client rclcpp cfr_protocol_interfaces)
+
+# ament_export_targets(protocol_client HAS_LIBRARY_TARGET)
+# ament_export_dependencies(rclcpp std_msgs std_srvs cfr_protocol_interfaces)
+# install(
+#   DIRECTORY include/cfr_protocol_comm
+#   DESTINATION include
+# )
+# install(
+#   TARGETS protocol_client
+#   EXPORT protocol_client
+#   LIBRARY DESTINATION lib
+#   ARCHIVE DESTINATION lib
+#   RUNTIME DESTINATION bin
+#   INCLUDES DESTINATION include
+# )
 
 
 if(BUILD_TESTING)

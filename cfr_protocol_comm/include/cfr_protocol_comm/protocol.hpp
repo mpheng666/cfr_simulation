@@ -3,6 +3,7 @@
 
 #include <string>
 namespace cfr_protocol {
+
     enum class Protocol : int {
         GETSTATE,
         GETMODE,
@@ -15,10 +16,11 @@ namespace cfr_protocol {
         CTRL,
         AXIS,
         SETBLADEANGLE,
-        BEACONS
+        BEACONS,
+        UNKNOWN
     };
 
-    class ProtocolConversion {
+    class ProtocolUtility {
     public:
         static std::string getStringFromProtocol(const Protocol& protocol)
         {
@@ -59,10 +61,13 @@ namespace cfr_protocol {
                 case Protocol::BEACONS:
                     return "BEACONS";
                     break;
+                case Protocol::UNKNOWN:
+                    return "UNKNWON";
+                    break;
             }
         }
 
-        Protocol getProtocolFromString(const std::string& data) const
+        static Protocol getProtocolFromString(const std::string& data)
         {
             if (data == "PSTATE")
                 return Protocol::GETSTATE;
@@ -88,7 +93,7 @@ namespace cfr_protocol {
                 return Protocol::SETBLADEANGLE;
             if (data == "BEACONS")
                 return Protocol::BEACONS;
-            return {};
+            return Protocol::UNKNOWN;
         }
     };
 } // namespace cfr_protocol

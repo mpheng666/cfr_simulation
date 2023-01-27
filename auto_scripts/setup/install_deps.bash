@@ -1,4 +1,5 @@
-sudo apt install ros-foxy-xacro
-sudo apt install ros-foxy-gazebo-*
-sudo apt install ros-foxy-ros2-control
-sudo apt install ros-foxy-ros2-controllers
+#!/bin/bash
+sudo apt install ros-foxy-xacro -y
+sudo apt install ros-foxy-gazebo-* -y
+sudo apt install ros-foxy-ros2-control -y
+sudo apt install ros-foxy-ros2-controllers -y

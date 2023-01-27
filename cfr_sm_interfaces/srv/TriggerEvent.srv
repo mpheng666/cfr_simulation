@@ -1,4 +1,0 @@
-string service_name
-float64[] data
----
-bool success

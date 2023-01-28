@@ -28,11 +28,7 @@ namespace cfr_sm {
     {
         std::cout << "State: StateInitializing \n";
         context<sm_CFR>().sm_CFR_manager_->initialise();
-    }
-
-    sc::result StateInitializing::react(const EventInitDone& event)
-    {
-        return transit<StateReady>();
+        post_event(EventInitDone());
     }
 
     // StateReady
@@ -59,21 +55,21 @@ namespace cfr_sm {
 
     sc::result StateRunning::react(const EventStop& event)
     {
-        return transit<StateStop>();
+        return transit<StateStopped>();
     }
 
     sc::result StateRunning::react(const EventControl& event)
     {
-        context<sm_CFR>().sm_CFR_manager_->setCmdvel(event.x, event.y, event.z);
-        context<sm_CFR>().sm_CFR_manager_->setBladeSpeed(event.speed);
+        context<sm_CFR>().sm_CFR_manager_->setCmdvel(event.linear_x, event.linear_y, event.angular_z);
+        context<sm_CFR>().sm_CFR_manager_->setBladeSpeed(event.blade_speed);
         return discard_event();
     }
 
-    // StateStop
-    StateStop::StateStop(my_context ctx)
+    // StateStopped
+    StateStopped::StateStopped(my_context ctx)
         : my_base(ctx)
     {
-        std::cout << "State: StateStop \n";
+        std::cout << "State: StateStopped \n";
         context<sm_CFR>().sm_CFR_manager_->stopAllActions();
     }
     // StateError

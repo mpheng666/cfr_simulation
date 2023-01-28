@@ -96,8 +96,6 @@ namespace cfr_socket_comm {
 
             auto respond_msg = std::make_shared<std::string>(line + ",OK\n");
 
-            msg_handler_.handleMessage(line);
-
             doAsynWrite(con_handle, respond_msg);
             // doAsynRead(con_handle);
         }

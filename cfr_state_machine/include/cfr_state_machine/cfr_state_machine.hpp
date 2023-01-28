@@ -27,11 +27,9 @@ namespace cfr_sm {
 
     struct StateInitializing : sc::state<StateInitializing, sm_CFR> {
         StateInitializing(my_context ctx);
-        typedef mpl::list<sc::custom_reaction<EventInitDone>,
+        typedef mpl::list<sc::transition<EventInitDone, StateReady>,
                           sc::transition<EventFailed, StateError>>
         reactions;
-
-        sc::result react(const EventInitDone& event);
     };
 
     struct StateReady : sc::state<StateReady, sm_CFR> {
@@ -54,8 +52,8 @@ namespace cfr_sm {
         sc::result react(const EventControl& event);
     };
 
-    struct StateStop : sc::state<StateStop, sm_CFR> {
-        StateStop(my_context ctx);
+    struct StateStopped : sc::state<StateStopped, sm_CFR> {
+        StateStopped(my_context ctx);
         typedef mpl::list<sc::transition<EventInit, StateReady>,
                           sc::transition<EventReset, StateIdle>>
         reactions;

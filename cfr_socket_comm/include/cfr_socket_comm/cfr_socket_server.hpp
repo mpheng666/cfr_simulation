@@ -1,7 +1,6 @@
 #ifndef CFR_SOCKET_SERVER_HPP_
 #define CFR_SOCKET_SERVER_HPP_
 
-#include "cfr_socket_comm/message_handler.hpp"
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include <list>
@@ -39,8 +38,6 @@ namespace cfr_socket_comm {
         tcp::acceptor acceptor_;
         std::list<Connection> connections_;
         static constexpr int MAX_BUFFER_SIZE_{1024};
-
-        MessageHandler msg_handler_;
 
         void startAccept();
         void handleAccept(con_handle_t con_handle, boost::system::error_code const& err);

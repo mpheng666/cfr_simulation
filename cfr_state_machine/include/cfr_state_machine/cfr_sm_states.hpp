@@ -16,7 +16,7 @@ namespace cfr_sm
     struct IStateRunningMPTAuto;
     struct IStateRunningNYPAuto;
 
-    struct StateStop;
+    struct StateStopped;
     struct StateError;
 }
 

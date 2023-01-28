@@ -19,34 +19,10 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(std_msgs REQUIRED)
-find_package(std_srvs REQUIRED)
 find_package(Boost REQUIRED)
-find_package(cfr_state_machine REQUIRED)
+find_package(cfr_protocol_interfaces REQUIRED)
 
 include_directories( include ${Boost_INCLUDE_DIRS} )
-
-# ===== msg_handler_lib =====
-add_library(msg_handler_lib src/message_handler.cpp)
-target_include_directories(msg_handler_lib PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
-ament_target_dependencies(msg_handler_lib cfr_state_machine)
-
-ament_export_targets(msg_handler_lib HAS_LIBRARY_TARGET)
-ament_export_dependencies(cfr_state_machine)
-install(
-  DIRECTORY include/cfr_socket_comm
-  DESTINATION include
-)
-install(
-  TARGETS msg_handler_lib
-  EXPORT msg_handler_lib
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib
-  RUNTIME DESTINATION bin
-  INCLUDES DESTINATION include
-)
 
 # ===== cfr_socket_server_node =====
 add_executable(cfr_socket_server_node node/cfr_socket_server_node.cpp src/cfr_socket_server.cpp)
@@ -56,10 +32,8 @@ target_include_directories(cfr_socket_server_node PUBLIC
 ament_target_dependencies(
   cfr_socket_server_node
   rclcpp
-  std_msgs
-  std_srvs
 )
-target_link_libraries(cfr_socket_server_node msg_handler_lib)
+target_link_libraries(cfr_socket_server_node)
 
 # ===== cfr_socket_client_node =====
 add_executable(cfr_socket_client_node node/cfr_socket_client_node.cpp src/cfr_socket_client.cpp)
@@ -69,7 +43,6 @@ target_include_directories(cfr_socket_client_node PUBLIC
 ament_target_dependencies(
   cfr_socket_client_node
   rclcpp
-  std_msgs
 )
 
 install(TARGETS cfr_socket_server_node

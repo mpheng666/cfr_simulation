@@ -13,7 +13,7 @@ int main(int argc, char** argv)
     std::string input;
 
     while (rclcpp::ok()) {
-        std::cout << "Input: ";
+        std::cout << "ED: ";
         std::getline(std::cin, input);
         if (input == "quit")
             break;

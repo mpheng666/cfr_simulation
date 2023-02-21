@@ -80,6 +80,7 @@ namespace cfr_sm {
         context<sm_CFR>().sm_CFR_manager_->killAllActions();
     }
 
-    sc::result StateError::react(const EventReset& event) { return transit<StateIdle>(); }
+    sc::result StateError::react(const EventInit& event) { 
+        return transit<StateIdle>(); }
 
 } // namespace cfr_sm

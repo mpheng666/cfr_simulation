@@ -54,16 +54,15 @@ namespace cfr_sm {
 
     struct StateStopped : sc::state<StateStopped, sm_CFR> {
         StateStopped(my_context ctx);
-        typedef mpl::list<sc::transition<EventInit, StateReady>,
-                          sc::transition<EventReset, StateIdle>>
+        typedef mpl::list<sc::transition<EventInit, StateReady>>
         reactions;
     };
 
     struct StateError : sc::state<StateError, sm_CFR> {
         StateError(my_context ctx);
-        typedef sc::custom_reaction<EventReset> reactions;
+        typedef sc::custom_reaction<EventInit> reactions;
 
-        sc::result react(const EventReset& event);
+        sc::result react(const EventInit& event);
     };
 
 } // namespace cfr_sm

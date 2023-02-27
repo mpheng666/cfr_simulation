@@ -20,22 +20,23 @@ class CFRBladesControl : public rclcpp::Node {
 public:
     CFRBladesControl()
         : Node("cfr_blades_node")
+        , joy_subscription_(this->create_subscription<sensor_msgs::msg::Joy>(
+          "joy", 10, std::bind(&CFRBladesControl::joy_callback, this, _1)))
+        , blade_speed_subscription_(this->create_subscription<std_msgs::msg::Float32>(
+          "cfr_blade_speed",
+          10,
+          std::bind(&CFRBladesControl::blade_speed_callback, this, _1)))
+        , blades_publisher_(this->create_publisher<std_msgs::msg::Float64MultiArray>(
+          "forward_velocity_controller/commands", 10))
+        , start_publisher_(this->create_publisher<std_msgs::msg::Bool>("allow_move", 10))
+        , timer_(this->create_wall_timer(
+          200ms, std::bind(&CFRBladesControl::timer_callback, this)))
     {
         this->load_params();
-        joy_subscription_ = this->create_subscription<sensor_msgs::msg::Joy>(
-        "joy", 10, std::bind(&CFRBladesControl::joy_callback, this, _1));
-        blade_speed_subscription_ = this->create_subscription<std_msgs::msg::Float32>(
-        "cfr_blade_speed", 10,
-        std::bind(&CFRBladesControl::blade_speed_callback, this, _1));
-        blades_publisher_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(
-        "forward_velocity_controller/commands", 10);
-        start_publisher_ = this->create_publisher<std_msgs::msg::Bool>("allow_move", 10);
-        timer_ = this->create_wall_timer(
-        200ms, std::bind(&CFRBladesControl::timer_callback, this));
     }
 
 private:
-    void timer_callback()
+    void timer_callback()  const
     {
         auto control_msg = std_msgs::msg::Float64MultiArray();
         control_msg.data.resize(N_BLADES);
@@ -43,7 +44,7 @@ private:
         control_msg.data.back() = -blades_speed_;
         // RCLCPP_INFO(this->get_logger(), "Blades speed: %f", control_msg.data.front()
         // * 60.0);
-        if (abs(blades_speed_) > 0.1) {
+        if (abs(static_cast<int>(blades_speed_)) > 0.1) {
             auto msg = std_msgs::msg::Bool();
             msg.data = true;
             start_publisher_->publish(msg);
@@ -114,10 +115,10 @@ private:
     const int N_BLADES = 2;
     double max_speed_ = 200.0 / 60.0;
     double blades_speed_{0.0};
-    int enable_button_;
-    int speed_axis_;
+    int enable_button_{0};
+    int speed_axis_{3};
     bool require_enable_button_{false};
-    int start_button_;
+    int start_button_{0};
     bool is_start_{false};
     double joy_offset_{0.0};
     double joy_deadzone_{0.15};

@@ -1,0 +1,26 @@
+# ~/.tmuxinator/cfr_rc_simulation.yml
+
+name: cfr_rc_simulation
+root: ~/workspace/cfr_ws
+
+windows:
+  - simulation:
+      layout: tiled
+      pre:
+        - source install/local_setup.bash
+      panes:
+        - ros2 launch cfr_gazebo gazebo.launch.py
+        - sleep 3; ros2 launch cfr_blades_control start_rc.launch.py
+        - sleep 3; ros2 launch cfr_actuation start.launch.py
+        - sleep 3; ros2 launch cfr_dynamics start.launch.py
+        - sleep 3; ros2 launch cfr_kinematics_states start.launch.py
+  - rc_control:
+      pre:
+        - source install/local_setup.bash
+      panes:
+        - sleep 2; ros2 launch cfr_telejoy_config teleop-launch.py joy_config:=spmr1010
+  - path_tracer:
+      pre:
+        - source install/local_setup.bash
+      panes:
+        - sleep 4; ros2 launch path_tracer start.launch.py

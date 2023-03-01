@@ -9,7 +9,7 @@ else
     echo "$DIR directory does not exist, creating new directory"
     mkdir "$DIR"
 fi
-# FILES="/home/mpheng/workspace/cfr_ws/src/cfr_simulation/auto_scripts/tmux/tmuxinator/*"
+# FILES=~/workspace/cfr_ws/src/cfr_simulation/auto_scripts/tmux/tmuxinator/*
 FILES=~/workspace/cfr_ws/src/auto_scripts/tmux/tmuxinator/*
 for f in "$FILES"
 do

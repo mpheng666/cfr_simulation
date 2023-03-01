@@ -4,11 +4,11 @@ namespace cfr_actuation_ns {
     CfrActuation::CfrActuation()
         : Node("cfr_actuation")
         , actuation_pub_(
-          this->create_publisher<std_msgs::msg::Float64MultiArray>("cfr_actuation", 10))
+          this->create_publisher<std_msgs::msg::Float64MultiArray>("~/motor_actuation", 10))
         , joy_sub_(this->create_subscription<sensor_msgs::msg::Joy>(
           "joy", 10, std::bind(&CfrActuation::joyCb, this, _1)))
         , allow_move_sub_(this->create_subscription<std_msgs::msg::Bool>(
-          "allow_move", 10, std::bind(&CfrActuation::allowMoveCb, this, _1)))
+          "~/allow_move", 10, std::bind(&CfrActuation::allowMoveCb, this, _1)))
         , timer_(this->create_wall_timer(10ms, std::bind(&CfrActuation::timerCb, this)))
         , reset_timer_(
           this->create_wall_timer(2s, std::bind(&CfrActuation::resetTimerCb, this)))
@@ -89,10 +89,10 @@ namespace cfr_actuation_ns {
         this->declare_parameter("joy_right_y_magnitude", 1.0);
     }
 
-    void CfrActuation::joyToMotorActuation(const double JoystickLeftX,
-                                           [[maybe_unused]] const double JoystickLeftY,
-                                           const double JoystickRightX,
-                                           const double JoystickRightY)
+    void CfrActuation::joyToMotorActuation(const double& JoystickLeftX,
+                                           [[maybe_unused]] const double& JoystickLeftY,
+                                           const double& JoystickRightX,
+                                           const double& JoystickRightY)
     {
         motor_actuation_.LXMotordeg_FB =
         motor_deg_limit_.LXmin * (1 - (JoystickRightY - joy_limit_.joymin) /
@@ -129,9 +129,7 @@ namespace cfr_actuation_ns {
         motor_deg_limit_.RYmax * (JoystickLeftX - joy_limit_.joymin) /
         (joy_limit_.joymax - joy_limit_.joymin);
 
-        // [[maybe_unused]] double dummy = JoystickLeftY;
-
-        // motor_actuation_.print();
+        motor_actuation_.print(this->get_name());
     }
 
 } // namespace cfr_actuation_ns

@@ -35,10 +35,11 @@ def generate_launch_description():
 
     return launch.LaunchDescription([
         launch_ros.actions.Node(
-            name='cfr_actuation_node',
+            name='cfr_actuation',
             package='cfr_actuation',
             executable='cfr_actuation_node',
             output='screen',
+            namespace='cfr',
             parameters= [joy_config, motor_limits_config]
         )
     ])

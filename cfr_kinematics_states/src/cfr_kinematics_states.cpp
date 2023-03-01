@@ -5,7 +5,7 @@ namespace cfr_kinemtics_states_ns {
         : Node("cfr_kinematics_states")
         , cmd_vel_pub_(this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 10))
         , acc_sub_(this->create_subscription<geometry_msgs::msg::Accel>(
-          "cfr_acceleration", 10, std::bind(&CfrKinematicsStates::accelCb, this, _1)))
+          "cfr_dynamics/cfr_acceleration", 10, std::bind(&CfrKinematicsStates::accelCb, this, _1)))
         , timer_(
           this->create_wall_timer(100ms, std::bind(&CfrKinematicsStates::timerCb, this)))
     {

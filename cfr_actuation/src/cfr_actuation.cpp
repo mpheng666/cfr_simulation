@@ -8,7 +8,7 @@ namespace cfr_actuation_ns {
         , joy_sub_(this->create_subscription<sensor_msgs::msg::Joy>(
           "joy", 10, std::bind(&CfrActuation::joyCb, this, _1)))
         , allow_move_sub_(this->create_subscription<std_msgs::msg::Bool>(
-          "~/allow_move", 10, std::bind(&CfrActuation::allowMoveCb, this, _1)))
+          "allow_move", 10, std::bind(&CfrActuation::allowMoveCb, this, _1)))
         , timer_(this->create_wall_timer(10ms, std::bind(&CfrActuation::timerCb, this)))
         , reset_timer_(
           this->create_wall_timer(2s, std::bind(&CfrActuation::resetTimerCb, this)))

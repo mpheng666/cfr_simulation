@@ -33,10 +33,11 @@ def generate_launch_description():
 
     return launch.LaunchDescription([
         launch_ros.actions.Node(
-            name='cfr_blades_node',
+            name='cfr_blades',
             package='cfr_blades_control',
             executable='cfr_blades_node',
             output='screen',
+            namespace='cfr',
             parameters=[
                 blades_config,
             ]

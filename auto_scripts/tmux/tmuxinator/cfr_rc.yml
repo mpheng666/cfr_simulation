@@ -23,4 +23,4 @@ windows:
       pre:
         - source install/local_setup.bash
       panes:
-        - sleep 4; ros2 launch path_tracer start.launch.py
+        # - sleep 4; ros2 launch path_tracer start.launch.py

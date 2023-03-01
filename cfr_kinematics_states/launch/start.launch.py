@@ -30,9 +30,12 @@ def load_yaml(file_path):
 def generate_launch_description():
     return launch.LaunchDescription([
         launch_ros.actions.Node(
-            name='cfr_kinematics_states_node',
+            name='cfr_kinematics_states',
             package='cfr_kinematics_states',
             executable='cfr_kinematics_states_node',
             output='screen',
+            namespace='cfr',
+            remappings=[
+            ('/cfr/cmd_vel', '/cmd_vel'),]
         )
     ])

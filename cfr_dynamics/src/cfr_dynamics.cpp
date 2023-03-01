@@ -3,9 +3,9 @@ namespace cfr_dynamics_ns {
     CfrDynamics::CfrDynamics()
         : Node("cfr_dynamics")
         , accel_pub_(
-          this->create_publisher<geometry_msgs::msg::Accel>("cfr_acceleration", 10))
+          this->create_publisher<geometry_msgs::msg::Accel>("~/cfr_acceleration", 10))
         , actuation_sub_(this->create_subscription<std_msgs::msg::Float64MultiArray>(
-          "cfr_actuation", 10, std::bind(&CfrDynamics::actuationCb, this, _1)))
+          "cfr_actuation/motor_actuation", 10, std::bind(&CfrDynamics::actuationCb, this, _1)))
         , odom_sub_(this->create_subscription<nav_msgs::msg::Odometry>(
           "odom", 10, std::bind(&CfrDynamics::odomCb, this, _1)))
         , timer_(this->create_wall_timer(10ms, std::bind(&CfrDynamics::timerCb, this)))
@@ -27,7 +27,7 @@ namespace cfr_dynamics_ns {
         model_inputs_.LXMotordeg = msg->data.at(0);
         model_inputs_.RXMotordeg = msg->data.at(1);
         model_inputs_.RYMotordeg = msg->data.at(2);
-        // model_inputs_.print();
+        model_inputs_.print(this->get_name());
         // model_inputs_.NetTorque = msg->data.at(3);
         model_inputs_.NetTorque = 45.0;
         this->computeEffectiveContactRadius();
@@ -94,7 +94,7 @@ namespace cfr_dynamics_ns {
                 -(effective_c_r_.k_right_y * abs(model_inputs_.RYMotordeg) +
                   effective_c_r_.b_right_y);
         }
-        // effective_c_r_.print();
+        effective_c_r_.print(this->get_name());
     }
 
     void CfrDynamics::computeDynamics()
@@ -180,7 +180,7 @@ namespace cfr_dynamics_ns {
         dynamics_gen_.theta_acc_left + dynamics_gen_.theta_acc_right -
         (environment_params_.mu_4 * model_inputs_.theta_dot) / cfr_model_.I;
 
-        // dynamics_gen_.print();
+        dynamics_gen_.print(this->get_name());
     }
 
 } // namespace cfr_dynamics_ns

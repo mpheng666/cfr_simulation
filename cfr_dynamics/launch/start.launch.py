@@ -30,9 +30,12 @@ def load_yaml(file_path):
 def generate_launch_description():
     return launch.LaunchDescription([
         launch_ros.actions.Node(
-            name='cfr_dynamics_node',
+            name='cfr_dynamics',
             package='cfr_dynamics',
             executable='cfr_dynamics_node',
             output='screen',
+            namespace='cfr',
+            remappings=[
+            ('/cfr/odom', '/odom'),]
         )
     ])

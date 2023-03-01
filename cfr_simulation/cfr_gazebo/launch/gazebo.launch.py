@@ -50,7 +50,7 @@ def generate_launch_description():
     spawn_cfr_velocity_controller = Node(
         package='controller_manager',
         executable='spawner.py',
-        arguments=['forward_velocity_controller', '-c', '/controller_manager'],
+        arguments=['blades_velocity_controller', '-c', '/controller_manager'],
         output='screen',
     )
 

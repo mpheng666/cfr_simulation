@@ -45,7 +45,7 @@
         </ray>
         <plugin name="${link}_scan" filename="libgazebo_ros_ray_sensor.so">
           <ros>
-            <remapping>~/out:=/${link}/scan</remapping>
+            <remapping>~/out:=/cfr/${link}/scan</remapping>
           </ros>
           <output_type>sensor_msgs/LaserScan</output_type>
           <frame_name>${link}</frame_name>

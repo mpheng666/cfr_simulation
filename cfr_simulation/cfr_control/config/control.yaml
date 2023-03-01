@@ -5,10 +5,10 @@ controller_manager:
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
 
-    forward_velocity_controller:
+    blades_velocity_controller:
       type: velocity_controllers/JointGroupVelocityController
 
-forward_velocity_controller:
+blades_velocity_controller:
   ros__parameters:
     joints:
       - right_blade_joint

@@ -23,11 +23,11 @@ public:
         , joy_subscription_(this->create_subscription<sensor_msgs::msg::Joy>(
           "joy", 10, std::bind(&CFRBladesControl::joy_callback, this, _1)))
         , blade_speed_subscription_(this->create_subscription<std_msgs::msg::Float32>(
-          "cfr_blade_speed",
+          "~/cfr_blade_speed",
           10,
           std::bind(&CFRBladesControl::blade_speed_callback, this, _1)))
         , blades_publisher_(this->create_publisher<std_msgs::msg::Float64MultiArray>(
-          "forward_velocity_controller/commands", 10))
+          "blades_velocity_controller/commands", 10))
         , start_publisher_(this->create_publisher<std_msgs::msg::Bool>("allow_move", 10))
         , timer_(this->create_wall_timer(
           200ms, std::bind(&CFRBladesControl::timer_callback, this)))

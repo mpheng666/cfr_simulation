@@ -32,10 +32,11 @@ def generate_launch_description():
 
     return launch.LaunchDescription([
         launch_ros.actions.Node(
-            name='path_tracer',
+            name='cfr_path_tracer',
             package='path_tracer',
             executable='path_tracer_node',
             output='screen',
+            namespace='cfr'
         ),
         launch_ros.actions.Node(
             name='rviz',

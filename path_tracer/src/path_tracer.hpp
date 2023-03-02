@@ -36,7 +36,7 @@ namespace path_tracer {
         rclcpp::TimerBase::SharedPtr timer_;
 
         nav_msgs::msg::Odometry odom_;
-        nav_msgs::msg::Path path_message_ = nav_msgs::msg::Path();
+        nav_msgs::msg::Path path_message_;
         visualization_msgs::msg::Marker trace_marker_;
         visualization_msgs::msg::MarkerArray trace_markers_;
 

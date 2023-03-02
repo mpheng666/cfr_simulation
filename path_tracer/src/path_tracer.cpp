@@ -7,10 +7,10 @@ namespace path_tracer {
     PathTracer::PathTracer()
         : Node("path_tracer")
         , odom_subscription_(this->create_subscription<nav_msgs::msg::Odometry>(
-          "odom", 10, std::bind(&PathTracer::odomCallback, this, _1)))
+          "/odom", 10, std::bind(&PathTracer::odomCallback, this, _1)))
         , path_publisher_(this->create_publisher<nav_msgs::msg::Path>("~/cfr_path", 10))
         , markers_publisher_(
-          this->create_publisher<visualization_msgs::msg::MarkerArray>("path_marker", 10))
+          this->create_publisher<visualization_msgs::msg::MarkerArray>("~/path_marker", 10))
         , timer_(
           this->create_wall_timer(500ms, std::bind(&PathTracer::timerCallback, this)))
         , tf_buffer_(std::make_unique<tf2_ros::Buffer>(this->get_clock()))

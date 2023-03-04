@@ -33,17 +33,18 @@ set(dependencies
 )
 
 add_library(${library_name} SHARED
-  src/cfr_mpc.cpp
+  include/lib/mpcmoveCodeGeneration.cpp
+  include/lib/qpkwik.cpp
+  include/lib/norm.cpp
+  include/lib/xgerc.cpp
+  include/lib/xnrm2.cpp
 )
-
 ament_target_dependencies(${library_name}
   ${dependencies}
 )
 
-add_executable(${executable_name} src/cfr_mpc_node.cpp)
-
+add_executable(${executable_name} src/cfr_mpc_node.cpp  src/cfr_mpc.cpp )
 target_link_libraries(${executable_name} ${library_name})
-
 ament_target_dependencies(${executable_name}
   ${dependencies}
 )
@@ -58,7 +59,7 @@ install(TARGETS ${executable_name}
   RUNTIME DESTINATION lib/${PROJECT_NAME}
 )
 
-install(DIRECTORY include launch lib
+install(DIRECTORY include launch
   DESTINATION share/${PROJECT_NAME}
 )
 

@@ -19,6 +19,7 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
 
 include_directories(
   include
@@ -30,6 +31,7 @@ set(dependencies
   ament_cmake
   rclcpp
   std_msgs
+  geometry_msgs
 )
 
 add_library(${library_name} SHARED

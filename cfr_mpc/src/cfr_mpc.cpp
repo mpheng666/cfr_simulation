@@ -3,8 +3,12 @@
 namespace cfr_mpc {
     CFRMPC::CFRMPC()
         : Node("cfr_mpc")
-        , mpc_compute_cb_timer_(
-          this->create_wall_timer(100ms, std::bind(&CFRMPC::MPCComputeCb, this)))
+        , control_pub_timer_(
+          this->create_wall_timer(100ms, std::bind(&CFRMPC::controlPubCb, this)))
+        , u_control_pub_(
+          this->create_publisher<std_msgs::msg::Float64MultiArray>("control_u", 10))
+        , cmd_vel_sub_(this->create_subscription<geometry_msgs::msg::Twist>(
+          "cmd_vel", 10, std::bind(&CFRMPC::cmdvelCb, this, _1)))
     {
     }
 
@@ -13,7 +17,7 @@ namespace cfr_mpc {
         // mpcmoveCodeGeneration_terminate();
     }
 
-    void CFRMPC::MPCComputeCb()
+    void CFRMPC::MPCCompute(const geometry_msgs::msg::Twist& msg)
     {
         struct10_T Info;
         struct4_T statedata;
@@ -25,15 +29,24 @@ namespace cfr_mpc {
         // Call the entry-point 'mpcmoveCodeGeneration'.
         argInit_struct4_T(&statedata); // set 0
         r = argInit_struct5_T();       // set 0
-        r.signals.ref[2] = 0.5;        // set ref to 0.5
-        printf("output r is %f, %f %f\n", r.signals.ref[0], r.signals.ref[1],
-               r.signals.ref[2]);
+        r.signals.ref[0] = msg.linear.x;
+        r.signals.ref[1] = msg.linear.y;
+        r.signals.ref[2] = msg.angular.z;
         // statedata = plant[3], disturbance[3], lastmove[3], covariance[36], ia[72]
         // r = signal.ym[3], signal.ref[3]
         // u = double[3]
         // Info = Uopt[33], Yopt[33], Xopt[66], Topt[11], Slack, Iterations, Cost;
         coder::mpcmoveCodeGeneration(&statedata, &r, u, &Info);
-        printf("output u is %f, %f %f\n", u[0], u[1], u[2]);
+        control_msg_.data.resize(3);
+        control_msg_.data.at(0) = u[0];
+        control_msg_.data.at(1) = u[1];
+        control_msg_.data.at(2) = u[2];
+    }
+
+    void CFRMPC::cmdvelCb(const geometry_msgs::msg::Twist::SharedPtr msg) { MPCCompute(*msg); }
+
+    void CFRMPC::controlPubCb() {
+        u_control_pub_->publish(control_msg_);
     }
 
     void CFRMPC::argInit_3x1_real_T(double result[3])

@@ -15,6 +15,9 @@
 
 #include "rclcpp/rclcpp.hpp"
 
+#include "geometry_msgs/msg/twist.hpp"
+#include "std_msgs/msg/float64_multi_array.hpp"
+
 #include <algorithm>
 #include <chrono>
 #include <functional>
@@ -58,7 +61,11 @@ namespace cfr_mpc {
         ~CFRMPC();
 
     private:
-        rclcpp::TimerBase::SharedPtr mpc_compute_cb_timer_;
+        rclcpp::TimerBase::SharedPtr control_pub_timer_;
+        rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr u_control_pub_;
+        rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_sub_;
+
+        std_msgs::msg::Float64MultiArray control_msg_;
 
         void argInit_3x1_real_T(double result[3]);
         void argInit_6x6_real_T(double result[36]);
@@ -69,7 +76,9 @@ namespace cfr_mpc {
         struct5_T argInit_struct5_T();
         struct6_T argInit_struct6_T();
 
-        void MPCComputeCb();
+        void MPCCompute(const geometry_msgs::msg::Twist& msg);
+        void cmdvelCb(const geometry_msgs::msg::Twist::SharedPtr msg);
+        void controlPubCb();
     };
 
 } // namespace cfr_mpc

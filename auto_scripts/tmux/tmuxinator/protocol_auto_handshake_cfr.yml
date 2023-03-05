@@ -1,0 +1,10 @@
+# ~/.tmuxinator/protocol_auto_handshake_cfr.yml
+
+name: protocol_auto_handshake_cfr
+root: ~/
+
+windows:
+  - joy_test:
+      panes:
+        - cd ~/workspace/cfr_ws/src/cfr_simulation/cfr_socket_comm/node/ && sleep 2 && ./socket_auto_handshake_node 192.168.1.2 10000
+        - source ~/workspace/cfr_ws/install/local_setup.bash && sleep 3 ; ros2 run cfr_feedback_server cfr_feedback_client_node 192.168.1.2 10001

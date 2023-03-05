@@ -7,4 +7,4 @@ windows:
   - joy_test:
       panes:
         - ros2 launch cfr_telejoy_config start.launch
-        # - ros2 launch cfr_socket_comm client.launch
+        - ros2 run cfr_socket_comm cfr_socket_client_node 192.168.1.2 10000

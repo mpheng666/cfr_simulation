@@ -36,7 +36,7 @@ namespace cfr_protocol {
 
         void getSMState();
 
-        void triggerEvent(const std::string& service_name, const std::vector<double>& data);
+        bool triggerEvent(const std::string& service_name, const std::vector<double>& data);
     };
 } // namespace cfr_protocol
 

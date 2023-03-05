@@ -24,6 +24,16 @@ namespace cfr_protocol {
         RCLCPP_INFO_STREAM(this->get_logger(), "Receive request: " << req->service_name
                                                                    << " with data size "
                                                                    << req->data.size());
+
+        bool response_triggered = triggerEvent(req->service_name, req->data);
+        if(robot_state_machine_.is_valid_event_)
+        {
+            res->response = req->service_name + ",OK";
+        }
+        else
+        {
+            res->response = req->service_name + ",ERR" + "INVALID_STATE"; 
+        }
         res->success = true;
     }
 
@@ -47,7 +57,7 @@ namespace cfr_protocol {
         }
     }
 
-    void ProtocolServer::triggerEvent(const std::string& service_name,
+    bool ProtocolServer::triggerEvent(const std::string& service_name,
                                       const std::vector<double>& data)
     {
         using namespace cfr_sm;
@@ -58,10 +68,14 @@ namespace cfr_protocol {
             robot_state_machine_.process_event(EventGetMode());
         }
         else if (service_name == "NYPAUTO") {
-            robot_state_machine_.process_event(EventSetMode(1));
+            if (data.size()) {
+                robot_state_machine_.process_event(EventSetMode(data.at(0)));
+            }
         }
         else if (service_name == "FB") {
-            robot_state_machine_.process_event(EventFeedBack(1));
+            if (data.size()) {
+                robot_state_machine_.process_event(EventFeedBack(data.at(0)));
+            }
         }
         else if (service_name == "INIT") {
             robot_state_machine_.process_event(EventInit());
@@ -76,17 +90,26 @@ namespace cfr_protocol {
             robot_state_machine_.process_event(EventStartEngine());
         }
         else if (service_name == "CTRL") {
-            robot_state_machine_.process_event(EventControl(1,2,3,4));
+            if (data.size() >= 4) {
+                robot_state_machine_.process_event(
+                EventControl(data.at(0), data.at(1), data.at(2), data.at(3)));
+            }
         }
         else if (service_name == "AXIS") {
-            robot_state_machine_.process_event(EventAxis(1,2,3,4));
+            if (data.size() >= 4) {
+            }
+            robot_state_machine_.process_event(
+            EventAxis(data.at(0), data.at(1), data.at(2), data.at(3)));
         }
         else if (service_name == "BLADEANG") {
-            robot_state_machine_.process_event(EventSetBladeAngle(1));
+            if (data.size()) {
+            }
+            robot_state_machine_.process_event(EventSetBladeAngle(data.at(0)));
         }
         else if (service_name == "BEACONS") {
             robot_state_machine_.process_event(EventBeacons());
         }
+        return true;
     }
 
 } // namespace cfr_protocol

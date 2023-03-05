@@ -15,6 +15,8 @@ namespace cfr_sm {
         sm_CFR();
         std::shared_ptr<cfr_manager::CFRManager> sm_CFR_manager_;
         void unconsumed_event(const sc::event_base& event);
+
+        bool is_valid_event_ {true};
     };
 
     struct StateIdle : sc::simple_state<StateIdle, sm_CFR> {

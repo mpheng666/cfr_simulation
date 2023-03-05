@@ -80,6 +80,9 @@ namespace cfr_sm {
     struct EventBeacons : sc::event<EventBeacons> {
     };
 
+    struct EventReset : sc::event<EventReset> {
+    };
+
 } // namespace cfr_sm
 
 #endif

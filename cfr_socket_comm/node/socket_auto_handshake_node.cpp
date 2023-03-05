@@ -37,24 +37,20 @@ namespace cfr_socket_comm {
         {
             std::cout << "Session started! \n";
             if (doHandShake()) {
-                for (;;) {
-                    doControlCommand(50, 0.1, 0.1, 0.1);
-                    boost::asio::steady_timer t(ioc_,
-                                                boost::asio::chrono::milliseconds(100));
-                    t.wait();
-                }
+                std::cout << "Handshake is OK \n";
             }
             else {
                 std::cerr << "Error during handshake, please try again later! \n";
-                return;
             }
+            continueSession();
         }
 
         bool doHandShake()
         {
             std::cout << "Handshaking \n";
-            return (doCommand("INIT", 3, 1000) && doCommand("START", 3, 1000) &&
-                    doCommand("FB", 3, 1000) && doCommand("STARTENGINE", 3, 1000));
+            return (
+            doCommand("INIT", 3, 1000) && doCommand("START", 3, 1000) &&
+            doCommand("FB,1", 3, 1000) /* && doCommand("STARTENGINE", 3, 1000) */);
         }
 
         std::string doRead()
@@ -69,15 +65,16 @@ namespace cfr_socket_comm {
             catch (const std::exception& e) {
                 std::cerr << e.what() << "\n";
             }
-            std::cout << "Read: " << res;
+            std::cout << "CFR: " << res;
             return res;
         }
 
         void doWrite(const std::string& msg)
         {
             try {
-                std::cout << "Write: " << msg;
-                boost::asio::write(socket_, boost::asio::buffer(msg));
+                std::cout << "ED: " << msg;
+                boost::asio::write(socket_, boost::asio::buffer(msg + "\n"));
+                std::cout << "\n";
             }
             catch (const std::exception& e) {
                 std::cerr << e.what() << '\n';
@@ -86,8 +83,12 @@ namespace cfr_socket_comm {
 
         bool validateMsg(const std::string& msg, const std::string& target_msg)
         {
-            std::cout << "Validating respond: " << target_msg;
-            return msg + ",OK\n" == target_msg;
+            std::cout << "Validating response: " << target_msg;
+            if (msg + ",OK\n" == target_msg) {
+                std::cout << "Response OK \n";
+                return true;
+            }
+            return false;
         }
 
         bool
@@ -124,6 +125,21 @@ namespace cfr_socket_comm {
             doWrite(command);
             return true;
         }
+
+        void continueSession()
+        {
+            std::cout << "Possible command: <PSTATE>, <BLADEANG, 5>, <MODE>, "
+                         "<STARTENGINE>, <BEACONS>, <STOP>, <INIT> \n";
+            for (;;) {
+                std::cout << "ED: ";
+                char request_data[MAX_BUFFER_SIZE_];
+                std::cin.getline(request_data, MAX_BUFFER_SIZE_);
+                doWrite(request_data);
+                auto command = doRead();
+            }
+        }
+
+        static constexpr int MAX_BUFFER_SIZE_ = 1024;
     };
 
 } // namespace cfr_socket_comm

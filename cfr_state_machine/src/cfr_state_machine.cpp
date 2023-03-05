@@ -11,11 +11,14 @@ namespace cfr_sm {
 
     void sm_CFR::unconsumed_event(const sc::event_base& event)
     {
+        is_valid_event_ = false;
         std::cout << "Invalid event: " << typeid(event).name() << "\n";
     }
 
     // StateIdle
-    StateIdle::StateIdle() { std::cout << "State: StateIdle \n"; }
+    StateIdle::StateIdle() { 
+        // is_valid_event_ = true;
+        std::cout << "State: StateIdle \n"; }
 
     sc::result StateIdle::react(const EventInit& event)
     {

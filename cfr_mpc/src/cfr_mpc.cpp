@@ -5,8 +5,7 @@ namespace cfr_mpc {
         : Node("cfr_mpc")
         , control_pub_timer_(
           this->create_wall_timer(100ms, std::bind(&CFRMPC::controlPubCb, this)))
-        , joy_control_pub_(this->create_publisher<sensor_msgs::msg::Joy>(
-          "~/joy", 10))
+        , joy_control_pub_(this->create_publisher<sensor_msgs::msg::Joy>("~/joy", 10))
         , cmd_vel_sub_(this->create_subscription<geometry_msgs::msg::Twist>(
           "~/cmd_vel", 10, std::bind(&CFRMPC::cmdvelCb, this, _1)))
     {
@@ -33,6 +32,15 @@ namespace cfr_mpc {
         joy_control_msg_.axes.at(1) = u[0];
         joy_control_msg_.axes.at(2) = u[1];
         joy_control_msg_.axes.at(0) = u[2];
+        RCLCPP_INFO_STREAM(this->get_logger(), "plant0: " << statedata.Plant[0]);
+        RCLCPP_INFO_STREAM(this->get_logger(), "plant1: " << statedata.Plant[1]);
+        RCLCPP_INFO_STREAM(this->get_logger(), "plant2: " << statedata.Plant[2]);
+        RCLCPP_INFO_STREAM(this->get_logger(), "disturbance0: " << statedata.Disturbance[0]);
+        RCLCPP_INFO_STREAM(this->get_logger(), "disturbance1: " << statedata.Disturbance[1]);
+        RCLCPP_INFO_STREAM(this->get_logger(), "disturbance2: " << statedata.Disturbance[2]);
+        RCLCPP_INFO_STREAM(this->get_logger(), "lastmove0: " << statedata.LastMove[0]);
+        RCLCPP_INFO_STREAM(this->get_logger(), "lastmove1: " << statedata.LastMove[1]);
+        RCLCPP_INFO_STREAM(this->get_logger(), "lastmove2: " << statedata.LastMove[2]);
     }
 
     void CFRMPC::cmdvelCb(const geometry_msgs::msg::Twist::SharedPtr msg)

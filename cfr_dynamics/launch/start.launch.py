@@ -36,6 +36,7 @@ def generate_launch_description():
             output='screen',
             namespace='cfr',
             remappings=[
-            ('/cfr/odom', '/odom'),]
+            ('/cfr/odom', '/odom'),
+            ('/cfr/motor_actuation', 'cfr_mpc/motor_actuation')]
         )
     ])

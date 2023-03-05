@@ -1,22 +1,15 @@
 #ifndef _CFR_MPC_CFR_MPC_HPP_
 #define _CFR_MPC_CFR_MPC_HPP_
 
-// platform type definition
 #include "lib/rtwtypes.h"
-
-// platform compiler definition
 #include "lib/mpcmoveCodeGeneration_spec.h"
-
-// optimization function
 #include "lib/qpkwik.h"
-
-// actual mpc
 #include "lib/mpcmoveCodeGeneration.h"
 
 #include "rclcpp/rclcpp.hpp"
 
 #include "geometry_msgs/msg/twist.hpp"
-#include "std_msgs/msg/float64_multi_array.hpp"
+#include "sensor_msgs/msg/joy.hpp"
 
 #include <algorithm>
 #include <chrono>
@@ -62,10 +55,10 @@ namespace cfr_mpc {
 
     private:
         rclcpp::TimerBase::SharedPtr control_pub_timer_;
-        rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr u_control_pub_;
+        rclcpp::Publisher<sensor_msgs::msg::Joy>::SharedPtr joy_control_pub_;
         rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_sub_;
-
-        std_msgs::msg::Float64MultiArray control_msg_;
+        
+        sensor_msgs::msg::Joy joy_control_msg_;
 
         void argInit_3x1_real_T(double result[3]);
         void argInit_6x6_real_T(double result[36]);
@@ -79,6 +72,11 @@ namespace cfr_mpc {
         void MPCCompute(const geometry_msgs::msg::Twist& msg);
         void cmdvelCb(const geometry_msgs::msg::Twist::SharedPtr msg);
         void controlPubCb();
+
+        struct10_T Info;
+        struct4_T statedata;
+        struct5_T r;
+        double u[3];
     };
 
 } // namespace cfr_mpc

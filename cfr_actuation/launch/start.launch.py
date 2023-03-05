@@ -40,6 +40,7 @@ def generate_launch_description():
             executable='cfr_actuation_node',
             output='screen',
             namespace='cfr',
-            parameters= [joy_config, motor_limits_config]
+            parameters= [joy_config, motor_limits_config],
+            remappings=[('joy', 'cfr_mpc/joy')]
         )
     ])

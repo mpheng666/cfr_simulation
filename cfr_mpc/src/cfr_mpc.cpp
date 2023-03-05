@@ -5,11 +5,15 @@ namespace cfr_mpc {
         : Node("cfr_mpc")
         , control_pub_timer_(
           this->create_wall_timer(100ms, std::bind(&CFRMPC::controlPubCb, this)))
-        , u_control_pub_(
-          this->create_publisher<std_msgs::msg::Float64MultiArray>("control_u", 10))
+        , joy_control_pub_(this->create_publisher<sensor_msgs::msg::Joy>(
+          "~/joy", 10))
         , cmd_vel_sub_(this->create_subscription<geometry_msgs::msg::Twist>(
-          "cmd_vel", 10, std::bind(&CFRMPC::cmdvelCb, this, _1)))
+          "~/cmd_vel", 10, std::bind(&CFRMPC::cmdvelCb, this, _1)))
     {
+        argInit_struct4_T(&statedata); // set 0
+        r = argInit_struct5_T();       // set 0
+        joy_control_msg_.axes.resize(8);
+        joy_control_msg_.buttons.resize(8);
     }
 
     CFRMPC::~CFRMPC()
@@ -19,35 +23,24 @@ namespace cfr_mpc {
 
     void CFRMPC::MPCCompute(const geometry_msgs::msg::Twist& msg)
     {
-        struct10_T Info;
-        struct4_T statedata;
-        struct5_T r;
-        double u[3];
-        // Initialize function 'mpcmoveCodeGeneration' input arguments.
-        // Initialize function input argument 'statedata'.
-        // Initialize function input argument 'onlinedata'.
-        // Call the entry-point 'mpcmoveCodeGeneration'.
-        argInit_struct4_T(&statedata); // set 0
-        r = argInit_struct5_T();       // set 0
         r.signals.ref[0] = msg.linear.x;
         r.signals.ref[1] = msg.linear.y;
         r.signals.ref[2] = msg.angular.z;
         // statedata = plant[3], disturbance[3], lastmove[3], covariance[36], ia[72]
         // r = signal.ym[3], signal.ref[3]
-        // u = double[3]
         // Info = Uopt[33], Yopt[33], Xopt[66], Topt[11], Slack, Iterations, Cost;
         coder::mpcmoveCodeGeneration(&statedata, &r, u, &Info);
-        control_msg_.data.resize(3);
-        control_msg_.data.at(0) = u[0];
-        control_msg_.data.at(1) = u[1];
-        control_msg_.data.at(2) = u[2];
+        joy_control_msg_.axes.at(1) = u[0];
+        joy_control_msg_.axes.at(2) = u[1];
+        joy_control_msg_.axes.at(0) = u[2];
     }
 
-    void CFRMPC::cmdvelCb(const geometry_msgs::msg::Twist::SharedPtr msg) { MPCCompute(*msg); }
-
-    void CFRMPC::controlPubCb() {
-        u_control_pub_->publish(control_msg_);
+    void CFRMPC::cmdvelCb(const geometry_msgs::msg::Twist::SharedPtr msg)
+    {
+        MPCCompute(*msg);
     }
+
+    void CFRMPC::controlPubCb() { joy_control_pub_->publish(joy_control_msg_); }
 
     void CFRMPC::argInit_3x1_real_T(double result[3])
     {

@@ -1,0 +1,7 @@
+cfr:
+  cfr_dynamics:
+    ros__parameters:
+      friction_coefficient_mu1: 0.0
+      viscocity_coefficient_mu2: 0.2
+      airdrag_coefficient_mu3: 150.0
+      rotational_resistance_coefficient_mu4: 400.0

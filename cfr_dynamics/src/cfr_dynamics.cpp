@@ -41,7 +41,12 @@ namespace cfr_dynamics_ns {
         model_inputs_.theta_dot = msg->twist.twist.angular.z;
     }
 
-    void CfrDynamics::loadParams() {}
+    void CfrDynamics::loadParams() {
+        this->get_parameter("friction_coefficient_mu1", environment_params_.mu_1);
+        this->get_parameter("viscocity_coefficient_mu2", environment_params_.mu_2);
+        this->get_parameter("airdrag_coefficient_mu3", environment_params_.mu_3);
+        this->get_parameter("rotational_resistance_coefficient_mu4", environment_params_.mu_4);
+    }
 
     void CfrDynamics::computeEffectiveContactRadius()
     {

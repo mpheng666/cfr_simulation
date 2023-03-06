@@ -40,7 +40,7 @@ namespace cfr_dynamics_ns {
 
     struct EnvParams {
         double mu_1{0.0};   // friction coefficient
-        double mu_2{0.2};   // viscocoty coefficient
+        double mu_2{0.2};   // viscocity coefficient
         double mu_3{150.0}; // air drag coefficient
         double mu_4{400.0}; // rotational resistance coefficient
         double g{9.81};

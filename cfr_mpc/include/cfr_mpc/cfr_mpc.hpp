@@ -31,7 +31,6 @@ namespace cfr_mpc {
         rclcpp::Publisher<sensor_msgs::msg::Joy>::SharedPtr joy_control_pub_;
         rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_sub_;
         rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_sub_;
-
         sensor_msgs::msg::Joy joy_control_msg_;
 
         void argInit_3x1_real_T(double result[3]);

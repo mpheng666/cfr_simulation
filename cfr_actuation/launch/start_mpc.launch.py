@@ -41,6 +41,6 @@ def generate_launch_description():
             output='screen',
             namespace='cfr',
             parameters= [joy_config, motor_limits_config],
-            remappings=[('joy', 'cfr_mpc/joy')]
+            remappings=[('joy', 'cfr_mpc/joy_control')]
         )
     ])

@@ -59,21 +59,21 @@ namespace cfr_kinemtics_states_ns {
         // RCLCPP_INFO(this->get_logger(), "Currnet vel angular z: %lf",
         // kinematics_states_.velocity_angular_z_curr);
 
-        // kinematics_states_.velocity_linear_x_prev =
-        // kinematics_states_.velocity_linear_x_curr;
-        // kinematics_states_.velocity_linear_y_prev =
-        // kinematics_states_.velocity_linear_y_curr;
-        // kinematics_states_.velocity_angular_z_prev =
-        // kinematics_states_.velocity_angular_z_curr;
+        kinematics_states_.velocity_linear_x_prev =
+        kinematics_states_.velocity_linear_x_curr;
+        kinematics_states_.velocity_linear_y_prev =
+        kinematics_states_.velocity_linear_y_curr;
+        kinematics_states_.velocity_angular_z_prev =
+        kinematics_states_.velocity_angular_z_curr;
 
         t_prev_ = t_;
     }
 
-    void CfrKinematicsStates::odomCb(const nav_msgs::msg::Odometry::SharedPtr msg)
+    void CfrKinematicsStates::odomCb([[maybe_unused]]const nav_msgs::msg::Odometry::SharedPtr msg)
     {
-        kinematics_states_.velocity_linear_x_prev = msg->twist.twist.linear.x;
-        kinematics_states_.velocity_linear_y_prev = msg->twist.twist.linear.y;
-        kinematics_states_.velocity_angular_z_prev = msg->twist.twist.angular.z;
+        // kinematics_states_.velocity_linear_x_prev = msg->twist.twist.linear.x;
+        // kinematics_states_.velocity_linear_y_prev = msg->twist.twist.linear.y;
+        // kinematics_states_.velocity_angular_z_prev = msg->twist.twist.angular.z;
     }
 
 } // namespace cfr_kinemtics_states_ns

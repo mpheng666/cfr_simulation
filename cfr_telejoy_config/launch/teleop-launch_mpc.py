@@ -19,17 +19,16 @@ def generate_launch_description():
             launch.substitutions.TextSubstitution(text=os.path.join(
                 get_package_share_directory('cfr_telejoy_config'), 'config', '')),
             joy_config, launch.substitutions.TextSubstitution(text='.config.yaml')]),
-
         launch_ros.actions.Node(
             package='joy', executable='joy_node', name='joy_node', namespace='cfr',
             parameters=[{
                 'dev': joy_dev,
                 'deadzone': 0.15,
                 'autorepeat_rate': 20.0,
-            }]),
-        # launch_ros.actions.Node(
-        #     package='teleop_twist_joy', executable='teleop_node',
-        #     name='teleop_twist_joy_node', parameters=[config_filepath], namespace='cfr',
-        #     remappings=[('cmd_vel', 'cfr_mpc/cmd_vel')]
-        #     ),
+            }],remappings=[('joy', 'joy_twist')]),
+        launch_ros.actions.Node(
+            package='teleop_twist_joy', executable='teleop_node',
+            name='teleop_twist_joy_node', parameters=[config_filepath], namespace='cfr',
+            remappings=[('joy', 'joy_twist'),('cmd_vel', 'cfr_mpc/cmd_vel')]
+            ),
     ])

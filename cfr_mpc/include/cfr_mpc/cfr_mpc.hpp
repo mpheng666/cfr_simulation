@@ -20,34 +20,6 @@
 using namespace std::chrono_literals;
 using std::placeholders::_1;
 
-// Type Definitions
-// struct struct10_T {
-//     double Uopt[33];
-//     double Yopt[33];
-//     double Xopt[66];
-//     double Topt[11];
-//     double Slack;
-//     double Iterations;
-//     double Cost;
-// };
-
-// struct struct4_T {
-//     double Plant[3];
-//     double Disturbance[3];
-//     double LastMove[3];
-//     double Covariance[36];
-//     boolean_T iA[72];
-// };
-
-// struct struct6_T {
-//     double ym[3];
-//     double ref[3];
-// };
-
-// struct struct5_T {
-//     struct6_T signals;
-// };
-
 namespace cfr_mpc {
     class CFRMPC : public rclcpp::Node {
     public:
@@ -76,8 +48,6 @@ namespace cfr_mpc {
         void odomCb(const nav_msgs::msg::Odometry::SharedPtr msg);
         void controlPubCb();
 
-        // struct10_T Info;
-        // struct4_T statedata;
         struct5_T r;
         double u[3];
     };

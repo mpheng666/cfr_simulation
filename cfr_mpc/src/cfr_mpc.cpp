@@ -8,8 +8,10 @@ namespace cfr_mpc {
         , joy_control_pub_(this->create_publisher<sensor_msgs::msg::Joy>("~/joy", 10))
         , cmd_vel_sub_(this->create_subscription<geometry_msgs::msg::Twist>(
           "~/cmd_vel", 10, std::bind(&CFRMPC::cmdvelCb, this, _1)))
+        , odom_sub_(this->create_subscription<nav_msgs::msg::Odometry>(
+          "/odom", 10, std::bind(&CFRMPC::odomCb, this, _1)))
     {
-        argInit_struct4_T(&statedata); // set 0
+        // argInit_struct4_T(&statedata); // set 0
         r = argInit_struct5_T();       // set 0
         joy_control_msg_.axes.resize(8);
         joy_control_msg_.buttons.resize(8);
@@ -22,6 +24,11 @@ namespace cfr_mpc {
 
     void CFRMPC::MPCCompute(const geometry_msgs::msg::Twist& msg)
     {
+        struct10_T Info;
+        struct4_T statedata;
+        // struct5_T r;
+        argInit_struct4_T(&statedata); // set 0
+
         r.signals.ref[0] = msg.linear.x;
         r.signals.ref[1] = msg.linear.y;
         r.signals.ref[2] = msg.angular.z;
@@ -35,17 +42,33 @@ namespace cfr_mpc {
         RCLCPP_INFO_STREAM(this->get_logger(), "plant0: " << statedata.Plant[0]);
         RCLCPP_INFO_STREAM(this->get_logger(), "plant1: " << statedata.Plant[1]);
         RCLCPP_INFO_STREAM(this->get_logger(), "plant2: " << statedata.Plant[2]);
-        RCLCPP_INFO_STREAM(this->get_logger(), "disturbance0: " << statedata.Disturbance[0]);
-        RCLCPP_INFO_STREAM(this->get_logger(), "disturbance1: " << statedata.Disturbance[1]);
-        RCLCPP_INFO_STREAM(this->get_logger(), "disturbance2: " << statedata.Disturbance[2]);
+        RCLCPP_INFO_STREAM(this->get_logger(),
+                           "disturbance0: " << statedata.Disturbance[0]);
+        RCLCPP_INFO_STREAM(this->get_logger(),
+                           "disturbance1: " << statedata.Disturbance[1]);
+        RCLCPP_INFO_STREAM(this->get_logger(),
+                           "disturbance2: " << statedata.Disturbance[2]);
         RCLCPP_INFO_STREAM(this->get_logger(), "lastmove0: " << statedata.LastMove[0]);
         RCLCPP_INFO_STREAM(this->get_logger(), "lastmove1: " << statedata.LastMove[1]);
         RCLCPP_INFO_STREAM(this->get_logger(), "lastmove2: " << statedata.LastMove[2]);
+        RCLCPP_INFO_STREAM(this->get_logger(), "signal.ref0: " << r.signals.ref[0]);
+        RCLCPP_INFO_STREAM(this->get_logger(), "signal.ref1: " << r.signals.ref[1]);
+        RCLCPP_INFO_STREAM(this->get_logger(), "signal.ref2: " << r.signals.ref[2]);
+        RCLCPP_INFO_STREAM(this->get_logger(), "signal.ym0: " << r.signals.ym[0]);
+        RCLCPP_INFO_STREAM(this->get_logger(), "signal.ym1: " << r.signals.ym[1]);
+        RCLCPP_INFO_STREAM(this->get_logger(), "signal.ym2: " << r.signals.ym[2]);
     }
 
     void CFRMPC::cmdvelCb(const geometry_msgs::msg::Twist::SharedPtr msg)
     {
         MPCCompute(*msg);
+    }
+
+    void CFRMPC::odomCb(const nav_msgs::msg::Odometry::SharedPtr msg)
+    {
+        r.signals.ym[0] = msg->twist.twist.linear.x;
+        r.signals.ym[1] = msg->twist.twist.linear.y;
+        r.signals.ym[2] = msg->twist.twist.angular.z;
     }
 
     void CFRMPC::controlPubCb() { joy_control_pub_->publish(joy_control_msg_); }

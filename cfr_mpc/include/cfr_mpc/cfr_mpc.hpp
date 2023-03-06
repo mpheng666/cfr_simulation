@@ -1,14 +1,15 @@
 #ifndef _CFR_MPC_CFR_MPC_HPP_
 #define _CFR_MPC_CFR_MPC_HPP_
 
-#include "lib/rtwtypes.h"
+#include "lib/mpcmoveCodeGeneration.h"
 #include "lib/mpcmoveCodeGeneration_spec.h"
 #include "lib/qpkwik.h"
-#include "lib/mpcmoveCodeGeneration.h"
+#include "lib/rtwtypes.h"
 
 #include "rclcpp/rclcpp.hpp"
 
 #include "geometry_msgs/msg/twist.hpp"
+#include "nav_msgs/msg/odometry.hpp"
 #include "sensor_msgs/msg/joy.hpp"
 
 #include <algorithm>
@@ -57,7 +58,8 @@ namespace cfr_mpc {
         rclcpp::TimerBase::SharedPtr control_pub_timer_;
         rclcpp::Publisher<sensor_msgs::msg::Joy>::SharedPtr joy_control_pub_;
         rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_sub_;
-        
+        rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_sub_;
+
         sensor_msgs::msg::Joy joy_control_msg_;
 
         void argInit_3x1_real_T(double result[3]);
@@ -71,10 +73,11 @@ namespace cfr_mpc {
 
         void MPCCompute(const geometry_msgs::msg::Twist& msg);
         void cmdvelCb(const geometry_msgs::msg::Twist::SharedPtr msg);
+        void odomCb(const nav_msgs::msg::Odometry::SharedPtr msg);
         void controlPubCb();
 
-        struct10_T Info;
-        struct4_T statedata;
+        // struct10_T Info;
+        // struct4_T statedata;
         struct5_T r;
         double u[3];
     };

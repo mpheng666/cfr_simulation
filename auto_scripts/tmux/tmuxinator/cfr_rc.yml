@@ -11,7 +11,7 @@ windows:
       panes:
         - ros2 launch cfr_gazebo gazebo.launch.py
         - sleep 3; ros2 launch cfr_blades_control start_rc.launch.py
-        - sleep 3; ros2 launch cfr_actuation start.launch.py
+        - sleep 3; ros2 launch cfr_actuation start_rc.launch.py
         - sleep 4; ros2 launch cfr_dynamics start.launch.py
         - sleep 4; ros2 launch cfr_kinematics_states start.launch.py
   - rc_control:

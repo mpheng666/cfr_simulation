@@ -7,6 +7,7 @@
 
 #include "geometry_msgs/msg/accel.hpp"
 #include "geometry_msgs/msg/twist.hpp"
+#include "nav_msgs/msg/odometry.hpp"
 #include "rclcpp/rclcpp.hpp"
 
 using namespace std::chrono_literals;
@@ -47,11 +48,13 @@ namespace cfr_kinemtics_states_ns {
         rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_pub_;
         rclcpp::Subscription<geometry_msgs::msg::Accel>::SharedPtr acc_sub_;
         rclcpp::TimerBase::SharedPtr timer_;
+        rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_sub_;
 
         void loadParams();
         void timerCb();
         void accelCb(const geometry_msgs::msg::Accel::SharedPtr msg);
         void updateStates();
+        void odomCb(const nav_msgs::msg::Odometry::SharedPtr msg);
     };
 
 } // namespace cfr_kinemtics_states_ns

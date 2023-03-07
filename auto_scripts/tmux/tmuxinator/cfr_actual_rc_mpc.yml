@@ -1,0 +1,34 @@
+# ~/.tmuxinator/cfr_mpc_simulation.yml
+
+name: cfr_mpc_simulation
+root: ~/workspace/cfr_ws
+
+windows:
+  - socket_comm:
+      pre: source install/local_setup.bash
+      panes:
+        - launch client auto connect node
+        - link up the odom
+        - link up the cmd_vel
+  - core:
+      layout: tiled
+      pre:
+        - source install/local_setup.bash
+      panes:
+        - sleep 3; ros2 launch cfr_blades_control start_rc.launch.py
+        - sleep 3; ros2 launch cfr_mpc start.launch.py
+        - sleep 3; ros2 launch cfr_actuation start_mpc.launch.py
+        - sleep 4; ros2 launch cfr_dynamics start.launch.py
+        - sleep 4; ros2 launch cfr_kinematics_states start.launch.py
+  - rc_control:
+      pre:
+        - source install/local_setup.bash
+      panes:
+        - sleep 2; ros2 launch cfr_telejoy_config teleop-launch_mpc.py joy_config:=spmr1010
+        - sleep 3; ros2 topic echo /cfr/cfr_mpc/cmd_vel
+        - sleep 3; ros2 topic echo /cfr/joy_twist
+  - path_tracer:
+      pre:
+        - source install/local_setup.bash
+      panes:
+        # - sleep 4; ros2 launch path_tracer start.launch.py

@@ -36,7 +36,7 @@ public:
     }
 
 private:
-    void timer_callback()  const
+    void timer_callback() const
     {
         auto control_msg = std_msgs::msg::Float64MultiArray();
         control_msg.data.resize(N_BLADES);
@@ -60,27 +60,25 @@ private:
 
     void joy_callback(const sensor_msgs::msg::Joy::SharedPtr msg)
     {
-        // [[maybe_unused]] auto temp = (msg->axes.at(speed_axis_) - joy_offset_);
-        // // RCLCPP_INFO(this->get_logger(), "temp %f", temp);
-        // if (is_start_) {
-        //     if (msg->buttons.at(enable_button_) || !require_enable_button_) {
-        //         // blades_speed_ = std::clamp(msg->axes.at(speed_axis_) * max_speed_,
-        //         0.0,
-        //         // max_speed_);
-        //         blades_speed_ = (msg->axes.at(speed_axis_) - joy_offset_) * max_speed_;
-        //     }
-        // }
+        [[maybe_unused]] auto temp = (msg->axes.at(speed_axis_) - joy_offset_);
+        // RCLCPP_INFO(this->get_logger(), "temp %f", temp);
+        if (is_start_) {
+            if (msg->buttons.at(enable_button_) || !require_enable_button_) {
+                blades_speed_ =
+                std::clamp(msg->axes.at(speed_axis_) * max_speed_, 0.0, max_speed_);
+                blades_speed_ = (msg->axes.at(speed_axis_) - joy_offset_) * max_speed_;
+            }
+        }
+        else {
+            if (msg->buttons.at(start_button_) > 0) {
+                is_start_ = true;
+            }
 
-        // else {
-        //     if (msg->buttons.at(start_button_) > 0) {
-        //         is_start_ = true;
-        //     }
-
-        //     if (abs(msg->axes.at(speed_axis_) - joy_offset_) > joy_deadzone_) {
-        //         // system("notify-send -u low --hint int:transient:1 'CFR SIMULATION'
-        //         // 'Please start the engine!'");
-        //     }
-        // }
+            if (abs(msg->axes.at(speed_axis_) - joy_offset_) > joy_deadzone_) {
+                // system("notify-send -u low --hint int:transient:1 'CFR SIMULATION'
+                // 'Please start the engine!'");
+            }
+        }
     }
 
     void blade_speed_callback(const std_msgs::msg::Float32::SharedPtr msg)

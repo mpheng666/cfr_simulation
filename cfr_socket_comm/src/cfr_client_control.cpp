@@ -115,6 +115,20 @@ namespace cfr_socket_comm {
         }
     }
 
-    void CfrClientControl::twistCb(const geometry_msgs::msg::Twist::ConstPtr msg) {}
+    void CfrClientControl::twistCb(const geometry_msgs::msg::Twist::ConstPtr msg) {
+        auto twist_socket = encodeTwistToSocketFormat(msg);
+        auto twist_socket_str = makeStringTwistSocketFormat(twist_socket);
+        doCommandWrite(twist_socket_str);
+    }
+
+    CFRTwistSocketFormat CfrClientControl::encodeTwistToSocketFormat(const geometry_msgs::msg::Twist::ConstPtr& msg)
+    {
+
+    }
+
+    std::string CfrClientControl::makeStringTwistSocketFormat(const CFRTwistSocketFormat& input_twist)
+    {
+
+    }
 
 } // namespace cfr_socket_comm

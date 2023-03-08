@@ -14,7 +14,7 @@
 namespace cfr_socket_comm {
     using boost::asio::ip::tcp;
 
-    struct CFRFeedbackFormat {
+    struct CFRFeedbackSocketFormat {
         uint32_t timestamped_ms{0};
         double position_x_m{0.0};
         double position_y_m{0.0};
@@ -29,7 +29,7 @@ namespace cfr_socket_comm {
         double RY_motor_angle_deg{0.0};
     };
 
-    struct CFRTwistFormat {
+    struct CFRTwistSocketFormat {
         double blade_speed_rpm{0.0};
         double linear_x_relative{0.0};
         double angualr_z_relative{0.0};
@@ -73,6 +73,9 @@ namespace cfr_socket_comm {
 
         void decodeFeedback();
         void publishFeedback();
+
+        CFRTwistSocketFormat encodeTwistToSocketFormat(const geometry_msgs::msg::Twist::ConstPtr& msg);
+        std::string makeStringTwistSocketFormat(const CFRTwistSocketFormat& input_twist);
     };
 } // namespace cfr_socket_comm
 

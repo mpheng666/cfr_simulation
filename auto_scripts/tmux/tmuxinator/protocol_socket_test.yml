@@ -5,8 +5,9 @@ root: ~/workspace/cfr_ws
 
 windows:
   - socket_test:
+      pre: source install/local_setup.bash
       panes:
-        - source install/local_setup.bash && ros2 run cfr_state_machine cfr_sm_node
-        - source install/local_setup.bash && ros2 run cfr_socket_comm cfr_socket_server_node 10000
-        - source install/local_setup.bash && sleep 3; ros2 run cfr_socket_comm cfr_socket_client_node localhost 10000
-        - source install/local_setup.bash && sleep 3 ; ros2 run cfr_feedback_server cfr_feedback_client_node localhost 10001
+        - ros2 run cfr_state_machine cfr_sm_node
+        - ros2 run cfr_socket_comm cfr_socket_server_node 10000
+        - sleep 3; ros2 run cfr_socket_comm cfr_socket_client_node localhost 10000
+        - sleep 3 ; ros2 run cfr_feedback_server cfr_feedback_client_node localhost 10001

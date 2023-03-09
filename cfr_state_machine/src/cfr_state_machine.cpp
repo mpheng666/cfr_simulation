@@ -3,9 +3,10 @@
 namespace cfr_sm {
 
     // sm_CFR
-    sm_CFR::sm_CFR(std::shared_ptr<cfr_manager::CFRManager> manager)
-        : sm_CFR_manager_(manager)
+    sm_CFR::sm_CFR()
+        : sm_CFR_manager_(std::make_shared<cfr_manager::CFRManager>())
     {
+        std::thread([&]() { rclcpp::spin(sm_CFR_manager_); }).detach();
     }
 
     void sm_CFR::unconsumed_event(const sc::event_base& event)

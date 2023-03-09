@@ -3,15 +3,10 @@
 int main(int argc, char* argv[])
 {
     rclcpp::init(argc, argv);
-    auto cfr_manager_node = std::make_shared<cfr_manager::CFRManager>();
 
-    cfr_sm::sm_CFR state_machine(cfr_manager_node);
-
-    rclcpp::spin(cfr_manager_node);
-    
+    cfr_sm::sm_CFR state_machine;
     state_machine.initiate();
     
-
-    rclcpp::shutdown();
+    // rclcpp::shutdown();
     return 0;
 }

@@ -9,10 +9,11 @@
 
 #include <thread>
 #include <typeinfo>
+#include <memory>
 
 namespace cfr_sm {
     struct sm_CFR : sc::state_machine<sm_CFR, StateIdle> {
-        sm_CFR(std::shared_ptr<cfr_manager::CFRManager> manager);
+        sm_CFR();
         std::shared_ptr<cfr_manager::CFRManager> sm_CFR_manager_;
         void unconsumed_event(const sc::event_base& event);
     };

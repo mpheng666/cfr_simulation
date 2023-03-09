@@ -3,10 +3,9 @@
 namespace cfr_sm {
 
     // sm_CFR
-    sm_CFR::sm_CFR()
-        : sm_CFR_manager_(std::make_shared<cfr_manager::CFRManager>())
+    sm_CFR::sm_CFR(std::shared_ptr<cfr_manager::CFRManager> manager)
+        : sm_CFR_manager_(manager)
     {
-        std::thread([&]() { rclcpp::spin(sm_CFR_manager_); }).detach();
     }
 
     void sm_CFR::unconsumed_event(const sc::event_base& event)
@@ -60,7 +59,8 @@ namespace cfr_sm {
 
     sc::result StateRunning::react(const EventControl& event)
     {
-        context<sm_CFR>().sm_CFR_manager_->setCmdvel(event.linear_x, event.linear_y, event.angular_z);
+        context<sm_CFR>().sm_CFR_manager_->setCmdvel(event.linear_x, event.linear_y,
+                                                     event.angular_z);
         context<sm_CFR>().sm_CFR_manager_->setBladeSpeed(event.blade_speed);
         return discard_event();
     }
@@ -80,7 +80,6 @@ namespace cfr_sm {
         context<sm_CFR>().sm_CFR_manager_->killAllActions();
     }
 
-    sc::result StateError::react(const EventInit& event) { 
-        return transit<StateIdle>(); }
+    sc::result StateError::react(const EventInit& event) { return transit<StateIdle>(); }
 
 } // namespace cfr_sm

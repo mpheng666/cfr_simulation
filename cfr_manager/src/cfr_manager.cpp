@@ -14,7 +14,7 @@ CFRManager::CFRManager()
           100ms, std::bind(&CFRManager::pubTimerCallback, this))),
       update_timer_(this->create_wall_timer(
           50ms, std::bind(&CFRManager::updateTimerCallback, this))) {
-  std::cout << "CFR manager is initializsed! \n";
+  std::cout << "CFR manager is initialised! \n";
 }
 
 void CFRManager::startBroadcastRobotStatus() { feedback_broadcastor_.start(); }

@@ -84,7 +84,7 @@ namespace cfr_socket_comm {
             }
         }
 
-         static bool validateMsg(const std::string& msg, const std::string& target_msg)
+        static bool validateMsg(const std::string& msg, const std::string& target_msg)
         {
             std::cout << "Validating respond: " << target_msg;
             return msg + ",OK\n" == target_msg;

@@ -66,6 +66,7 @@ namespace cfr_socket_comm {
         else {
             if (con_handle->socket.is_open()) {
                 // Write completed successfully and connection is open
+                std::cout << "Write: " << *msg_buffer;
             }
         }
         doAsynRead(con_handle);
@@ -94,10 +95,10 @@ namespace cfr_socket_comm {
             std::string line;
             std::getline(is, line);
 
-            auto respond_msg = std::make_shared<std::string>(line + ",OK\n");
+            auto respond_msg = std::make_shared<std::string>(line + ",OK" + "\n");
+            std::cout << "Read: " << *respond_msg;
 
             doAsynWrite(con_handle, respond_msg);
-            // doAsynRead(con_handle);
         }
     }
 

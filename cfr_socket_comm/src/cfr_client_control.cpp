@@ -201,22 +201,12 @@ namespace cfr_socket_comm {
 
     void CfrClientControl::serverTwistCommandCb()
     {
-        auto twist_socket_str = makeStringTwistSocketFormat(twist_socket_msg_);
+        auto twist_socket_str =
+        ProtocolHandler::makeStringTwistSocketFormat(twist_socket_msg_, DELIMITER_);
         RCLCPP_INFO_STREAM(this->get_logger(), "ioc running: " << !ioc_.stopped());
-        doCommandWrite(twist_socket_str);
+        if (start_control_) {
+            doCommandWrite(twist_socket_str);
+        }
     }
-
-    std::string
-    CfrClientControl::makeStringTwistSocketFormat(const CFRTwistSocketFormat& input_twist)
-    {
-        std::string retval{"CTRL,"};
-        retval.append(std::to_string(input_twist.blade_speed_rpm) + ",");
-        retval.append(std::to_string(input_twist.linear_x_relative) + ",");
-        retval.append(std::to_string(input_twist.angular_z_relative) + ",");
-        retval.append(std::to_string(input_twist.linear_y_relative) + DELIMITER_);
-        return retval;
-    }
-
-    void CfrClientControl::tokenizeOdom() {}
 
 } // namespace cfr_socket_comm

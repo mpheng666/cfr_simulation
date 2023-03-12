@@ -1,20 +1,15 @@
-# ~/.tmuxinator/cfr_mpc_simulation.yml
+# ~/.tmuxinator/cfr_mpc_rc.yml
 
-name: cfr_mpc_simulation
+name: cfr_mpc_rc
 root: ~/workspace/cfr_ws
 
 windows:
-  - socket_comm:
-      pre: source install/local_setup.bash
-      panes:
-        - launch client auto connect node
-        - link up the odom
-        - link up the cmd_vel
-  - core:
+  - simulation:
       layout: tiled
       pre:
         - source install/local_setup.bash
       panes:
+        - ros2 launch cfr_gazebo gazebo.launch.py
         - sleep 3; ros2 launch cfr_blades_control start_rc.launch.py
         - sleep 3; ros2 launch cfr_mpc start.launch.py
         - sleep 3; ros2 launch cfr_actuation start_mpc.launch.py

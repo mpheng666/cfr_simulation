@@ -1,7 +1,7 @@
 #ifndef CFR_SOCKET_COMM_CFR_CLIENT_CONTROL_HPP_
 #define CFR_SOCKET_COMM_CFR_CLIENT_CONTROL_HPP_
 
-#include "cfr_protocol_comm/protocol_msg_handler.hpp"
+#include "cfr_socket_comm/cfr_protocol_handler.hpp"
 
 #include "geometry_msgs/msg/twist.hpp"
 #include "nav_msgs/msg/odometry.hpp"

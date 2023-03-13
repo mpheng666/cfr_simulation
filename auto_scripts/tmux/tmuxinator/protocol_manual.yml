@@ -1,0 +1,11 @@
+# ~/.tmuxinator/protocol_manual.yml
+
+name: protocol_manual
+root: ~/workspace/cfr_ws
+
+windows:
+  - command_client:
+      pre: source install/local_setup.bash
+      panes:
+        - ros2 run cfr_socket_comm cfr_mock_command_server_node 10000
+        - sleep 2; ros2 run cfr_socket_comm cfr_manual_command_client_node localhost 10000

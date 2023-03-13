@@ -10,7 +10,7 @@ namespace cfr_socket_comm {
             boost::asio::connect(socket_, endpoints);
         }
         catch (const std::exception& e) {
-            std::cerr << e.what() << '\n';
+            std::cerr << "Resolve error: " << e.what() << '\n';
             return false;
         }
         return true;
@@ -24,7 +24,7 @@ namespace cfr_socket_comm {
                                boost::asio::buffer(msg));
         }
         catch (const std::exception& e) {
-            std::cerr << e.what() << '\n';
+            std::cerr << "Write error: " << e.what() << '\n';
         }
         return request_size;
     }
@@ -37,7 +37,7 @@ namespace cfr_socket_comm {
             buffer_size = boost::asio::read_until(socket_, stream_read_buffer, "\n");
         }
         catch (const std::exception& e) {
-            std::cerr << e.what() << "\n";
+            std::cerr << "Read error: " << e.what() << "\n";
         }
         std::string stream_read_buffer_str(
         (std::istreambuf_iterator<char>(&stream_read_buffer)),

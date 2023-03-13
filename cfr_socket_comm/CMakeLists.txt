@@ -28,45 +28,44 @@ find_package(geometry_msgs REQUIRED)
 include_directories( include ${Boost_INCLUDE_DIRS} )
 
 # ===== cfr_socket_server_node =====
-add_executable(cfr_socket_server_node node/cfr_socket_server_node.cpp src/cfr_socket_server.cpp)
-target_include_directories(cfr_socket_server_node PUBLIC
+add_executable(cfr_mock_command_server_node node/cfr_mock_command_server_node.cpp src/cfr_socket_server.cpp)
+target_include_directories(cfr_mock_command_server_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 ament_target_dependencies(
-  cfr_socket_server_node
+  cfr_mock_command_server_node
   rclcpp
 )
-target_link_libraries(cfr_socket_server_node)
 
-# ===== cfr_socket_client_node =====
-add_executable(cfr_socket_client_node node/cfr_socket_client_node.cpp src/cfr_socket_client.cpp)
-target_include_directories(cfr_socket_client_node PUBLIC
+# ===== cfr_manual_command_client_node =====
+add_executable(cfr_manual_command_client_node node/cfr_manual_command_client_node.cpp src/cfr_socket_client.cpp)
+target_include_directories(cfr_manual_command_client_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 ament_target_dependencies(
-  cfr_socket_client_node
+  cfr_manual_command_client_node
   rclcpp
 )
 
 # ===== cfr_client_control_node =====
-add_executable(cfr_client_control_node node/cfr_client_control_node.cpp src/cfr_client_control.cpp)
-target_include_directories(cfr_client_control_node PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
-ament_target_dependencies(
-  cfr_client_control_node
-  rclcpp
-  std_msgs
-  nav_msgs
-  geometry_msgs
-)
+# add_executable(cfr_client_control_node node/cfr_client_control_node.cpp src/cfr_client_control.cpp)
+# target_include_directories(cfr_client_control_node PUBLIC
+#   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+#   $<INSTALL_INTERFACE:include>)
+# ament_target_dependencies(
+#   cfr_client_control_node
+#   rclcpp
+#   std_msgs
+#   nav_msgs
+#   geometry_msgs
+# )
 
-install(TARGETS cfr_socket_server_node
+install(TARGETS cfr_mock_command_server_node
   DESTINATION lib/${PROJECT_NAME})
-install(TARGETS cfr_socket_client_node
+install(TARGETS cfr_manual_command_client_node
   DESTINATION lib/${PROJECT_NAME})
-install(TARGETS cfr_client_control_node
-  DESTINATION lib/${PROJECT_NAME})
+# install(TARGETS cfr_client_control_node
+#   DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

@@ -3,8 +3,16 @@
 
 #include <string>
 #include <vector>
+#include <array>
+#include <algorithm>
+
+#include "tf2/LinearMath/Matrix3x3.h"
+#include "tf2/LinearMath/Quaternion.h"
 
 namespace cfr_socket_comm {
+
+    using RPY_T = std::array<double, 3>;
+
     struct CFRFeedbackSocketFormat {
         uint32_t timestamped_ms{0};
         double position_x_m{0.0};
@@ -64,7 +72,75 @@ namespace cfr_socket_comm {
             return retval;
         }
 
-        void tokenizeOdom() {}
+        static CFRFeedbackSocketFormat tokenizeOdom(const std::string& odom)
+        {
+            CFRFeedbackSocketFormat retval;
+            const std::string DELIMITER_{"\n"};
+            auto splitted_token = splitString(odom, DELIMITER_);
+            auto final_token = removeWhiteSpaces(splitted_token);
+            if (final_token.size() == 12) {
+                retval.timestamped_ms = std::stoul(final_token.at(0));
+                retval.position_x_m = std::stod(final_token.at(1));
+                retval.position_y_m = std::stod(final_token.at(2));
+                retval.theta_deg = std::stod(final_token.at(3));
+                retval.blade_speed_rpm = std::stod(final_token.at(4));
+                retval.blade_angle_deg = std::stod(final_token.at(5));
+                retval.velocity_linear_x = std::stod(final_token.at(6));
+                retval.velocity_linear_y = std::stod(final_token.at(7));
+                retval.velocity_theta = std::stod(final_token.at(8));
+                retval.LX_motor_angle_deg = std::stod(final_token.at(9));
+                retval.RX_motor_angle_deg = std::stod(final_token.at(10));
+                retval.RY_motor_angle_deg = std::stod(final_token.at(11));
+            }
+
+            return retval;
+        }
+
+        static tf2::Quaternion EulerToQuaternion(const RPY_T& rpy)
+        {
+            tf2::Quaternion q;
+            q.setRPY(rpy.at(0), rpy.at(1), rpy.at(2));
+            return q;
+        }
+
+        static double degToRad(double val) { return (val / 180.0) * M_PI; }
+
+    private:
+        static VecStrT splitString(const std::string& input, const std::string& delimiter)
+        {
+            std::size_t pos_start{0};
+            std::size_t pos_end{0};
+            std::size_t delim_len{delimiter.length()};
+            std::string token;
+            VecStrT res{};
+
+            while ((pos_end = input.find(delimiter, pos_start)) != std::string::npos) {
+                token = input.substr(pos_start, pos_end - pos_start);
+                pos_start = pos_end + delim_len;
+                if (token.size()) {
+                    res.push_back(token);
+                }
+            }
+            if ((input.substr(pos_start)).size()) {
+                res.push_back(input.substr(pos_start));
+            }
+
+            return res;
+        }
+
+        static VecStrT removeWhiteSpaces(VecStrT& input)
+        {
+            for (auto& token : input) {
+                token.erase(std::remove_if(token.begin(), token.end(),
+                                           [](char c) {
+                                               return (c == ' ' || c == '\n' ||
+                                                       c == '\r' || c == '\t' ||
+                                                       c == '\v' || c == '\f');
+                                           }),
+                            token.end());
+            }
+            return input;
+        }
 
         VecStrT init_protocol_;
     };

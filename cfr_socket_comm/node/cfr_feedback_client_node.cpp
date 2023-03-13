@@ -1,40 +1,29 @@
-#include <boost/asio.hpp>
-#include <cstdlib>
-#include <cstring>
-#include <iostream>
+#include "cfr_socket_comm/cfr_feedback_client.hpp"
+#include "rclcpp/rclcpp.hpp"
 
 using boost::asio::ip::tcp;
 
 int main(int argc, char* argv[])
 {
+    rclcpp::init(argc, argv);
+    const std::string host = argv[1];
+    const std::string port = argv[2];
+
     if (argc != 3) {
         std::cerr << "Usage: client_node <host> <port>\n";
         return 1;
     }
 
-    boost::asio::io_context io_context;
+    boost::asio::io_context ioc;
 
-    tcp::socket s(io_context);
-    tcp::resolver resolver(io_context);
-    boost::asio::connect(s, resolver.resolve(argv[1], argv[2]));
+    auto feedback_client_node =
+    std::make_shared<cfr_socket_comm::CfrFeedbackClient>(ioc, host, port);
 
-    for (;;) {
-        try {
-            
-            std::string result;
-            boost::asio::streambuf streambuf;
-            boost::asio::read_until(s, streambuf, "\n");
+    std::thread spin_t([&]() { rclcpp::spin(feedback_client_node); });
 
-            std::string stream_read_buffer_str(
-            (std::istreambuf_iterator<char>(&streambuf)),
-            std::istreambuf_iterator<char>());
-            std::cout << stream_read_buffer_str << "\n";
-        }
-        catch (std::exception& e) {
-            std::cerr << "Exception: " << e.what() << "\n";
-            return 1;
-        }
-    }
+    feedback_client_node->start();
+
+    rclcpp::shutdown();
 
     return 0;
 }

@@ -20,7 +20,7 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(Boost REQUIRED)
-find_package(cfr_protocol_interfaces REQUIRED)
+# find_package(cfr_protocol_interfaces REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
@@ -58,13 +58,16 @@ ament_target_dependencies(
 )
 
 # ===== cfr_feedback_client_node =====
-add_executable(cfr_feedback_client_node node/cfr_feedback_client_node.cpp)
+add_executable(cfr_feedback_client_node node/cfr_feedback_client_node.cpp src/cfr_feedback_client.cpp)
 target_include_directories(cfr_feedback_client_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 ament_target_dependencies(
   cfr_feedback_client_node
   rclcpp
+  std_msgs
+  nav_msgs
+  geometry_msgs
 )
 
 # ===== cfr_client_control_node =====

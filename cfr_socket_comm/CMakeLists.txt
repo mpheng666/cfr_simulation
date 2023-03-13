@@ -27,13 +27,23 @@ find_package(geometry_msgs REQUIRED)
 
 include_directories( include ${Boost_INCLUDE_DIRS} )
 
-# ===== cfr_socket_server_node =====
+# ===== cfr_mock_command_server_node =====
 add_executable(cfr_mock_command_server_node node/cfr_mock_command_server_node.cpp src/cfr_socket_server.cpp)
 target_include_directories(cfr_mock_command_server_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 ament_target_dependencies(
   cfr_mock_command_server_node
+  rclcpp
+)
+
+# ===== cfr_mock_feedback_server_node =====
+add_executable(cfr_mock_feedback_server_node node/cfr_mock_feedback_server_node.cpp src/cfr_mock_feedback_server.cpp)
+target_include_directories(cfr_mock_feedback_server_node PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+ament_target_dependencies(
+  cfr_mock_feedback_server_node
   rclcpp
 )
 
@@ -44,6 +54,16 @@ target_include_directories(cfr_manual_command_client_node PUBLIC
   $<INSTALL_INTERFACE:include>)
 ament_target_dependencies(
   cfr_manual_command_client_node
+  rclcpp
+)
+
+# ===== cfr_feedback_client_node =====
+add_executable(cfr_feedback_client_node node/cfr_feedback_client_node.cpp)
+target_include_directories(cfr_feedback_client_node PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+ament_target_dependencies(
+  cfr_feedback_client_node
   rclcpp
 )
 
@@ -62,7 +82,11 @@ ament_target_dependencies(
 
 install(TARGETS cfr_mock_command_server_node
   DESTINATION lib/${PROJECT_NAME})
+install(TARGETS cfr_mock_feedback_server_node
+  DESTINATION lib/${PROJECT_NAME})
 install(TARGETS cfr_manual_command_client_node
+  DESTINATION lib/${PROJECT_NAME})
+install(TARGETS cfr_feedback_client_node
   DESTINATION lib/${PROJECT_NAME})
 # install(TARGETS cfr_client_control_node
 #   DESTINATION lib/${PROJECT_NAME})

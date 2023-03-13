@@ -31,7 +31,9 @@ namespace cfr_socket_comm {
 
     class ProtocolHandler {
     public:
-        static std::string makeStringTwistSocketFormat(const CFRTwistSocketFormat& input_twist, const char delimiter)
+        static std::string
+        makeStringTwistSocketFormat(const CFRTwistSocketFormat& input_twist,
+                                    const char delimiter)
         {
             std::string retval{"CTRL,"};
             retval.append(std::to_string(input_twist.blade_speed_rpm) + ",");
@@ -41,14 +43,30 @@ namespace cfr_socket_comm {
             return retval;
         }
 
-        void tokenizeOdom()
+        static std::string
+        makeStringCFRFeedbackSocketFormat(const CFRFeedbackSocketFormat& input_msg,
+                                          const char delimiter)
         {
-
+            std::string retval{};
+            retval.append(std::to_string(input_msg.timestamped_ms) + ",");
+            retval.append(std::to_string(input_msg.position_x_m) + ",");
+            retval.append(std::to_string(input_msg.position_y_m) + ",");
+            retval.append(std::to_string(input_msg.theta_deg) + ",");
+            retval.append(std::to_string(input_msg.blade_speed_rpm) + ",");
+            retval.append(std::to_string(input_msg.blade_angle_deg) + ",");
+            retval.append(std::to_string(input_msg.velocity_linear_x) + ",");
+            retval.append(std::to_string(input_msg.velocity_linear_y) + ",");
+            retval.append(std::to_string(input_msg.velocity_theta) + ",");
+            retval.append(std::to_string(input_msg.LX_motor_angle_deg) + ",");
+            retval.append(std::to_string(input_msg.RX_motor_angle_deg) + ",");
+            retval.append(std::to_string(input_msg.RY_motor_angle_deg));
+            retval += delimiter;
+            return retval;
         }
 
-        VecStrT init_protocol_;
+        void tokenizeOdom() {}
 
-        
+        VecStrT init_protocol_;
     };
 } // namespace cfr_socket_comm
 

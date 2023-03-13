@@ -1,10 +1,10 @@
 #ifndef CFR_SOCKET_COMM_PROTOCOL_HANDLER_HPP_
 #define CFR_SOCKET_COMM_PROTOCOL_HANDLER_HPP_
 
+#include <algorithm>
+#include <array>
 #include <string>
 #include <vector>
-#include <array>
-#include <algorithm>
 
 #include "tf2/LinearMath/Matrix3x3.h"
 #include "tf2/LinearMath/Quaternion.h"
@@ -94,6 +94,14 @@ namespace cfr_socket_comm {
             }
 
             return retval;
+        }
+
+        static VecStrT tokenizeCommandReply(const std::string& msg)
+        {
+            const std::string DELIMITER_{"\n"};
+            auto splitted_token = splitString(msg, DELIMITER_);
+            auto final_token = removeWhiteSpaces(splitted_token);
+            return final_token;
         }
 
         static tf2::Quaternion EulerToQuaternion(const RPY_T& rpy)

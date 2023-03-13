@@ -70,18 +70,18 @@ ament_target_dependencies(
   geometry_msgs
 )
 
-# ===== cfr_client_control_node =====
-# add_executable(cfr_client_control_node node/cfr_client_control_node.cpp src/cfr_client_control.cpp)
-# target_include_directories(cfr_client_control_node PUBLIC
-#   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-#   $<INSTALL_INTERFACE:include>)
-# ament_target_dependencies(
-#   cfr_client_control_node
-#   rclcpp
-#   std_msgs
-#   nav_msgs
-#   geometry_msgs
-# )
+# ===== cfr_auto_command_client_node =====
+add_executable(cfr_auto_command_client_node node/cfr_auto_command_client_node.cpp src/cfr_auto_command_client.cpp)
+target_include_directories(cfr_auto_command_client_node PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+ament_target_dependencies(
+  cfr_auto_command_client_node
+  rclcpp
+  std_msgs
+  nav_msgs
+  geometry_msgs
+)
 
 install(TARGETS cfr_mock_command_server_node
   DESTINATION lib/${PROJECT_NAME})
@@ -91,8 +91,12 @@ install(TARGETS cfr_manual_command_client_node
   DESTINATION lib/${PROJECT_NAME})
 install(TARGETS cfr_feedback_client_node
   DESTINATION lib/${PROJECT_NAME})
-# install(TARGETS cfr_client_control_node
-#   DESTINATION lib/${PROJECT_NAME})
+install(TARGETS cfr_auto_command_client_node
+  DESTINATION lib/${PROJECT_NAME})
+
+install(DIRECTORY include launch config
+  DESTINATION share/${PROJECT_NAME}
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

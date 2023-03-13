@@ -18,12 +18,11 @@
 namespace cfr_socket_comm {
     using boost::asio::ip::tcp;
 
-    class CfrClientControl : public rclcpp::Node {
+    class CfrAutoCommandClient : public rclcpp::Node {
     public:
-        CfrClientControl(const std::string& host,
-                         const std::string& command_port,
-                         const std::string& feedback_port,
-                         boost::asio::io_context& ioc);
+        CfrAutoCommandClient(const std::string& host,
+                             const std::string& command_port,
+                             boost::asio::io_context& ioc);
 
         void start();
 
@@ -32,43 +31,33 @@ namespace cfr_socket_comm {
         static constexpr char DELIMITER_{'\n'};
         std::string host_{};
         std::string command_port_{};
-        std::string feedback_port_{};
         boost::asio::io_context& ioc_;
         tcp::socket command_socket_{ioc_};
         tcp::socket feedback_socket_{ioc_};
 
-        CFRTwistSocketFormat twist_socket_msg_;
-        CFRFeedbackSocketFormat feedback_socket_msg_;
-        boost::asio::streambuf command_read_buffer_;
-        boost::asio::streambuf feedback_read_buffer_;
+        bool start_cfr_twist_{false};
 
-        rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odom_pub_;
+        CFRTwistSocketFormat twist_socket_msg_;
+
+        // std::vector<std::string> commands_;
+
         rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr twist_sub_;
         rclcpp::Subscription<std_msgs::msg::Float64>::SharedPtr blade_speed_sub_;
-        rclcpp::TimerBase::SharedPtr server_command_timer_;
-        bool start_control_ {false};
+
+        std::vector<std::string> commands_{
+        "PSTATE", "MODE",       "BEACONS",     "NYPAUTO,1", "INIT",
+        "PSTATE", "PSTATE",     "BLADEANG,10", "FB,1",      "START",
+        "PSTATE", "CTRL,0,0,1", "STARTENGINE", "PSTATE"};
 
         void twistCb(geometry_msgs::msg::Twist::SharedPtr msg);
         void bladeSpeedCb(std_msgs::msg::Float64::SharedPtr msg);
-        void serverTwistCommandCb();
-
         bool initCommandConnection();
-        bool initFeedbackConnection();
-        bool initCFREngine();
+        void loadCommands();
         void startSession();
+        bool verifyReplyCommand(const std::string& command, const std::string& reply);
 
         void doCommandWrite(const std::string& write_message);
-        void handleCommandWrite(const boost::system::error_code& ec,
-                                std::size_t bytes_transfered);
-
-        void doCommandRead();
-        void handleCommandRead(const boost::system::error_code& ec,
-                               std::size_t bytes_transfered);
-        
-        void doFeedbackRead();
-        void handleFeedbackRead(const boost::system::error_code& ec,
-                                std::size_t bytes_transfered);
- 
+        std::string doCommandRead();
     };
 } // namespace cfr_socket_comm
 

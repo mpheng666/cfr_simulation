@@ -35,6 +35,6 @@ def generate_launch_description():
             executable='cfr_feedback_client_node',
             output='screen',
             namespace='cfr',
-            remappings=[('cfr_feedback_client/odom', '/odom')]
+            # remappings=[('cfr_feedback_client/odom', '/odom')]
         )
     ])

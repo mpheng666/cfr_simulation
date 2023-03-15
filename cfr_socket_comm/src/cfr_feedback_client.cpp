@@ -9,7 +9,7 @@ namespace cfr_socket_comm {
         , ioc_(ioc)
         , socket_(ioc_)
         , resolver_(ioc_)
-        , odom_pub_(this->create_publisher<nav_msgs::msg::Odometry>("~/odom", 10))
+        , odom_pub_(this->create_publisher<nav_msgs::msg::Odometry>("/odom", 10))
         , blade_speed_rpm_pub_(
           this->create_publisher<std_msgs::msg::Float32>("~/blade_speed_rpm", 10))
         , blade_angle_deg_pub_(

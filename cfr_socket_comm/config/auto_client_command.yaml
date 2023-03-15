@@ -10,7 +10,7 @@ command:
  - FB,1
  - START
  - PSTATE
- - CTRL,0,0,1
+ - CTRL,0,0,0,1
  - STARTENGINE
  - STOP
  - PSTATE

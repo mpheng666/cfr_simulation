@@ -98,7 +98,7 @@ namespace cfr_socket_comm {
 
         static VecStrT tokenizeCommandReply(const std::string& msg)
         {
-            const std::string DELIMITER_{"\n"};
+            const std::string DELIMITER_{","};
             auto splitted_token = splitString(msg, DELIMITER_);
             auto final_token = removeWhiteSpaces(splitted_token);
             return final_token;

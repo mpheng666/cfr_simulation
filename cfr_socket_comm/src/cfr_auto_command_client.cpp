@@ -46,7 +46,12 @@ namespace cfr_socket_comm {
     void CfrAutoCommandClient::startSession()
     {
         for (const auto& command : commands_) {
-            for (int i = 0; i <= 3; ++i) {
+            int do_command_count = 3;
+            if(command == "START")
+            {
+                start_cfr_twist_ = true;
+            }
+            for (int i = 0; i < do_command_count; ++i) {
                 std::cout << "ED: " << command << "\n";
                 doCommandWrite(command + "\n");
                 boost::asio::steady_timer t(ioc_,
@@ -113,7 +118,6 @@ namespace cfr_socket_comm {
             }
             else if (command == "START") {
                 if (tokens.at(1) == "OK") {
-                    start_cfr_twist_ = true;
                     return true;
                 }
             }
@@ -122,14 +126,8 @@ namespace cfr_socket_comm {
                     return true;
                 }
             }
-            else if (command == "STARTENGINE") {
-                if (tokens.at(1) == "OK") {
-                    return true;
-                }
-            }
             else if (command == "STOP") {
                 if (tokens.at(1) == "OK") {
-                    start_cfr_twist_ = false;
                     return true;
                 }
             }
@@ -163,7 +161,7 @@ namespace cfr_socket_comm {
         twist_socket_msg_.linear_x_relative = msg->linear.x;
         twist_socket_msg_.linear_y_relative = msg->linear.y;
         twist_socket_msg_.angular_z_relative = msg->angular.z;
-        twist_socket_msg_.blade_speed_rpm = 120;
+        twist_socket_msg_.blade_speed_rpm = 90;
         auto twist_socket_str =
         ProtocolHandler::makeStringTwistSocketFormat(twist_socket_msg_, DELIMITER_);
         // RCLCPP_INFO_STREAM(this->get_logger(), "ioc running: " << !ioc_.stopped());

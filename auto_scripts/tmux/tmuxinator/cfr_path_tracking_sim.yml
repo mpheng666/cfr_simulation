@@ -1,6 +1,6 @@
-# ~/.tmuxinator/cfr_path_tracking.yml
+# ~/.tmuxinator/cfr_path_tracking_sim.yml
 
-name: cfr_path_tracking
+name: cfr_path_tracking_sim
 root: ~/workspace/cfr_ws
 
 windows:
@@ -9,7 +9,7 @@ windows:
       pre:
         - source install/local_setup.bash
       panes:
-        # - ros2 launch cfr_gazebo gazebo.launch.py
+        - ros2 launch cfr_gazebo gazebo.launch.py
         - sleep 3; ros2 launch cfr_blades_control start_rc.launch.py
         - sleep 3; ros2 launch cfr_mpc start.launch.py
         - sleep 3; ros2 launch cfr_actuation start_mpc.launch.py

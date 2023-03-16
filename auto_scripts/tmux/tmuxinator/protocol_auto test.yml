@@ -1,6 +1,6 @@
-# ~/.tmuxinator/protocol_manual.yml
+# ~/.tmuxinator/protocol_auto test .yml
 
-name: protocol_manual
+name: protocol_auto test 
 root: ~/workspace/cfr_ws
 
 windows:
@@ -9,5 +9,5 @@ windows:
       panes:
         - ros2 run cfr_socket_comm cfr_mock_command_server_node 10000
         - sleep 1;ros2 run cfr_socket_comm cfr_mock_feedback_server_node 10001
-        - sleep 2; ros2 run cfr_socket_comm cfr_manual_command_client_node 192.168.1.2 10000
-        - sleep 2;ros2 run cfr_socket_comm cfr_feedback_client_node 192.168.1.2 10001
+        - sleep 2; ros2 run cfr_socket_comm cfr_auto_command_client_node localhost 10000
+        - sleep 6;ros2 run cfr_socket_comm cfr_feedback_client_node localhost 10001

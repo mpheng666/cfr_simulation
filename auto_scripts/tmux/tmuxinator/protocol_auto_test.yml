@@ -1,6 +1,6 @@
-# ~/.tmuxinator/protocol_auto test .yml
+# ~/.tmuxinator/protocol_auto_test .yml
 
-name: protocol_auto test 
+name: protocol_auto_test 
 root: ~/workspace/cfr_ws
 
 windows:

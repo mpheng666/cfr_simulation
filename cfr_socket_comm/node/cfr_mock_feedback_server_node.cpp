@@ -8,6 +8,7 @@
 
 #include <chrono>
 #include <thread>
+#include <random>
 
 void my_handler(int s)
 {
@@ -38,9 +39,15 @@ int main(int argc, char* argv[])
         cfr_socket_comm::CFRFeedbackSocketFormat msg;
 
         for (;;) {
+            std::random_device r;
+            std::default_random_engine e1(r());
+            std::uniform_int_distribution<int> uniform_dist(0, 6);
             msg.timestamped_ms = std::chrono::duration_cast<std::chrono::milliseconds>(
                                  std::chrono::system_clock::now().time_since_epoch())
                                  .count();
+            msg.position_x_m = static_cast<double>(uniform_dist(e1));
+            msg.position_y_m = static_cast<double>(uniform_dist(e1));
+            msg.theta_deg = static_cast<double>(uniform_dist(e1));
             auto msg_str =
             cfr_socket_comm::ProtocolHandler::makeStringCFRFeedbackSocketFormat(
             msg, DELIMITER);

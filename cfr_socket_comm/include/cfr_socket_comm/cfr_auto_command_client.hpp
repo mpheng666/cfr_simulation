@@ -47,7 +47,7 @@ namespace cfr_socket_comm {
         std::vector<std::string> commands_{
         "PSTATE", "MODE",       "BEACONS",     "NYPAUTO,1", "INIT",
         "PSTATE", "PSTATE",     "BLADEANG,10", "FB,1",      "START",
-        "PSTATE", "CTRL,90,0,0,1", "PSTATE"};
+        "PSTATE", "CTRL,90,0,0,0", "PSTATE"};
 
         void twistCb(geometry_msgs::msg::Twist::SharedPtr msg);
         void bladeSpeedCb(std_msgs::msg::Float64::SharedPtr msg);

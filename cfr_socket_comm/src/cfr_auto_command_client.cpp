@@ -47,18 +47,22 @@ namespace cfr_socket_comm {
     {
         for (const auto& command : commands_) {
             int do_command_count = 3;
-            if(command == "START")
-            {
+            if (command == "START") {
                 start_cfr_twist_ = true;
             }
             for (int i = 0; i < do_command_count; ++i) {
                 std::cout << "ED: " << command << "\n";
                 doCommandWrite(command + "\n");
                 boost::asio::steady_timer t(ioc_,
-                                            boost::asio::chrono::milliseconds(1000));
+                                            boost::asio::chrono::milliseconds(2000));
                 t.wait();
-                if (verifyReplyCommand(command, doCommandRead())) {
-                    break;
+                auto reply = doCommandRead();
+                if (verifyReplyCommand(command, reply)) {
+                    std::cout << "Command-> " << command << ": verified OK\n";
+                    i = do_command_count;
+                }
+                else {
+                    std::cout << "Command-> " << command << ": verified WARN\n";
                 }
             }
         }
@@ -78,26 +82,31 @@ namespace cfr_socket_comm {
                                                   const std::string& reply)
     {
         auto tokens = ProtocolHandler::tokenizeCommandReply(reply);
-        if (tokens.size() && tokens.at(0) == command) {
+        // std::cout << "Command verified: " << command << "\n";
+        // for (const auto& token : tokens) {
+        //     std::cout << "token: " << token << "\n";
+        // }
+        if (tokens.size()) {
             if (command == "PSTATE") {
                 if (tokens.at(1) == "IDLE" || tokens.at(1) == "INITIALIZING" ||
                     tokens.at(1) == "READY" || tokens.at(1) == "RUNNING" ||
-                    tokens.at(1) == "STOPPED") {
+                    tokens.at(1) == "STOPPED" || tokens.at(1) == "OK") {
                     return true;
                 }
             }
             else if (command == "MODE") {
-                if (tokens.at(1) == "MANUAL2" || tokens.at(1) == "NYP-AUTO") {
+                if (tokens.at(1) == "MANUAL2" || tokens.at(1) == "NYP-AUTO" ||
+                    tokens.at(1) == "OK") {
                     return true;
                 }
             }
             else if (command == "BEACONS") {
-                if (tokens.size() == 14) {
+                if (tokens.size() == 14 || tokens.at(1) == "OK") {
                     return true;
                 }
             }
             else if (command == "NYPAUTO,1") {
-                if (tokens.at(1) == "OK") {
+                if (tokens.at(2) == "OK") {
                     return true;
                 }
             }
@@ -107,12 +116,12 @@ namespace cfr_socket_comm {
                 }
             }
             else if (command == "BLADEANG,10") {
-                if (tokens.at(1) == "OK") {
+                if (tokens.at(2) == "OK") {
                     return true;
                 }
             }
             else if (command == "FB,1") {
-                if (tokens.at(1) == "OK") {
+                if (tokens.at(2) == "OK") {
                     return true;
                 }
             }
@@ -121,8 +130,8 @@ namespace cfr_socket_comm {
                     return true;
                 }
             }
-            else if (command == "CTRL,0,0,0") {
-                if (tokens.at(1) == "OK") {
+            else if (command == "CTRL,90,0,0,0") {
+                if (tokens.at(5) == "OK") {
                     return true;
                 }
             }
@@ -137,7 +146,8 @@ namespace cfr_socket_comm {
 
     void CfrAutoCommandClient::doCommandWrite(const std::string& write_message)
     {
-        boost::asio::write(command_socket_, boost::asio::buffer(write_message));
+        command_socket_.async_write_some(boost::asio::buffer(write_message),
+        [&]([[maybe_unused]]const boost::system::error_code& error, [[maybe_unused]]std::size_t bytes_transferred) {});
     }
 
     std::string CfrAutoCommandClient::doCommandRead()

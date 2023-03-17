@@ -32,3 +32,4 @@ windows:
         - source install/local_setup.bash
       panes:
         - sleep 4; ros2 launch path_tracker start.launch.py
+        - sleep 4; ros2 topic echo /cfr/cfr_mpc/cmd_vel

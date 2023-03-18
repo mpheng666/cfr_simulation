@@ -1,7 +1,21 @@
 cfr:
   cfr_dynamics:
     ros__parameters:
-      friction_coefficient_mu1: 0.0
-      viscocity_coefficient_mu2: 0.2
-      airdrag_coefficient_mu3: 150.0
-      rotational_resistance_coefficient_mu4: 400.0
+      robot_physical_properties:
+        mass: 550.0
+        width: 2.02
+        depth: 1.05
+        height: 1.6
+        blade_rad_max: 0.5
+        blade_rad_min: 0.3
+      evironment_factor:
+        friction_coefficient_mu1: 0.0
+        viscocity_coefficient_mu2: 0.2
+        airdrag_coefficient_mu3: 150.0
+        rotational_resistance_coefficient_mu4: 400.0
+      model_param:
+        k_left_rotor_damping_coefficient: 0.7
+        k_right_rotor_damping_coefficient: 0.7
+        hy_left_blade_effective_radius_gain: 0.02
+        hy_right_blade_effective_radius_gain: 0.02
+        hx_right_blade_effective_radius_gain: 0.02

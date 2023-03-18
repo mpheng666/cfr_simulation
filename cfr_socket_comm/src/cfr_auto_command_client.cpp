@@ -12,6 +12,10 @@ namespace cfr_socket_comm {
           "/cfr/cfr_mpc/cmd_vel",
           10,
           std::bind(&CfrAutoCommandClient::twistCb, this, std::placeholders::_1)))
+          , blade_speed_sub_(this->create_subscription<std_msgs::msg::Int32>(
+          "/cfr/auto_client/blade_speed",
+          10,
+          std::bind(&CfrAutoCommandClient::bladeSpeedCb, this, std::placeholders::_1)))
     {
     }
 

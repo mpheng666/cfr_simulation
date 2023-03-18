@@ -5,6 +5,7 @@
 #include <array>
 #include <string>
 #include <vector>
+#include <iostream>
 
 #include "tf2/LinearMath/Matrix3x3.h"
 #include "tf2/LinearMath/Quaternion.h"
@@ -29,7 +30,7 @@ namespace cfr_socket_comm {
     };
 
     struct CFRTwistSocketFormat {
-        double blade_speed_rpm{0.0};
+        int blade_speed_rpm{0};
         double linear_x_relative{0.0};
         double angular_z_relative{0.0};
         double linear_y_relative{0.0};
@@ -48,6 +49,7 @@ namespace cfr_socket_comm {
             retval.append(std::to_string(input_twist.linear_x_relative) + ",");
             retval.append(std::to_string(input_twist.angular_z_relative) + ",");
             retval.append(std::to_string(input_twist.linear_y_relative) + delimiter);
+            std::cout << "CONTROL: " << retval;
             return retval;
         }
 
@@ -75,19 +77,19 @@ namespace cfr_socket_comm {
         static CFRFeedbackSocketFormat tokenizeOdom(const std::string& odom)
         {
             CFRFeedbackSocketFormat retval;
-            const std::string DELIMITER_{"\n"};
+            const std::string DELIMITER_{","};
             auto splitted_token = splitString(odom, DELIMITER_);
             auto final_token = removeWhiteSpaces(splitted_token);
             if (final_token.size() == 12) {
                 retval.timestamped_ms = std::stoul(final_token.at(0));
-                retval.position_x_m = std::stod(final_token.at(1));
-                retval.position_y_m = std::stod(final_token.at(2));
-                retval.theta_deg = std::stod(final_token.at(3));
-                retval.blade_speed_rpm = std::stod(final_token.at(4));
-                retval.blade_angle_deg = std::stod(final_token.at(5));
-                retval.velocity_linear_x = std::stod(final_token.at(6));
-                retval.velocity_linear_y = std::stod(final_token.at(7));
-                retval.velocity_theta = std::stod(final_token.at(8));
+                retval.position_x_m = std::stod(final_token.at(2));
+                retval.position_y_m = -std::stod(final_token.at(1));
+                retval.theta_deg = -std::stod(final_token.at(3));
+                retval.velocity_linear_x = std::stod(final_token.at(5));
+                retval.velocity_linear_y = -std::stod(final_token.at(4));
+                retval.velocity_theta = -std::stod(final_token.at(6));
+                retval.blade_speed_rpm = std::stod(final_token.at(7));
+                retval.blade_angle_deg = std::stod(final_token.at(8));
                 retval.LX_motor_angle_deg = std::stod(final_token.at(9));
                 retval.RX_motor_angle_deg = std::stod(final_token.at(10));
                 retval.RY_motor_angle_deg = std::stod(final_token.at(11));
@@ -108,6 +110,7 @@ namespace cfr_socket_comm {
         {
             tf2::Quaternion q;
             q.setRPY(rpy.at(0), rpy.at(1), rpy.at(2));
+            q.normalize();
             return q;
         }
 

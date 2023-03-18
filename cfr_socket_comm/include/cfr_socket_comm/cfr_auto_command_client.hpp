@@ -6,6 +6,7 @@
 #include "geometry_msgs/msg/twist.hpp"
 #include "nav_msgs/msg/odometry.hpp"
 #include "std_msgs/msg/float64.hpp"
+#include "std_msgs/msg/int32.hpp"
 
 #include "rclcpp/rclcpp.hpp"
 
@@ -42,15 +43,15 @@ namespace cfr_socket_comm {
         // std::vector<std::string> commands_;
 
         rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr twist_sub_;
-        rclcpp::Subscription<std_msgs::msg::Float64>::SharedPtr blade_speed_sub_;
+        rclcpp::Subscription<std_msgs::msg::Int32>::SharedPtr blade_speed_sub_;
 
         std::vector<std::string> commands_{
         "PSTATE", "MODE",       "BEACONS",     "NYPAUTO,1", "INIT",
-        "PSTATE", "PSTATE",     "BLADEANG,10", "FB,1",      "START",
-        "PSTATE", "CTRL,90,0,0,0", "PSTATE"};
+        "PSTATE", "PSTATE",     "BLADEANG,10", "FB,1", "START", 
+        "PSTATE", "CTRL,0,0,0,0", "PSTATE"};
 
         void twistCb(geometry_msgs::msg::Twist::SharedPtr msg);
-        void bladeSpeedCb(std_msgs::msg::Float64::SharedPtr msg);
+        void bladeSpeedCb(std_msgs::msg::Int32::SharedPtr msg);
         bool initCommandConnection();
         void loadCommands();
         void startSession();

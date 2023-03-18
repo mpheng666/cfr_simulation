@@ -1,16 +1,17 @@
-command:
- - PSTATE
- - MODE
- - BEACONS
- - NYPAUTO,1
- - INIT
- - PSTATE
- - PSTATE
- - BLADEANG,10
- - FB,1
- - START
- - PSTATE
- - CTRL,0,0,0,1
- - STARTENGINE
- - STOP
- - PSTATE
+cfr:
+  path_tracker:
+    ros__parameters:
+      commands:
+        - PSTATE
+        - MODE
+        - BEACONS
+        - NYPAUTO,1
+        - INIT
+        - PSTATE
+        - PSTATE
+        - BLADEANG,10
+        - FB,1
+        - START
+        - PSTATE
+        - CTRL,0,0,0,0
+        - PSTATE

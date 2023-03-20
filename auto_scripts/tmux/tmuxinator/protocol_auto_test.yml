@@ -9,5 +9,5 @@ windows:
       panes:
         - ros2 run cfr_socket_comm cfr_mock_command_server_node 10000
         - sleep 1;ros2 run cfr_socket_comm cfr_mock_feedback_server_node 10001
-        - sleep 2; ros2 run cfr_socket_comm cfr_auto_command_client_node localhost 10000
-        - sleep 6;ros2 run cfr_socket_comm cfr_feedback_client_node localhost 10001
+        - sleep 2; ros2 run cfr_socket_comm cfr_auto_command_client_node --ros-args -r __ns:=/cfr --params-file ~/workspace/cfr_ws/src/cfr_simulation/cfr_socket_comm/config/auto_command_client.yaml
+        - sleep 6;ros2 run cfr_socket_comm cfr_feedback_client_node --ros-args -r __ns:=/cfr --params-file ~/workspace/cfr_ws/src/cfr_simulation/cfr_socket_comm/config/feedback_client.yaml

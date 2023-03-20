@@ -22,19 +22,23 @@ namespace cfr_socket_comm {
 
     class CfrFeedbackClient : public rclcpp::Node {
     public:
-        CfrFeedbackClient(boost::asio::io_context& ioc_, const std::string& host, const std::string& port);
+        CfrFeedbackClient(boost::asio::io_context& ioc_);
         void start();
 
     private:
         boost::asio::io_context& ioc_;
         tcp::socket socket_;
         tcp::resolver resolver_;
+        std::string host_ip_{"localhost"};
+        std::string feedback_port_{"10001"};
 
         rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odom_pub_;
         rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr blade_speed_rpm_pub_;
         rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr blade_angle_deg_pub_;
         rclcpp::Publisher<std_msgs::msg::Float32MultiArray>::SharedPtr motor_position_deg_pub_;
 
+        void loadParams();
+        bool initConnection();
         void pubCb(const std::string& msg);
 
     };

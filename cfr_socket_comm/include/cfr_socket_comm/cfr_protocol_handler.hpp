@@ -49,7 +49,7 @@ namespace cfr_socket_comm {
             retval.append(std::to_string(input_twist.linear_x_relative) + ",");
             retval.append(std::to_string(input_twist.angular_z_relative) + ",");
             retval.append(std::to_string(input_twist.linear_y_relative) + delimiter);
-            std::cout << "CONTROL: " << retval;
+            std::cout << "CONTROL: " << retval << "\n";
             return retval;
         }
 

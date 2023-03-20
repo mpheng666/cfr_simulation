@@ -1,28 +1,27 @@
 #include "cfr_socket_comm/cfr_auto_command_client.hpp"
 
 namespace cfr_socket_comm {
-    CfrAutoCommandClient::CfrAutoCommandClient(const std::string& host,
-                                               const std::string& command_port,
-                                               boost::asio::io_context& ioc)
+    CfrAutoCommandClient::CfrAutoCommandClient(boost::asio::io_context& ioc)
         : Node("cfr_auto_command_client")
-        , host_(host)
-        , command_port_(command_port)
         , ioc_(ioc)
         , twist_sub_(this->create_subscription<geometry_msgs::msg::Twist>(
           "/cfr/cfr_mpc/cmd_vel",
           10,
           std::bind(&CfrAutoCommandClient::twistCb, this, std::placeholders::_1)))
-          , blade_speed_sub_(this->create_subscription<std_msgs::msg::Int32>(
+        , blade_speed_sub_(this->create_subscription<std_msgs::msg::Int32>(
           "/cfr/auto_client/blade_speed",
           10,
           std::bind(&CfrAutoCommandClient::bladeSpeedCb, this, std::placeholders::_1)))
     {
+        loadParams();
     }
 
     void CfrAutoCommandClient::start()
     {
         if (initCommandConnection()) {
-            RCLCPP_INFO_STREAM(this->get_logger(), "Connection establised!");
+            RCLCPP_INFO_STREAM(this->get_logger(), "Connection " << host_ << " at "
+                                                                 << command_port_
+                                                                 << " establised!");
             startSession();
         }
         else {
@@ -38,13 +37,26 @@ namespace cfr_socket_comm {
         }
         catch (const std::exception& e) {
             std::cerr << e.what() << '\n';
+            return false;
         }
         return true;
     }
 
-    void CfrAutoCommandClient::loadCommands()
+    void CfrAutoCommandClient::loadParams()
     {
+        this->declare_parameter("commands");
+        this->declare_parameter("host_ip");
+        this->declare_parameter("command_port");
+
         this->get_parameter("commands", commands_);
+        this->get_parameter("host_ip", host_);
+        this->get_parameter("command_port", command_port_);
+
+        RCLCPP_INFO_STREAM(this->get_logger(), "Load commands: ");
+        for (const auto& command : commands_) {
+            std::cout << command << " ";
+        }
+        std::cout << "\n";
     }
 
     void CfrAutoCommandClient::startSession()
@@ -134,7 +146,7 @@ namespace cfr_socket_comm {
                     return true;
                 }
             }
-            else if (command == "CTRL,90,0,0,0") {
+            else if (command == "CTRL,0,0,0,0") {
                 if (tokens.at(5) == "OK") {
                     return true;
                 }
@@ -150,8 +162,10 @@ namespace cfr_socket_comm {
 
     void CfrAutoCommandClient::doCommandWrite(const std::string& write_message)
     {
-        command_socket_.async_write_some(boost::asio::buffer(write_message),
-        [&]([[maybe_unused]]const boost::system::error_code& error, [[maybe_unused]]std::size_t bytes_transferred) {});
+        command_socket_.async_write_some(
+        boost::asio::buffer(write_message),
+        [&]([[maybe_unused]] const boost::system::error_code& error,
+            [[maybe_unused]] std::size_t bytes_transferred) {});
     }
 
     std::string CfrAutoCommandClient::doCommandRead()
@@ -184,7 +198,7 @@ namespace cfr_socket_comm {
         }
     }
 
-    void CfrAutoCommandClient::bladeSpeedCb(const std_msgs::msg::Float64::SharedPtr msg)
+    void CfrAutoCommandClient::bladeSpeedCb(const std_msgs::msg::Int32::SharedPtr msg)
     {
         twist_socket_msg_.blade_speed_rpm = msg->data;
     }

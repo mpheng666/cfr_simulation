@@ -1,6 +1,9 @@
 cfr:
-  path_tracker:
+  cfr_auto_command_client:
     ros__parameters:
+      host_ip: "192.168.1.2"
+      # host_ip: "localhost"
+      command_port: "10001"
       commands:
         - PSTATE
         - MODE

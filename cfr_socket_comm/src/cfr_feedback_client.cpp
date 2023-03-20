@@ -2,9 +2,7 @@
 
 namespace cfr_socket_comm {
 
-    CfrFeedbackClient::CfrFeedbackClient(boost::asio::io_context& ioc,
-                                         const std::string& host,
-                                         const std::string& port)
+    CfrFeedbackClient::CfrFeedbackClient(boost::asio::io_context& ioc)
         : Node("cfr_feedback_client")
         , ioc_(ioc)
         , socket_(ioc_)
@@ -18,12 +16,29 @@ namespace cfr_socket_comm {
           this->create_publisher<std_msgs::msg::Float32MultiArray>("~/motor_angle_deg",
                                                                    10))
     {
+        loadParams();
+        initConnection();
+    }
+
+    void CfrFeedbackClient::loadParams()
+    {
+        this->declare_parameter("host_ip");
+        this->declare_parameter("feedback_port_");
+
+        this->get_parameter("host_ip", host_ip_);
+        this->get_parameter("feedback_port", feedback_port_);
+    }
+
+    bool CfrFeedbackClient::initConnection()
+    {
         try {
-            boost::asio::connect(socket_, resolver_.resolve(host, port));
+            boost::asio::connect(socket_, resolver_.resolve(host_ip_, feedback_port_));
         }
         catch (const std::exception& e) {
             std::cerr << e.what() << '\n';
+            return false;
         }
+        return true;
     }
 
     void CfrFeedbackClient::pubCb(const std::string& msg)

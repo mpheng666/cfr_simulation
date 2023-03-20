@@ -6,15 +6,11 @@ int main(int argc, char* argv[])
 {
     rclcpp::init(argc, argv);
     try {
-        if (argc != 3) {
-            std::cerr << "Usage: client_node <host> <command_port> \n";
-            return 1;
-        }
 
         boost::asio::io_context ioc;
 
         auto node =
-        std::make_shared<cfr_socket_comm::CfrAutoCommandClient>(argv[1], argv[2], ioc);
+        std::make_shared<cfr_socket_comm::CfrAutoCommandClient>(ioc);
 
         std::thread t([&ioc] { ioc.run(); });
         std::thread t2([&] { rclcpp::spin(node); });

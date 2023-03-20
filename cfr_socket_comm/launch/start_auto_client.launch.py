@@ -34,15 +34,19 @@ def generate_launch_description():
     'config',
     'auto_client_command.yaml'
     )
+    network = os.path.join(
+    get_package_share_directory('cfr_socket_comm'),
+    'config',
+    'network.yaml'
+    )
 
     return launch.LaunchDescription([
         launch_ros.actions.Node(
             name='cfr_auto_command_client',
-            package='cfr_auto_command_client',
+            package='cfr_socket_comm',
             executable='cfr_auto_command_client_node',
             output='screen',
             namespace='cfr',
-            parameters = [commands],
-            remappings=[('cfr_auto_command_client/cmd_vel', '/cfr/cfr_mpc/cmd_vel')]
+            parameters = [commands, network],
         )
     ])

@@ -28,13 +28,19 @@ def load_yaml(file_path):
         return None
 
 def generate_launch_description():
+    network = os.path.join(
+    get_package_share_directory('cfr_socket_comm'),
+    'config',
+    'network.yaml'
+    )
+       
     return launch.LaunchDescription([
         launch_ros.actions.Node(
             name='cfr_feedback_client',
-            package='cfr_feedback_client',
+            package='cfr_socket_comm',
             executable='cfr_feedback_client_node',
             output='screen',
             namespace='cfr',
-            # remappings=[('cfr_feedback_client/odom', '/odom')]
+            parameters = [network],
         )
     ])

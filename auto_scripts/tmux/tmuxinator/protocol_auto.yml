@@ -7,5 +7,5 @@ windows:
   - command_client:
       pre: source install/local_setup.bash
       panes:
-       - sleep 2; ros2 run cfr_socket_comm cfr_auto_command_client_node --ros-args -r __ns:=/cfr --params-file ~/workspace/cfr_ws/src/cfr_simulation/cfr_socket_comm/config/auto_command_client.yaml
+        - sleep 2; ros2 run cfr_socket_comm cfr_auto_command_client_node --ros-args -r __ns:=/cfr --params-file ~/workspace/cfr_ws/src/cfr_simulation/cfr_socket_comm/config/auto_command_client.yaml
         - sleep 6;ros2 run cfr_socket_comm cfr_feedback_client_node --ros-args -r __ns:=/cfr --params-file ~/workspace/cfr_ws/src/cfr_simulation/cfr_socket_comm/config/feedback_client.yaml

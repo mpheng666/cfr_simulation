@@ -1,6 +1,6 @@
-# ~/.tmuxinator/cfr_path_tracking_sim.yml
+# ~/.tmuxinator/cfr_path_tracking_sim_no_mpc.yml
 
-name: cfr_path_tracking_sim
+name: cfr_path_tracking_sim_no_mpc
 root: ~/workspace/cfr_ws
 
 pre_window: source install/local_setup.bash
@@ -9,11 +9,11 @@ windows:
       layout: tiled
       panes:
         - ros2 launch cfr_gazebo gazebo.launch.py
-        - sleep 3; ros2 launch cfr_blades_control start_rc.launch.py
-        - sleep 3; ros2 launch cfr_mpc start.launch.py
-        - sleep 3; ros2 launch cfr_actuation start_mpc.launch.py
-        - sleep 4; ros2 launch cfr_dynamics start.launch.py
-        - sleep 4; ros2 launch cfr_kinematics_states start.launch.py
+        # - sleep 3; ros2 launch cfr_blades_control start_rc.launch.py
+        # - sleep 3; ros2 launch cfr_mpc start.launch.py
+        # - sleep 3; ros2 launch cfr_actuation start_mpc.launch.py
+        # - sleep 4; ros2 launch cfr_dynamics start.launch.py
+        # - sleep 4; ros2 launch cfr_kinematics_states start.launch.py
   - rc_control:
       panes:
         # - sleep 2; ros2 launch cfr_telejoy_config teleop-launch_mpc.py joy_config:=spmr1010
